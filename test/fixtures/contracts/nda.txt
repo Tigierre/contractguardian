@@ -1,0 +1,99 @@
+ACCORDO DI RISERVATEZZA E NON DIVULGAZIONE
+
+TRA
+
+Innovatech S.r.l., con sede legale in Milano, Via Montenapoleone 15, Partita IVA 01234567890, nella persona del legale rappresentante Dott. Marco Rossi (di seguito "Parte Divulgante")
+
+E
+
+TechConsulting Italia S.r.l., con sede legale in Roma, Via dei Fori Imperiali 25, Partita IVA 09876543210, nella persona del legale rappresentante Ing. Laura Bianchi (di seguito "Parte Ricevente")
+
+congiuntamente denominate "le Parti" e singolarmente "la Parte".
+
+PREMESSO CHE
+
+- La Parte Divulgante detiene informazioni riservate, dati tecnici, know-how, strategie commerciali, elenchi clienti, codici sorgente software, processi produttivi, piani di sviluppo prodotto e altre informazioni di natura confidenziale relative alla propria attività imprenditoriale;
+- La Parte Ricevente è interessata ad accedere a tali informazioni riservate al fine di valutare una potenziale collaborazione commerciale, partnership tecnologica o accordo di sviluppo congiunto;
+- Le Parti desiderano regolare i termini e le condizioni di divulgazione, utilizzo e protezione delle informazioni riservate che saranno scambiate nel corso delle trattative.
+
+TUTTO CIÒ PREMESSO, LE PARTI CONVENGONO QUANTO SEGUE:
+
+ARTICOLO 1 - DEFINIZIONI
+
+1.1 Per "Informazioni Riservate" si intendono tutte le informazioni, dati, documenti, materiali, know-how tecnico e commerciale, specifiche di prodotto, codice sorgente, algoritmi, database, elenchi clienti, strategie di marketing, piani finanziari, proiezioni economiche, contratti esistenti con terzi, prezzi, listini, margini di profitto, fornitori, processi produttivi, metodi operativi e qualsiasi altra informazione di natura confidenziale comunicata dalla Parte Divulgante alla Parte Ricevente, sia in forma scritta, orale, elettronica o in qualsiasi altro formato tangibile o intangibile.
+
+1.2 Sono considerate Informazioni Riservate anche tutte le informazioni che la Parte Ricevente dovesse apprendere nel corso di visite presso le sedi operative, gli stabilimenti produttivi, i laboratori di ricerca e sviluppo della Parte Divulgante, incluse osservazioni dirette, fotografie, misurazioni, rilevazioni tecniche e qualsiasi altro dato acquisito durante tali visite.
+
+1.3 Sono altresì considerate Informazioni Riservate le conversazioni, le discussioni tecniche, le presentazioni commerciali, i materiali condivisi durante riunioni, conference call, videoconferenze e qualsiasi altra forma di comunicazione tra le Parti.
+
+ARTICOLO 2 - OBBLIGHI DI RISERVATEZZA
+
+2.1 La Parte Ricevente si impegna a mantenere strettamente riservate le Informazioni Riservate ricevute e a non divulgarle, comunicarle, trasferirle o renderle accessibili a terzi, in tutto o in parte, senza il preventivo consenso scritto della Parte Divulgante.
+
+2.2 La Parte Ricevente si impegna a utilizzare le Informazioni Riservate esclusivamente per le finalità concordate con la Parte Divulgante e per la valutazione della potenziale collaborazione commerciale oggetto delle trattative.
+
+2.3 La Parte Ricevente si impegna a limitare l'accesso alle Informazioni Riservate ai propri dipendenti, collaboratori, consulenti e professionisti che abbiano effettiva necessità di conoscerle per l'espletamento delle loro mansioni e che siano stati preventivamente informati della natura confidenziale di tali informazioni.
+
+2.4 La Parte Ricevente è responsabile della condotta dei propri dipendenti, collaboratori, consulenti e professionisti in relazione alla tutela delle Informazioni Riservate e risponde direttamente di ogni loro eventuale violazione degli obblighi di riservatezza come se fosse una propria violazione diretta.
+
+ARTICOLO 3 - DIVIETO DI UTILIZZO E NON CONCORRENZA
+
+3.1 La Parte Ricevente si impegna a non utilizzare, sfruttare commercialmente, riprodurre, modificare, adattare o sviluppare prodotti o servizi derivati dalle Informazioni Riservate senza l'autorizzazione scritta della Parte Divulgante.
+
+3.2 La Parte Ricevente si impegna a non fare ingegneria inversa, decompilazione, disassemblaggio o qualsiasi altra operazione volta a risalire al codice sorgente, agli algoritmi, ai processi tecnici o ai metodi operativi della Parte Divulgante.
+
+3.3 Per tutta la durata del presente accordo e per i successivi cinque anni dalla sua cessazione, la Parte Ricevente si impegna a non svolgere, direttamente o indirettamente, attività concorrenziale con quella della Parte Divulgante nel medesimo settore merceologico, area geografica e segmento di mercato.
+
+ARTICOLO 4 - PROPRIETÀ INTELLETTUALE
+
+4.1 Tutte le Informazioni Riservate, inclusi i relativi diritti di proprietà intellettuale, diritti d'autore, brevetti, marchi, design e know-how, rimangono di esclusiva proprietà della Parte Divulgante.
+
+4.2 Nessuna disposizione del presente accordo può essere interpretata come cessione, trasferimento o concessione in licenza di diritti di proprietà intellettuale dalla Parte Divulgante alla Parte Ricevente.
+
+4.3 Qualsiasi invenzione, idea, miglioramento, sviluppo, innovazione o opera dell'ingegno derivante dall'utilizzo o dall'elaborazione delle Informazioni Riservate è di esclusiva proprietà della Parte Divulgante.
+
+ARTICOLO 5 - DURATA E CESSAZIONE
+
+5.1 Il presente accordo ha durata indeterminata e gli obblighi di riservatezza permangono fino a quando le Informazioni Riservate non divengano di pubblico dominio per cause non imputabili alla Parte Ricevente.
+
+5.2 In ogni caso, gli obblighi di riservatezza e non concorrenza previsti dal presente accordo permangono per tutta la durata della vita lavorativa della Parte Ricevente e dei suoi collaboratori che abbiano avuto accesso alle Informazioni Riservate.
+
+5.3 Al termine del rapporto contrattuale o su richiesta della Parte Divulgante in qualsiasi momento, la Parte Ricevente si impegna a restituire immediatamente, entro 24 ore dalla richiesta, tutti i documenti, materiali, supporti informatici e qualsiasi altro materiale contenente o relativo alle Informazioni Riservate, oltre a distruggere tutte le copie, duplicati, estratti e derivati in proprio possesso.
+
+ARTICOLO 6 - PENALI E RESPONSABILITÀ
+
+6.1 In caso di violazione degli obblighi di riservatezza previsti dal presente accordo, la Parte Ricevente sarà tenuta al pagamento di una penale pari a Euro 500.000,00 (cinquecentomila/00) per ogni singola violazione, fermo restando il diritto della Parte Divulgante al risarcimento del maggior danno effettivamente subito.
+
+6.2 In caso di violazione del divieto di non concorrenza, la Parte Ricevente sarà tenuta al pagamento di una penale pari a Euro 1.000.000,00 (unmilione/00), oltre al risarcimento dell'eventuale maggior danno, incluso il lucro cessante.
+
+6.3 La Parte Ricevente risponde di tutte le conseguenze dannose derivanti dalla violazione degli obblighi assunti, inclusi danni diretti, indiretti, consequenziali, perdita di profitti, danno all'immagine, danno reputazionale e ogni altra forma di pregiudizio patrimoniale e non patrimoniale.
+
+6.4 In caso di contestazione giudiziale, la Parte Ricevente si impegna a sostenere tutte le spese legali, competenze di avvocati, periti e consulenti tecnici della Parte Divulgante, indipendentemente dall'esito del giudizio.
+
+ARTICOLO 7 - RESTITUZIONE E DISTRUZIONE
+
+7.1 Su semplice richiesta scritta della Parte Divulgante, anche trasmessa via email o messaggio di testo, la Parte Ricevente deve immediatamente, senza alcun ritardo e in ogni caso entro 12 ore dalla ricezione della richiesta, restituire ogni documento, file elettronico, supporto digitale, appunto manoscritto, fotografia, copia, estratto o qualsiasi altro materiale contenente Informazioni Riservate.
+
+7.2 La Parte Ricevente deve certificare per iscritto, attraverso dichiarazione sottoscritta dal legale rappresentante, la completa restituzione o distruzione di tutti i materiali riservati, includendo la descrizione dettagliata delle modalità di distruzione dei file elettronici.
+
+ARTICOLO 8 - DISPOSIZIONI GENERALI
+
+8.1 Il presente accordo è regolato dalla legge italiana e qualsiasi controversia relativa alla sua interpretazione, validità, efficacia ed esecuzione sarà devoluta alla competenza esclusiva del Foro di Milano.
+
+8.2 Eventuali modifiche o integrazioni al presente accordo devono essere concordate per iscritto tra le Parti.
+
+8.3 Qualora una o più disposizioni del presente accordo dovessero essere dichiarate nulle, invalide o inefficaci, tale nullità non pregiudicherà la validità ed efficacia delle restanti clausole.
+
+Letto, confermato e sottoscritto.
+
+Milano, 15 gennaio 2024
+
+Per Innovatech S.r.l.
+_______________________
+Dott. Marco Rossi
+Legale Rappresentante
+
+Per TechConsulting Italia S.r.l.
+_______________________
+Ing. Laura Bianchi
+Legale Rappresentante

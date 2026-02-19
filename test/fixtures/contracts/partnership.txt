@@ -1,0 +1,161 @@
+ACCORDO DI PARTNERSHIP STRATEGICA E JOINT VENTURE
+
+TRA
+
+EcoEnergy Solutions S.r.l., con sede legale in Firenze, Via dei Calzaiuoli 32, Partita IVA 33445566778, capitale sociale Euro 100.000,00 i.v., nella persona del Presidente del CdA Ing. Roberto Conti (di seguito "Partner A")
+
+E
+
+GreenTech Innovations S.r.l., con sede legale in Padova, Prato della Valle 8, Partita IVA 99887766554, capitale sociale Euro 75.000,00 i.v., nella persona dell'Amministratore Unico Dott. Francesco Verdi (di seguito "Partner B")
+
+congiuntamente denominate "i Partner" e singolarmente "il Partner".
+
+PREMESSO CHE
+
+- Partner A opera nel settore della produzione e installazione di impianti fotovoltaici per uso residenziale e industriale, con particolare focus su soluzioni per l'accumulo energetico e sistemi di gestione intelligente dell'energia;
+- Partner B è attivo nello sviluppo di software per la gestione ottimizzata di smart grid, piattaforme IoT per il monitoraggio energetico e algoritmi di intelligenza artificiale per la previsione dei consumi;
+- I Partner intendono unire le rispettive competenze tecniche, risorse finanziarie, portafogli clienti e know-how industriale per sviluppare congiuntamente una piattaforma integrata di gestione energetica destinata al mercato europeo;
+- I Partner riconoscono il valore strategico della collaborazione per accelerare l'innovazione tecnologica, ampliare la presenza commerciale e conseguire economie di scala.
+
+TUTTO CIÒ PREMESSO E CONSIDERATO, I PARTNER CONVENGONO QUANTO SEGUE:
+
+ARTICOLO 1 - OGGETTO DELLA PARTNERSHIP
+
+1.1 I Partner si impegnano a collaborare in forma di partnership strategica per:
+   a) Progettazione e sviluppo congiunto di una piattaforma software per la gestione intelligente di impianti fotovoltaici residenziali e commerciali;
+   b) Integrazione delle soluzioni hardware di Partner A con le piattaforme software di Partner B;
+   c) Commercializzazione congiunta dei prodotti e servizi risultanti dalla partnership sui mercati italiano, europeo ed extraeuropeo;
+   d) Condivisione di risorse tecniche, personale specializzato, laboratori di ricerca e infrastrutture di testing;
+   e) Partecipazione congiunta a bandi di finanziamento pubblico, progetti di ricerca, gare d'appalto e iniziative di innovazione.
+
+1.2 La partnership ha carattere di esclusività: ciascun Partner si impegna a non sviluppare, commercializzare o supportare prodotti o servizi concorrenti rispetto a quelli oggetto della presente collaborazione, né a stringere accordi simili con terze parti operanti nel medesimo settore per tutta la durata della partnership.
+
+ARTICOLO 2 - GOVERNANCE E ORGANI DECISIONALI
+
+2.1 È istituito un Comitato di Coordinamento Strategico (CCS) composto da 4 membri: 2 designati da Partner A e 2 designati da Partner B. Il CCS si riunisce trimestralmente e ha il compito di:
+   - Definire gli indirizzi strategici della partnership;
+   - Approvare il budget annuale delle attività congiunte;
+   - Valutare l'andamento delle performance commerciali e tecnologiche;
+   - Decidere su investimenti, assunzioni di personale dedicato, apertura di sedi operative condivise;
+   - Risolvere controversie operative tra i Partner.
+
+2.2 Le decisioni del CCS sono assunte all'unanimità. In assenza di unanimità, prevale la posizione espressa da Partner A, cui è attribuito diritto di veto su tutte le deliberazioni strategiche, incluse quelle relative a budget, investimenti, assunzione di personale chiave, scelte tecnologiche strutturali, ingresso di nuovi partner.
+
+2.3 Partner A nomina il Presidente del CCS, che ha poteri di convocazione, firma della documentazione ufficiale e rappresentanza esterna della partnership. Il Presidente ha anche facoltà di assumere decisioni urgenti in via autonoma, informando successivamente gli altri membri del CCS.
+
+ARTICOLO 3 - CONTRIBUTI DEI PARTNER
+
+3.1 Partner A si impegna a conferire alla partnership:
+   - Contributo in denaro: Euro 150.000,00 entro 30 giorni dalla sottoscrizione del presente accordo;
+   - Licenza d'uso esclusiva dei propri brevetti, know-how tecnico, disegni industriali relativi a sistemi di accumulo energetico;
+   - Accesso al portafoglio clienti esistente (circa 2.500 clienti attivi);
+   - Personale tecnico: 3 ingegneri specializzati in energia rinnovabile a tempo pieno;
+   - Utilizzo di laboratorio di testing e certificazione con strumentazione avanzata.
+
+3.2 Partner B si impegna a conferire alla partnership:
+   - Contributo in denaro: Euro 50.000,00 entro 30 giorni dalla sottoscrizione del presente accordo;
+   - Licenza d'uso del software proprietario per gestione smart grid;
+   - Accesso alle piattaforme cloud per hosting delle applicazioni;
+   - Personale tecnico: 2 sviluppatori software senior a tempo parziale (50% FTE);
+   - Supporto per attività di marketing digitale e comunicazione.
+
+3.3 I contributi in denaro saranno utilizzati per:
+   - Sviluppo della piattaforma integrata (60%);
+   - Attività di marketing e commercializzazione (25%);
+   - Spese amministrative e legali (15%).
+
+ARTICOLO 4 - RIPARTIZIONE DEGLI UTILI E DELLE PERDITE
+
+4.1 Gli utili e le perdite derivanti dalle attività della partnership saranno ripartiti tra i Partner secondo le seguenti percentuali:
+   - Partner A: 70%
+   - Partner B: 30%
+
+4.2 La ripartizione prevista al punto 4.1 è definitiva e invariabile per tutta la durata della partnership, indipendentemente dall'eventuale variazione dei contributi effettivamente apportati dai Partner.
+
+4.3 Gli utili saranno distribuiti annualmente entro 60 giorni dalla chiusura dell'esercizio sociale, previa approvazione del bilancio consuntivo da parte del CCS.
+
+4.4 In caso di perdite, ciascun Partner è tenuto a coprire la propria quota parte mediante versamento in denaro entro 30 giorni dalla richiesta formulata dal CCS. Il mancato versamento costituisce inadempimento grave e legittima l'altro Partner a risolvere il contratto con diritto al risarcimento dei danni.
+
+ARTICOLO 5 - PROPRIETÀ INTELLETTUALE
+
+5.1 Tutti i diritti di proprietà intellettuale relativi a invenzioni, brevetti, software, algoritmi, database, know-how, marchi, design, documentazione tecnica e qualsiasi altra opera dell'ingegno sviluppata nell'ambito della partnership sono di esclusiva proprietà di Partner A.
+
+5.2 Partner B rinuncia espressamente a qualsiasi pretesa di comproprietà o diritto d'autore sui risultati della collaborazione, riconoscendo che il proprio contributo ha natura meramente esecutiva e di supporto tecnico subordinato alla direzione strategica di Partner A.
+
+5.3 Al termine della partnership, Partner A conserva la titolarità esclusiva di tutti i diritti di proprietà intellettuale, mentre Partner B deve cessare immediatamente ogni utilizzo delle tecnologie, software, marchi e materiali sviluppati congiuntamente.
+
+ARTICOLO 6 - OBBLIGHI DI RISERVATEZZA E NON CONCORRENZA
+
+6.1 Ciascun Partner si impegna a mantenere strettamente riservate tutte le informazioni tecniche, commerciali, finanziarie e strategiche apprese nell'ambito della partnership.
+
+6.2 Gli obblighi di riservatezza permangono per 10 anni dalla cessazione della partnership.
+
+6.3 Per tutta la durata della partnership e per i successivi 5 anni dalla sua cessazione, Partner B si impegna a non svolgere, direttamente o indirettamente, attività concorrenziale con quella oggetto della partnership, né a collaborare con concorrenti di Partner A o a sviluppare prodotti o servizi simili a quelli oggetto della presente collaborazione.
+
+6.4 Partner B si impegna a non assumere, contattare o sollecitare dipendenti, collaboratori o consulenti di Partner A per un periodo di 7 anni dalla cessazione della partnership.
+
+ARTICOLO 7 - DURATA E RECESSO
+
+7.1 La partnership ha durata di 5 (cinque) anni decorrenti dalla data di sottoscrizione del presente accordo.
+
+7.2 Alla scadenza naturale, la partnership si rinnova tacitamente per ulteriori periodi di 3 anni, salvo disdetta comunicata con raccomandata A/R almeno 18 mesi prima della scadenza.
+
+7.3 Partner A ha facoltà di recedere in qualsiasi momento dalla partnership con preavviso scritto di 60 giorni, senza obbligo di motivazione. In tal caso, Partner A non è tenuto ad alcun indennizzo, rimborso o compensazione nei confronti di Partner B.
+
+7.4 Partner B può recedere dalla partnership solo per giusta causa, previa autorizzazione scritta di Partner A. Il recesso di Partner B è subordinato al pagamento di una penale pari a Euro 200.000,00 a titolo di indennizzo per il mancato conseguimento degli obiettivi programmati.
+
+7.5 In caso di recesso di Partner B, Partner A acquisisce automaticamente e senza corrispettivo aggiuntivo la piena titolarità di tutti i contributi, materiali, software, know-how e diritti conferiti da Partner B nell'ambito della partnership.
+
+ARTICOLO 8 - OBBLIGHI DI NON COMPETIZIONE POST-PARTNERSHIP
+
+8.1 Al termine della partnership per qualsiasi causa, Partner B si impegna a:
+   a) Non utilizzare, sfruttare commercialmente o divulgare a terzi le informazioni, tecnologie, know-how, contatti commerciali appresi durante la collaborazione;
+   b) Non operare, direttamente o indirettamente, nel settore della gestione energetica, fotovoltaico, smart grid, IoT energetico per un periodo di 5 anni;
+   c) Non stringere accordi commerciali con i clienti acquisiti durante la partnership per un periodo di 7 anni;
+   d) Non assumere o collaborare con personale che abbia prestato attività per la partnership per un periodo di 7 anni.
+
+8.2 La violazione degli obblighi di cui al punto 8.1 comporta il pagamento di una penale di Euro 500.000,00 per ciascuna violazione, ferma restando la facoltà di Partner A di agire per il risarcimento del maggior danno effettivamente subito.
+
+ARTICOLO 9 - MODIFICHE E VARIAZIONI
+
+9.1 Qualsiasi modifica al presente accordo deve essere approvata per iscritto da entrambi i Partner.
+
+9.2 Tuttavia, Partner A si riserva la facoltà di modificare unilateralmente le percentuali di ripartizione degli utili, i criteri di governance e le condizioni di recesso, dandone comunicazione scritta a Partner B con preavviso di 30 giorni.
+
+ARTICOLO 10 - RISOLUZIONE PER INADEMPIMENTO
+
+10.1 Il presente accordo si risolve automaticamente, senza necessità di diffida o costituzione in mora, nei seguenti casi:
+   a) Mancato versamento dei contributi in denaro da parte di Partner B entro i termini previsti;
+   b) Violazione degli obblighi di esclusività e non concorrenza da parte di Partner B;
+   c) Condotta di Partner B lesiva della reputazione, degli interessi commerciali o dell'immagine di Partner A;
+   d) Apertura di procedure concorsuali, fallimento, liquidazione di Partner B.
+
+10.2 In caso di risoluzione per inadempimento di Partner B, quest'ultimo è tenuto al pagamento di una penale di Euro 300.000,00, oltre al risarcimento dell'eventuale maggior danno, ferma restando l'acquisizione gratuita da parte di Partner A di tutti i diritti, contributi e materiali conferiti da Partner B.
+
+ARTICOLO 11 - LEGGE APPLICABILE E FORO COMPETENTE
+
+11.1 Il presente accordo è regolato dalla legge italiana.
+
+11.2 Per qualsiasi controversia relativa all'interpretazione, esecuzione o risoluzione del presente accordo, sarà esclusivamente competente il Foro di Firenze.
+
+11.3 Partner B rinuncia espressamente a qualsiasi altro foro alternativo eventualmente competente.
+
+ARTICOLO 12 - DISPOSIZIONI FINALI
+
+12.1 Il presente accordo sostituisce e supera qualsiasi precedente intesa verbale o scritta tra i Partner avente il medesimo oggetto.
+
+12.2 Qualora una o più disposizioni del presente accordo dovessero essere dichiarate nulle o invalide, tale nullità non pregiudica la validità ed efficacia delle restanti clausole, che rimangono pienamente vincolanti per le Parti.
+
+Letto, confermato e sottoscritto.
+
+Firenze, 10 maggio 2024
+
+Per EcoEnergy Solutions S.r.l.
+_______________________
+Ing. Roberto Conti
+Presidente del Consiglio di Amministrazione
+
+Per GreenTech Innovations S.r.l.
+_______________________
+Dott. Francesco Verdi
+Amministratore Unico

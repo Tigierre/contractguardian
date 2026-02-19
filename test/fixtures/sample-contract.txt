@@ -1,0 +1,26 @@
+CONTRATTO DI FORNITURA SERVIZI
+
+Articolo 1 - Oggetto
+La Società Fornitrice si impegna a fornire servizi di consulenza IT al Cliente.
+
+Articolo 2 - Corrispettivo
+Il Cliente pagherà un corrispettivo di €50.000 con le seguenti modalità:
+- 100% anticipato alla firma del contratto
+
+Articolo 3 - Penali
+In caso di ritardo nella consegna, il Fornitore pagherà una penale pari al 50% del valore del contratto per ogni giorno di ritardo, senza limite massimo.
+
+Articolo 4 - Responsabilità
+Il Fornitore assume responsabilità illimitata per qualsiasi danno, diretto o indiretto, causato al Cliente, inclusi danni consequenziali e perdita di profitti.
+
+Articolo 5 - Rinnovo
+Il contratto si rinnova automaticamente per periodi di 5 anni, salvo disdetta con preavviso di 12 mesi.
+
+Articolo 6 - Proprietà Intellettuale
+Tutto il software sviluppato durante l'esecuzione del contratto diventa proprietà esclusiva del Cliente, inclusi codice sorgente, documentazione e qualsiasi opera derivata, senza alcun compenso aggiuntivo.
+
+Articolo 7 - Risoluzione
+Il Cliente può risolvere il contratto in qualsiasi momento senza preavviso e senza penali. Il Fornitore può risolvere solo con 6 mesi di preavviso e previo rimborso di tutte le somme già versate.
+
+Articolo 8 - Foro competente
+Per qualsiasi controversia sarà competente esclusivamente il Foro di [città scelta dal Cliente].

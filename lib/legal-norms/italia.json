@@ -1,0 +1,321 @@
+{
+  "jurisdiction": "italia",
+  "lastUpdated": "2026-02-15",
+  "norms": [
+    {
+      "normId": "cc-1321",
+      "title": "Nozione del contratto",
+      "citation": "Art. 1321 Codice Civile",
+      "category": "general",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1321/",
+      "relevance": {
+        "nda": 0.9,
+        "service_agreement": 0.9,
+        "employment": 0.9,
+        "partnership": 0.9,
+        "purchase": 0.9,
+        "lease": 0.9,
+        "license": 0.9,
+        "vendor": 0.9,
+        "loan": 0.9,
+        "distribution": 0.9,
+        "franchise": 0.9,
+        "other": 0.9
+      }
+    },
+    {
+      "normId": "cc-1325",
+      "title": "Indicazione dell'oggetto",
+      "citation": "Art. 1325 Codice Civile",
+      "category": "essential_elements",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1325/",
+      "relevance": {
+        "nda": 0.8,
+        "service_agreement": 0.95,
+        "employment": 0.9,
+        "partnership": 0.9,
+        "purchase": 0.95,
+        "lease": 0.95,
+        "license": 0.9,
+        "vendor": 0.95,
+        "loan": 0.9,
+        "distribution": 0.9,
+        "franchise": 0.85,
+        "other": 0.8
+      }
+    },
+    {
+      "normId": "cc-1326",
+      "title": "Contratto concluso mediante inizio dell'esecuzione",
+      "citation": "Art. 1326 Codice Civile",
+      "category": "formation",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1326/",
+      "relevance": {
+        "nda": 0.5,
+        "service_agreement": 0.85,
+        "employment": 0.7,
+        "partnership": 0.6,
+        "purchase": 0.8,
+        "lease": 0.7,
+        "license": 0.7,
+        "vendor": 0.85,
+        "loan": 0.5,
+        "distribution": 0.75,
+        "franchise": 0.6,
+        "other": 0.6
+      }
+    },
+    {
+      "normId": "cc-1337",
+      "title": "Trattative e responsabilità precontrattuale",
+      "citation": "Art. 1337 Codice Civile",
+      "category": "liability",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1337/",
+      "relevance": {
+        "nda": 0.85,
+        "service_agreement": 0.8,
+        "employment": 0.75,
+        "partnership": 0.9,
+        "purchase": 0.8,
+        "lease": 0.75,
+        "license": 0.8,
+        "vendor": 0.8,
+        "loan": 0.85,
+        "distribution": 0.85,
+        "franchise": 0.9,
+        "other": 0.7
+      }
+    },
+    {
+      "normId": "cc-1341",
+      "title": "Condizioni generali di contratto",
+      "citation": "Art. 1341 Codice Civile",
+      "category": "unfair_terms",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1341/",
+      "relevance": {
+        "nda": 0.7,
+        "service_agreement": 0.95,
+        "employment": 0.85,
+        "partnership": 0.7,
+        "purchase": 0.9,
+        "lease": 0.95,
+        "license": 0.9,
+        "vendor": 0.95,
+        "loan": 0.85,
+        "distribution": 0.85,
+        "franchise": 0.85,
+        "other": 0.8
+      }
+    },
+    {
+      "normId": "cc-1362",
+      "title": "Intenzione dei contraenti",
+      "citation": "Art. 1362 Codice Civile",
+      "category": "interpretation",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1362/",
+      "relevance": {
+        "nda": 0.85,
+        "service_agreement": 0.9,
+        "employment": 0.85,
+        "partnership": 0.9,
+        "purchase": 0.85,
+        "lease": 0.85,
+        "license": 0.9,
+        "vendor": 0.85,
+        "loan": 0.8,
+        "distribution": 0.85,
+        "franchise": 0.85,
+        "other": 0.8
+      }
+    },
+    {
+      "normId": "cc-1218",
+      "title": "Responsabilità del debitore",
+      "citation": "Art. 1218 Codice Civile",
+      "category": "liability",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-i-art-1218/",
+      "relevance": {
+        "nda": 0.75,
+        "service_agreement": 0.95,
+        "employment": 0.85,
+        "partnership": 0.8,
+        "purchase": 0.9,
+        "lease": 0.85,
+        "license": 0.85,
+        "vendor": 0.95,
+        "loan": 0.9,
+        "distribution": 0.85,
+        "franchise": 0.8,
+        "other": 0.8
+      }
+    },
+    {
+      "normId": "cc-1453",
+      "title": "Risoluzione per inadempimento",
+      "citation": "Art. 1453 Codice Civile",
+      "category": "termination",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-ii-art-1453/",
+      "relevance": {
+        "nda": 0.7,
+        "service_agreement": 0.95,
+        "employment": 0.8,
+        "partnership": 0.85,
+        "purchase": 0.9,
+        "lease": 0.9,
+        "license": 0.85,
+        "vendor": 0.95,
+        "loan": 0.9,
+        "distribution": 0.9,
+        "franchise": 0.85,
+        "other": 0.8
+      }
+    },
+    {
+      "normId": "cc-1671",
+      "title": "Garanzia per vizi",
+      "citation": "Art. 1671 Codice Civile",
+      "category": "warranty",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-iii-art-1671/",
+      "relevance": {
+        "nda": 0.3,
+        "service_agreement": 0.85,
+        "employment": 0.4,
+        "partnership": 0.5,
+        "purchase": 0.95,
+        "lease": 0.7,
+        "license": 0.7,
+        "vendor": 0.9,
+        "loan": 0.3,
+        "distribution": 0.8,
+        "franchise": 0.6,
+        "other": 0.6
+      }
+    },
+    {
+      "normId": "cc-2103",
+      "title": "Obbligo di fedeltà del prestatore di lavoro",
+      "citation": "Art. 2103 Codice Civile",
+      "category": "confidentiality",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quinto-titolo-ii-art-2103/",
+      "relevance": {
+        "nda": 0.95,
+        "service_agreement": 0.7,
+        "employment": 0.95,
+        "partnership": 0.75,
+        "purchase": 0.4,
+        "lease": 0.4,
+        "license": 0.6,
+        "vendor": 0.6,
+        "loan": 0.3,
+        "distribution": 0.6,
+        "franchise": 0.65,
+        "other": 0.5
+      }
+    },
+    {
+      "normId": "cc-2598",
+      "title": "Atti di concorrenza sleale",
+      "citation": "Art. 2598 Codice Civile",
+      "category": "unfair_competition",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quinto-titolo-x-art-2598/",
+      "relevance": {
+        "nda": 0.85,
+        "service_agreement": 0.7,
+        "employment": 0.75,
+        "partnership": 0.8,
+        "purchase": 0.6,
+        "lease": 0.5,
+        "license": 0.8,
+        "vendor": 0.7,
+        "loan": 0.4,
+        "distribution": 0.85,
+        "franchise": 0.9,
+        "other": 0.6
+      }
+    },
+    {
+      "normId": "cc-1571",
+      "title": "Locazione: obblighi del locatore",
+      "citation": "Art. 1571 Codice Civile",
+      "category": "lease_obligations",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-iii-art-1571/",
+      "relevance": {
+        "nda": 0.3,
+        "service_agreement": 0.5,
+        "employment": 0.4,
+        "partnership": 0.5,
+        "purchase": 0.4,
+        "lease": 0.95,
+        "license": 0.6,
+        "vendor": 0.5,
+        "loan": 0.3,
+        "distribution": 0.5,
+        "franchise": 0.6,
+        "other": 0.5
+      }
+    },
+    {
+      "normId": "cc-1754",
+      "title": "Mutuo: obblighi del mutuatario",
+      "citation": "Art. 1754 Codice Civile",
+      "category": "loan_obligations",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-iii-art-1754/",
+      "relevance": {
+        "nda": 0.3,
+        "service_agreement": 0.4,
+        "employment": 0.4,
+        "partnership": 0.5,
+        "purchase": 0.5,
+        "lease": 0.5,
+        "license": 0.5,
+        "vendor": 0.5,
+        "loan": 0.95,
+        "distribution": 0.5,
+        "franchise": 0.6,
+        "other": 0.5
+      }
+    },
+    {
+      "normId": "cc-1803",
+      "title": "Mandato: obblighi del mandatario",
+      "citation": "Art. 1803 Codice Civile",
+      "category": "agency",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-iii-art-1803/",
+      "relevance": {
+        "nda": 0.5,
+        "service_agreement": 0.75,
+        "employment": 0.7,
+        "partnership": 0.8,
+        "purchase": 0.6,
+        "lease": 0.5,
+        "license": 0.6,
+        "vendor": 0.7,
+        "loan": 0.5,
+        "distribution": 0.85,
+        "franchise": 0.8,
+        "other": 0.6
+      }
+    },
+    {
+      "normId": "cc-2230",
+      "title": "Diligenza nell'esecuzione dell'incarico",
+      "citation": "Art. 2230 Codice Civile",
+      "category": "professional_duty",
+      "url": "https://www.codice-civile-online.it/codice-civile-libro-quarto-titolo-iii-art-2230/",
+      "relevance": {
+        "nda": 0.6,
+        "service_agreement": 0.9,
+        "employment": 0.85,
+        "partnership": 0.75,
+        "purchase": 0.7,
+        "lease": 0.6,
+        "license": 0.75,
+        "vendor": 0.85,
+        "loan": 0.6,
+        "distribution": 0.75,
+        "franchise": 0.75,
+        "other": 0.7
+      }
+    }
+  ]
+}

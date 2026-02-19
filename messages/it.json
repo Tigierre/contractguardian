@@ -1,0 +1,175 @@
+{
+  "Metadata": {
+    "title": "ContractGuardian - Analisi Contratti Intelligente",
+    "description": "Analizza i tuoi contratti PDF in meno di 2 minuti."
+  },
+  "Header": {
+    "brand": "ContractGuardian",
+    "report": "Report"
+  },
+  "LegalDisclaimer": {
+    "title": "Avviso Importante",
+    "aiWarning": "Questa analisi è fornita da un'intelligenza artificiale e non costituisce consulenza legale.",
+    "recommendation": "Per decisioni legali, consulta un avvocato qualificato. ContractGuardian è uno strumento di assistenza alla revisione, non un sostituto della consulenza professionale."
+  },
+  "Home": {
+    "hero": "Analizza contratti PDF con intelligenza artificiale. Identifica punti di forza e aree di miglioramento in meno di 2 minuti.",
+    "uploadTitle": "Carica un contratto",
+    "historyTitle": "Le tue analisi",
+    "howItWorks": "Come funziona",
+    "steps": {
+      "1": "Carica il tuo contratto PDF (digitale o scansionato)",
+      "2": "L'AI estrae automaticamente le parti contrattuali",
+      "3": "L'AI analizza punti di forza e aree di miglioramento",
+      "4": "Ricevi un report completo con suggerimenti operativi"
+    }
+  },
+  "Upload": {
+    "dragActive": "Rilascia il file PDF qui...",
+    "dragIdle": "Trascina un file PDF qui, oppure clicca per selezionare",
+    "maxSize": "Massimo 10MB - Solo file PDF",
+    "uploading": "Caricamento in corso...",
+    "extracting": "Estrazione testo dal PDF",
+    "uploadComplete": "Caricamento completato",
+    "fileLabel": "File:",
+    "textExtracted": "Testo estratto:",
+    "characters": "caratteri",
+    "pages": "Pagine:",
+    "ocrMethod": "Metodo: OCR (documento scansionato) - Confidenza: {confidence}%",
+    "startAnalysis": "Inizia l'Analisi",
+    "metadataNote": "I metadati del contratto (parti, tipo, giurisdizione) verranno estratti e verificati automaticamente.",
+    "uploadAnother": "Carica un altro",
+    "analyzing": "Analisi in corso...",
+    "analyzingTime": "Generalmente meno di 2 minuti",
+    "error": "Errore",
+    "retry": "Riprova",
+    "invalidFile": "File non valido. Solo PDF fino a 10MB.",
+    "unknownError": "Errore sconosciuto"
+  },
+  "Report": {
+    "backHome": "Torna alla home",
+    "exportPdf": "Esporta PDF",
+    "rerunAnalysis": "Riesegui Analisi",
+    "newAnalysis": "Nuova Analisi",
+    "analysisFailed": "Analisi Fallita",
+    "networkError": "Errore di rete. Verifica la connessione.",
+    "loadingError": "Errore nel caricamento",
+    "analysisResults": "Risultati dell'Analisi",
+    "summaryUnavailable": "Riepilogo non disponibile."
+  },
+  "ExecutiveSummary": {
+    "title": "Riepilogo Esecutivo",
+    "assessment": {
+      "daRivedere": "Da Rivedere",
+      "equilibrato": "Equilibrato",
+      "positivo": "Positivo"
+    },
+    "date": "Data:",
+    "duration": "Durata:",
+    "seconds": "{count} secondi",
+    "minutesSeconds": "{minutes}m {seconds}s"
+  },
+  "Findings": {
+    "strength": "Punto di forza",
+    "importante": "Importante",
+    "consigliato": "Consigliato",
+    "suggerimento": "Suggerimento",
+    "clauseLabel": "Clausola",
+    "explanationLabel": "Spiegazione",
+    "redlineLabel": "Suggerimento di Modifica",
+    "strengthsTitle": "Punti di Forza ({count})",
+    "improvementsTitle": "Aree di Miglioramento ({count})",
+    "importantiGroup": "Importanti ({count})",
+    "consigliatiGroup": "Consigliati ({count})",
+    "suggerimentiGroup": "Suggerimenti ({count})",
+    "noFindings": "Nessun elemento rilevante trovato",
+    "noFindingsDesc": "Il contratto non presenta elementi significativi rispetto alle policy analizzate."
+  },
+  "SeverityCounts": {
+    "total": "Totale",
+    "strengths": "Punti di Forza",
+    "importante": "Importanti",
+    "consigliato": "Consigliati",
+    "suggerimento": "Suggerimenti"
+  },
+  "History": {
+    "empty": "Nessuna analisi effettuata. Carica un contratto per iniziare.",
+    "completed": "Completata",
+    "processing": "In corso",
+    "pending": "In attesa",
+    "failed": "Fallita",
+    "forza": "forza",
+    "importanti": "importanti",
+    "totali": "totali",
+    "deleteTitle": "Elimina contratto",
+    "deleteConfirm": "Eliminare questo contratto e tutte le sue analisi?"
+  },
+  "Progress": {
+    "preparing": "Preparazione documento...",
+    "analyzing": "Analisi clausole in corso...",
+    "summarizing": "Generazione riepilogo...",
+    "completing": "Completamento...",
+    "processing": "Elaborazione in corso...",
+    "chunkProgress": "Analisi chunk {current}/{total}...",
+    "timeEstimate": "Generalmente meno di 2 minuti",
+    "elapsed": "{seconds}s trascorsi"
+  },
+  "Errors": {
+    "unexpected": "Si è verificato un errore imprevisto",
+    "generic": "Qualcosa è andato storto. Riprova tra qualche istante.",
+    "retry": "Riprova",
+    "reportLoadError": "Errore nel caricamento del report",
+    "reportLoadDesc": "Impossibile caricare il report. Verifica che l'analisi sia stata completata.",
+    "backHome": "Torna alla home"
+  },
+  "Common": {},
+  "contractTypes": {
+    "nda": "NDA (Accordo di Non Divulgazione)",
+    "nda.description": "Contratti di riservatezza e protezione informazioni confidenziali",
+    "serviceAgreement": "Contratto di Servizi",
+    "serviceAgreement.description": "Contratti di prestazione servizi professionali, consulenza, manutenzione",
+    "employment": "Contratto di Lavoro",
+    "employment.description": "Contratti di lavoro dipendente e autonomo",
+    "partnership": "Accordo di Partnership",
+    "partnership.description": "Accordi di partnership e collaborazione commerciale",
+    "purchase": "Contratto di Compravendita",
+    "purchase.description": "Contratti di vendita di beni e servizi",
+    "lease": "Contratto di Locazione",
+    "lease.description": "Contratti di locazione e affitto immobiliare o attrezzature",
+    "license": "Contratto di Licenza",
+    "license.description": "Contratti di licenza per proprietà intellettuale, software, marchi",
+    "vendor": "Contratto con Fornitore",
+    "vendor.description": "Contratti di fornitura e approvvigionamento",
+    "loan": "Contratto di Finanziamento",
+    "loan.description": "Contratti di prestito, mutuo e finanziamento",
+    "distribution": "Contratto di Distribuzione",
+    "distribution.description": "Contratti di distribuzione commerciale e rivendita",
+    "franchise": "Contratto di Franchising",
+    "franchise.description": "Contratti di affiliazione commerciale e franchising",
+    "other": "Altro",
+    "other.description": "Altri tipi di contratto non classificati"
+  },
+  "ContractMetadata": {
+    "title": "Metadati del Contratto",
+    "partyA": "Parte A",
+    "partyB": "Parte B",
+    "contractType": "Tipo di Contratto",
+    "jurisdiction": "Giurisdizione",
+    "confidence": "Confidenza"
+  },
+  "jurisdictions": {
+    "italia": "Italia",
+    "eu": "Unione Europea",
+    "usa": "Stati Uniti",
+    "unknown": "Non specificata"
+  },
+  "actors": {
+    "partyA": "Parte A",
+    "partyB": "Parte B",
+    "general": "Generale",
+    "risksSectionPartyA": "{partyName}",
+    "risksSectionPartyB": "{partyName}",
+    "risksSectionGeneral": "Generali",
+    "noRisks": "Nessun rischio identificato per questa parte."
+  }
+}

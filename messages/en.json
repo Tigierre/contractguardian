@@ -1,0 +1,175 @@
+{
+  "Metadata": {
+    "title": "ContractGuardian - Intelligent Contract Analysis",
+    "description": "Analyze your PDF contracts in less than 2 minutes."
+  },
+  "Header": {
+    "brand": "ContractGuardian",
+    "report": "Report"
+  },
+  "LegalDisclaimer": {
+    "title": "Important Notice",
+    "aiWarning": "This analysis is provided by artificial intelligence and does not constitute legal advice.",
+    "recommendation": "For legal decisions, consult a qualified attorney. ContractGuardian is a review assistance tool, not a substitute for professional advice."
+  },
+  "Home": {
+    "hero": "Analyze PDF contracts with artificial intelligence. Identify strengths and areas for improvement in less than 2 minutes.",
+    "uploadTitle": "Upload a contract",
+    "historyTitle": "Your analyses",
+    "howItWorks": "How it works",
+    "steps": {
+      "1": "Upload your PDF contract (digital or scanned)",
+      "2": "AI automatically extracts contract parties",
+      "3": "AI analyzes strengths and areas for improvement",
+      "4": "Receive a complete report with actionable suggestions"
+    }
+  },
+  "Upload": {
+    "dragActive": "Drop the PDF file here...",
+    "dragIdle": "Drag a PDF file here, or click to select",
+    "maxSize": "Maximum 10MB - PDF files only",
+    "uploading": "Uploading...",
+    "extracting": "Extracting text from PDF",
+    "uploadComplete": "Upload complete",
+    "fileLabel": "File:",
+    "textExtracted": "Extracted text:",
+    "characters": "characters",
+    "pages": "Pages:",
+    "ocrMethod": "Method: OCR (scanned document) - Confidence: {confidence}%",
+    "startAnalysis": "Start Analysis",
+    "metadataNote": "Contract metadata (parties, type, jurisdiction) will be automatically extracted and verified.",
+    "uploadAnother": "Upload another",
+    "analyzing": "Analyzing...",
+    "analyzingTime": "Usually less than 2 minutes",
+    "error": "Error",
+    "retry": "Retry",
+    "invalidFile": "Invalid file. PDF files up to 10MB only.",
+    "unknownError": "Unknown error"
+  },
+  "Report": {
+    "backHome": "Back to home",
+    "exportPdf": "Export PDF",
+    "rerunAnalysis": "Re-run Analysis",
+    "newAnalysis": "New Analysis",
+    "analysisFailed": "Analysis Failed",
+    "networkError": "Network error. Check your connection.",
+    "loadingError": "Loading error",
+    "analysisResults": "Analysis Results",
+    "summaryUnavailable": "Summary unavailable."
+  },
+  "ExecutiveSummary": {
+    "title": "Executive Summary",
+    "assessment": {
+      "daRivedere": "Needs Review",
+      "equilibrato": "Balanced",
+      "positivo": "Positive"
+    },
+    "date": "Date:",
+    "duration": "Duration:",
+    "seconds": "{count} seconds",
+    "minutesSeconds": "{minutes}m {seconds}s"
+  },
+  "Findings": {
+    "strength": "Strength",
+    "importante": "Important",
+    "consigliato": "Recommended",
+    "suggerimento": "Suggestion",
+    "clauseLabel": "Clause",
+    "explanationLabel": "Explanation",
+    "redlineLabel": "Suggested Change",
+    "strengthsTitle": "Strengths ({count})",
+    "improvementsTitle": "Areas for Improvement ({count})",
+    "importantiGroup": "Important ({count})",
+    "consigliatiGroup": "Recommended ({count})",
+    "suggerimentiGroup": "Suggestions ({count})",
+    "noFindings": "No relevant items found",
+    "noFindingsDesc": "The contract does not present significant elements with respect to the analyzed policies."
+  },
+  "SeverityCounts": {
+    "total": "Total",
+    "strengths": "Strengths",
+    "importante": "Important",
+    "consigliato": "Recommended",
+    "suggerimento": "Suggestions"
+  },
+  "History": {
+    "empty": "No analyses performed. Upload a contract to get started.",
+    "completed": "Completed",
+    "processing": "In progress",
+    "pending": "Pending",
+    "failed": "Failed",
+    "forza": "strength",
+    "importanti": "important",
+    "totali": "total",
+    "deleteTitle": "Delete contract",
+    "deleteConfirm": "Delete this contract and all its analyses?"
+  },
+  "Progress": {
+    "preparing": "Preparing document...",
+    "analyzing": "Analyzing clauses...",
+    "summarizing": "Generating summary...",
+    "completing": "Completing...",
+    "processing": "Processing...",
+    "chunkProgress": "Analyzing chunk {current}/{total}...",
+    "timeEstimate": "Usually less than 2 minutes",
+    "elapsed": "{seconds}s elapsed"
+  },
+  "Errors": {
+    "unexpected": "An unexpected error occurred",
+    "generic": "Something went wrong. Please try again in a moment.",
+    "retry": "Retry",
+    "reportLoadError": "Error loading report",
+    "reportLoadDesc": "Unable to load the report. Verify that the analysis has been completed.",
+    "backHome": "Back to home"
+  },
+  "Common": {},
+  "contractTypes": {
+    "nda": "NDA (Non-Disclosure Agreement)",
+    "nda.description": "Confidentiality agreements and protection of confidential information",
+    "serviceAgreement": "Service Agreement",
+    "serviceAgreement.description": "Professional services, consulting, and maintenance contracts",
+    "employment": "Employment Contract",
+    "employment.description": "Employee and contractor employment agreements",
+    "partnership": "Partnership Agreement",
+    "partnership.description": "Partnership and commercial collaboration agreements",
+    "purchase": "Purchase Agreement",
+    "purchase.description": "Sale of goods and services contracts",
+    "lease": "Lease Agreement",
+    "lease.description": "Real estate or equipment lease and rental contracts",
+    "license": "License Agreement",
+    "license.description": "Intellectual property, software, and trademark licensing contracts",
+    "vendor": "Vendor Agreement",
+    "vendor.description": "Supply and procurement contracts",
+    "loan": "Loan Agreement",
+    "loan.description": "Loan, mortgage, and financing contracts",
+    "distribution": "Distribution Agreement",
+    "distribution.description": "Commercial distribution and resale contracts",
+    "franchise": "Franchise Agreement",
+    "franchise.description": "Commercial franchise and affiliation contracts",
+    "other": "Other",
+    "other.description": "Other unclassified contract types"
+  },
+  "ContractMetadata": {
+    "title": "Contract Metadata",
+    "partyA": "Party A",
+    "partyB": "Party B",
+    "contractType": "Contract Type",
+    "jurisdiction": "Jurisdiction",
+    "confidence": "Confidence"
+  },
+  "jurisdictions": {
+    "italia": "Italy",
+    "eu": "European Union",
+    "usa": "United States",
+    "unknown": "Not specified"
+  },
+  "actors": {
+    "partyA": "Party A",
+    "partyB": "Party B",
+    "general": "General",
+    "risksSectionPartyA": "{partyName}",
+    "risksSectionPartyB": "{partyName}",
+    "risksSectionGeneral": "General",
+    "noRisks": "No risks identified for this party."
+  }
+}

@@ -1,0 +1,236 @@
+CONTRATTO DI LICENZA SOFTWARE E PROPRIETÀ INTELLETTUALE
+
+TRA
+
+CodeMaster Technologies S.p.A., con sede legale in Roma, Piazza del Popolo 18, Partita IVA 12345678901, capitale sociale Euro 500.000,00 i.v., iscritta al Registro Imprese di Roma, nella persona dell'Amministratore Delegato Ing. Luca Ferrara (di seguito "Licenziante")
+
+E
+
+SmartRetail Solutions S.r.l., con sede legale in Napoli, Via Toledo 55, Partita IVA 10987654321, capitale sociale Euro 50.000,00 i.v., nella persona del Presidente del CdA Dott. Antonio Russo (di seguito "Licenziatario")
+
+congiuntamente denominate "le Parti" e singolarmente "la Parte".
+
+PREMESSO CHE
+
+- Il Licenziante è titolare esclusivo dei diritti di proprietà intellettuale relativi al software denominato "RetailOS Platform" (di seguito "Software"), una piattaforma cloud-based per la gestione integrata di punti vendita retail, e-commerce, inventory management, CRM e business intelligence;
+- Il Software è protetto dalle norme italiane, europee e internazionali in materia di diritto d'autore, brevetti software, segreti commerciali e know-how industriale;
+- Il Licenziatario opera nel settore del commercio al dettaglio multi-canale e desidera utilizzare il Software per ottimizzare la gestione dei propri punti vendita e della piattaforma e-commerce;
+- Il Licenziante intende concedere al Licenziatario una licenza d'uso del Software, ai termini e alle condizioni di seguito specificati.
+
+TUTTO CIÒ PREMESSO E CONSIDERATO, LE PARTI CONVENGONO QUANTO SEGUE:
+
+ARTICOLO 1 - DEFINIZIONI
+
+1.1 "Software": il software applicativo "RetailOS Platform", comprensivo di:
+   - Codice sorgente e codice oggetto;
+   - Database, algoritmi, architettura software, design patterns;
+   - Interfacce utente (UI), interfacce di programmazione (API), documentazione tecnica;
+   - Moduli, componenti, librerie, plugin, estensioni;
+   - Aggiornamenti, patch, nuove release, versioni evolutive;
+   - Materiali di supporto: manuali utente, guide tecniche, video tutorial.
+
+1.2 "Documentazione": tutti i materiali scritti, grafici, multimediali forniti dal Licenziante relativi all'installazione, configurazione, utilizzo, manutenzione del Software.
+
+1.3 "Proprietà Intellettuale": tutti i diritti di proprietà intellettuale, inclusi diritti d'autore, brevetti, marchi, design, know-how, segreti commerciali, relativi al Software e alla Documentazione.
+
+1.4 "Territorio": tutto il territorio mondiale.
+
+1.5 "Settore": commercio al dettaglio (retail), e-commerce, distribuzione, logistica e settori affini.
+
+ARTICOLO 2 - CONCESSIONE DELLA LICENZA
+
+2.1 Il Licenziante concede al Licenziatario, che accetta, una licenza esclusiva, irrevocabile, trasferibile e sublicenziabile per l'utilizzo del Software sul Territorio e nel Settore definiti all'art. 1.
+
+2.2 La licenza comprende il diritto di:
+   - Installare, eseguire e utilizzare il Software su un numero illimitato di server, dispositivi e postazioni di lavoro;
+   - Effettuare copie di backup del Software;
+   - Modificare, adattare, personalizzare il Software per adeguarlo alle proprie esigenze operative;
+   - Integrare il Software con sistemi di terze parti;
+   - Sublicenziare il Software a società controllate, collegate, partner commerciali o clienti del Licenziatario.
+
+2.3 La licenza è perpetua e non può essere revocata, sospesa o limitata dal Licenziante per tutta la durata dei diritti di proprietà intellettuale sul Software.
+
+2.4 Il Licenziante si impegna a non concedere licenze o autorizzazioni d'uso del Software ad altri soggetti operanti nel medesimo Settore per tutta la durata del presente contratto.
+
+ARTICOLO 3 - CORRISPETTIVO E MODALITÀ DI PAGAMENTO
+
+3.1 A fronte della concessione della licenza, il Licenziatario si impegna a corrispondere al Licenziante i seguenti compensi:
+
+   a) **Canone fisso annuale**: Euro 180.000,00 (centottantamila/00) oltre IVA, da pagarsi anticipatamente entro il 31 gennaio di ogni anno per l'intero anno solare.
+
+   b) **Royalty su ricavi**: il Licenziatario corrisponderà al Licenziante una royalty pari al 15% (quindici per cento) dei ricavi lordi annuali generati dall'utilizzo del Software, inclusi:
+      - Ricavi da vendite dirette di prodotti tramite piattaforma e-commerce gestita con il Software;
+      - Ricavi da punti vendita fisici la cui gestione operativa è supportata dal Software;
+      - Ricavi da sublicenze del Software concesse a terzi;
+      - Ricavi da servizi di consulenza, formazione, supporto tecnico erogati utilizzando il Software;
+      - Qualsiasi altro ricavo diretto o indiretto derivante dallo sfruttamento commerciale del Software.
+
+   c) **Royalty minima garantita**: indipendentemente dai ricavi effettivi, il Licenziatario si impegna a corrispondere al Licenziante una royalty minima annuale di Euro 500.000,00 (cinquecentomila/00) oltre IVA. Qualora la royalty calcolata al 15% dei ricavi lordi risulti inferiore, il Licenziatario verserà comunque la royalty minima garantita.
+
+   d) **Bonus di milestone**: il Licenziatario corrisponderà al Licenziante i seguenti bonus al raggiungimento di determinate soglie di ricavi annui:
+      - Ricavi > Euro 5.000.000: bonus di Euro 200.000,00;
+      - Ricavi > Euro 10.000.000: ulteriore bonus di Euro 500.000,00;
+      - Ricavi > Euro 20.000.000: ulteriore bonus di Euro 1.000.000,00.
+
+3.2 Il canone fisso annuale è dovuto indipendentemente dall'effettivo utilizzo del Software e non è rimborsabile in nessun caso.
+
+3.3 Le royalty devono essere calcolate e versate trimestralmente, entro 15 giorni dalla chiusura di ciascun trimestre solare, previa trasmissione di un report dettagliato dei ricavi.
+
+3.4 Il Licenziante ha diritto di verificare, in qualsiasi momento e senza preavviso, i registri contabili, documenti fiscali, estratti conto bancari, fatture emesse, contratti commerciali del Licenziatario, per accertare la corretta determinazione delle royalty dovute. Il Licenziatario si impegna a garantire pieno accesso ai propri sistemi contabili e gestionali.
+
+3.5 I corrispettivi previsti dal presente articolo sono soggetti a revisione annuale automatica con incremento minimo del 5% annuo, indipendentemente dall'andamento dell'inflazione o di altri indici economici.
+
+3.6 In caso di ritardo nel pagamento, sono dovuti interessi di mora nella misura del 15% annuo, oltre al rimborso forfettario delle spese di recupero credito pari a Euro 1.000,00 per ogni sollecito inviato.
+
+ARTICOLO 4 - PROPRIETÀ INTELLETTUALE
+
+4.1 Il Licenziante è e rimane l'unico ed esclusivo titolare di tutti i diritti di proprietà intellettuale relativi al Software, inclusi diritti d'autore, brevetti, know-how, segreti commerciali, marchi, design.
+
+4.2 Il Licenziatario riconosce espressamente che la presente licenza non comporta alcun trasferimento di proprietà intellettuale, ma costituisce esclusivamente una concessione di diritti d'uso limitati e revocabili.
+
+4.3 Qualsiasi modifica, adattamento, personalizzazione, sviluppo, miglioramento o opera derivata realizzata dal Licenziatario sul Software diventa automaticamente proprietà esclusiva del Licenziante, senza che il Licenziatario possa vantare alcun diritto di comproprietà, paternità morale o compenso aggiuntivo.
+
+4.4 Il Licenziatario si impegna a comunicare tempestivamente al Licenziante qualsiasi modifica, miglioramento o sviluppo apportato al Software, fornendo la documentazione tecnica completa, il codice sorgente e ogni materiale correlato.
+
+4.5 Il Licenziante acquisisce automaticamente e senza corrispettivo tutti i diritti sulle opere derivate, con facoltà di sfruttarle commercialmente, concederle in licenza a terzi, integrarle nel Software originale o utilizzarle per qualsiasi finalità commerciale.
+
+ARTICOLO 5 - OBBLIGHI DEL LICENZIATARIO
+
+5.1 Il Licenziatario si impegna a:
+   a) Utilizzare il Software esclusivamente per le finalità previste dal presente contratto;
+   b) Non effettuare reverse engineering, decompilazione, disassemblaggio o qualsiasi altra operazione volta a risalire al codice sorgente, agli algoritmi o ai metodi operativi del Software;
+   c) Non rimuovere, alterare o oscurare avvisi di copyright, marchi, indicazioni di proprietà intellettuale presenti nel Software o nella Documentazione;
+   d) Implementare adeguate misure di sicurezza informatica per proteggere il Software da accessi non autorizzati, furti, divulgazioni;
+   e) Segnalare immediatamente al Licenziante qualsiasi violazione della sicurezza, accesso non autorizzato, furto o utilizzo improprio del Software;
+   f) Mantenere riservate tutte le informazioni tecniche, know-how, algoritmi, metodologie apprese nell'utilizzo del Software;
+   g) Non utilizzare il Software per scopi illeciti, contrari alla legge, ai regolamenti o all'ordine pubblico.
+
+5.2 Il Licenziatario si impegna a non sviluppare, commercializzare o supportare software concorrenti o alternativi rispetto al Software, né a collaborare con terzi per lo sviluppo di soluzioni competitive.
+
+5.3 Il Licenziatario è responsabile di tutti gli utilizzi del Software da parte dei propri dipendenti, collaboratori, consulenti, partner e risponde direttamente di ogni loro eventuale violazione come se fosse una propria violazione diretta.
+
+ARTICOLO 6 - GARANZIE E LIMITAZIONI DI RESPONSABILITÀ
+
+6.1 Il Licenziante garantisce che il Software è conforme alle specifiche tecniche descritte nella Documentazione ufficiale alla data di rilascio della licenza.
+
+6.2 Il Licenziante non fornisce alcuna garanzia ulteriore, espressa o implicita, relativamente a:
+   - Funzionamento ininterrotto o esente da errori del Software;
+   - Idoneità del Software per particolari scopi o esigenze operative del Licenziatario;
+   - Assenza di bug, difetti, vulnerabilità di sicurezza;
+   - Compatibilità del Software con sistemi hardware o software di terze parti;
+   - Prestazioni, velocità, scalabilità del Software.
+
+6.3 Il Software è concesso in licenza "NELLO STATO IN CUI SI TROVA" ("AS IS") senza garanzie di alcun tipo.
+
+6.4 Il Licenziante non assume alcuna responsabilità per:
+   - Perdita di dati, interruzioni operative, danni ai sistemi del Licenziatario;
+   - Danni diretti, indiretti, consequenziali, incidentali derivanti dall'utilizzo o dall'impossibilità di utilizzare il Software;
+   - Perdita di profitti, opportunità commerciali, clienti, danni reputazionali;
+   - Violazioni di sicurezza, accessi non autorizzati, data breach;
+   - Malfunzionamenti causati da errato utilizzo, modifiche non autorizzate, integrazione con sistemi incompatibili.
+
+6.5 In ogni caso, la responsabilità totale del Licenziante per qualsiasi danno derivante dal presente contratto è limitata all'importo dei canoni fissi annuali effettivamente pagati dal Licenziatario nell'anno precedente l'evento dannoso, con esclusione di qualsiasi risarcimento per danni indiretti, perdita di profitti o danno reputazionale.
+
+ARTICOLO 7 - ASSISTENZA E MANUTENZIONE
+
+7.1 Il Licenziante fornirà assistenza tecnica e supporto help desk secondo le modalità "best effort", senza alcun vincolo di tempistiche o livelli di servizio garantiti.
+
+7.2 L'assistenza è fornita in orario lavorativo (lunedì-venerdì, 09:00-18:00, esclusi festivi nazionali) tramite email o sistema di ticketing. Non è garantito supporto telefonico, assistenza on-site o interventi fuori orario.
+
+7.3 Il Licenziante rilascerà aggiornamenti, patch di sicurezza e nuove versioni del Software secondo tempistiche e modalità discrezionali, senza alcun obbligo di garantire retrocompatibilità, funzionalità esistenti o supporto per versioni precedenti.
+
+7.4 Il Licenziatario è tenuto ad installare gli aggiornamenti rilasciati entro 15 giorni dalla loro disponibilità. Il mancato aggiornamento comporta decadenza di qualsiasi garanzia e supporto tecnico.
+
+ARTICOLO 8 - DURATA E RINNOVO
+
+8.1 Il presente contratto ha durata di 10 (dieci) anni decorrenti dalla data di sottoscrizione.
+
+8.2 Alla scadenza naturale, il contratto si rinnova tacitamente per ulteriori periodi di 10 anni, salvo disdetta da comunicarsi con raccomandata A/R almeno 24 mesi prima della scadenza.
+
+8.3 Durante il primo periodo contrattuale di 10 anni, il Licenziatario non può recedere anticipatamente dal contratto se non per giusta causa grave e documentata. In caso di recesso anticipato senza giusta causa, il Licenziatario è tenuto al pagamento integrale di tutti i canoni fissi annuali residui fino alla scadenza naturale, oltre a una penale pari a Euro 2.000.000,00 (duemilioni/00).
+
+ARTICOLO 9 - OBBLIGHI DI RISERVATEZZA
+
+9.1 Il Licenziatario si impegna a mantenere strettamente riservate tutte le informazioni tecniche, know-how, algoritmi, architetture, codice sorgente, metodologie operative, specifiche tecniche, documentazione, prezzi, listini e qualsiasi altra informazione relativa al Software.
+
+9.2 Gli obblighi di riservatezza permangono per 15 anni dalla cessazione del contratto.
+
+9.3 La violazione degli obblighi di riservatezza comporta il pagamento di una penale di Euro 1.000.000,00 (unmilione/00) per ogni singola violazione, ferma restando la facoltà del Licenziante di agire per il risarcimento del maggior danno effettivamente subito.
+
+ARTICOLO 10 - DIVIETO DI CONCORRENZA POST-CONTRATTUALE
+
+10.1 Al termine del contratto per qualsiasi causa, il Licenziatario si impegna a:
+   a) Cessare immediatamente ogni utilizzo del Software e disinstallarlo da tutti i sistemi;
+   b) Distruggere tutte le copie del Software, della Documentazione e di qualsiasi materiale correlato in proprio possesso;
+   c) Restituire al Licenziante ogni supporto fisico, chiave di licenza, credenziale di accesso;
+   d) Certificare per iscritto la completa distruzione dei materiali.
+
+10.2 Per un periodo di 5 (cinque) anni dalla cessazione del contratto, il Licenziatario si impegna a non:
+   - Sviluppare, commercializzare o utilizzare software simili, concorrenti o alternativi al Software;
+   - Collaborare con concorrenti del Licenziante o fornitori di soluzioni competitive;
+   - Assumere, contattare o sollecitare dipendenti, collaboratori o consulenti del Licenziante;
+   - Utilizzare know-how, metodologie, best practice apprese nell'utilizzo del Software per sviluppare soluzioni proprie o di terzi.
+
+10.3 La violazione del divieto di concorrenza post-contrattuale comporta il pagamento di una penale di Euro 3.000.000,00 (tremilioni/00), oltre al risarcimento dell'eventuale maggior danno.
+
+ARTICOLO 11 - RISOLUZIONE PER INADEMPIMENTO
+
+11.1 Il Licenziante ha facoltà di risolvere il contratto con effetto immediato, senza obbligo di preavviso o costituzione in mora, nei seguenti casi:
+   a) Mancato pagamento anche di una sola fattura entro 15 giorni dalla scadenza;
+   b) Violazione degli obblighi di riservatezza;
+   c) Reverse engineering, decompilazione o tentativi di accesso al codice sorgente;
+   d) Sublicenza non autorizzata del Software;
+   e) Comportamento del Licenziatario lesivo della reputazione o degli interessi del Licenziante;
+   f) Apertura di procedure concorsuali, fallimento, liquidazione del Licenziatario.
+
+11.2 In caso di risoluzione per inadempimento del Licenziatario, quest'ultimo è tenuto al pagamento:
+   - Di tutti i canoni fissi annuali residui fino alla scadenza naturale del contratto;
+   - Delle royalty minime garantite residue fino alla scadenza naturale;
+   - Di una penale forfettaria di Euro 2.500.000,00 (duemilioniquincentomila/00);
+   - Del risarcimento dell'eventuale maggior danno patrimoniale e non patrimoniale.
+
+11.3 Il Licenziatario può risolvere il contratto solo in caso di grave, reiterato e documentato inadempimento del Licenziante agli obblighi di manutenzione e supporto, previa costituzione in mora con concessione di 180 giorni per l'adempimento.
+
+ARTICOLO 12 - MODIFICHE UNILATERALI
+
+12.1 Il Licenziante si riserva la facoltà di modificare unilateralmente, con preavviso scritto di 60 giorni:
+   - I corrispettivi previsti dall'art. 3 (canoni, royalty, bonus);
+   - Le modalità di calcolo delle royalty;
+   - Le percentuali di royalty;
+   - Le condizioni di assistenza tecnica;
+   - Le funzionalità del Software;
+   - I termini e le condizioni di licenza.
+
+12.2 Il Licenziatario non può opporsi alle modifiche unilaterali. L'unico rimedio riconosciuto al Licenziatario è il diritto di recedere dal contratto entro 30 giorni dalla comunicazione delle modifiche, con pagamento della penale di recesso anticipato prevista dall'art. 8.3.
+
+ARTICOLO 13 - FORO COMPETENTE E LEGGE APPLICABILE
+
+13.1 Il presente contratto è regolato dalla legge italiana.
+
+13.2 Per qualsiasi controversia relativa all'interpretazione, esecuzione o risoluzione del presente contratto, sarà esclusivamente competente il Foro di Roma.
+
+13.3 Il Licenziatario rinuncia espressamente a qualsiasi altro foro alternativo eventualmente competente.
+
+ARTICOLO 14 - DISPOSIZIONI FINALI
+
+14.1 Il presente contratto sostituisce qualsiasi precedente accordo verbale o scritto tra le Parti avente il medesimo oggetto.
+
+14.2 Eventuali allegati tecnici formano parte integrante del presente contratto.
+
+14.3 Qualora una o più disposizioni del presente contratto dovessero essere dichiarate nulle o invalide, tale nullità non pregiudica la validità ed efficacia delle restanti clausole.
+
+14.4 Il Licenziatario dichiara di aver letto, compreso e accettato integralmente tutte le clausole del presente contratto, riconoscendo che le condizioni pattuite rispondono alle proprie esigenze e aspettative commerciali.
+
+Letto, confermato e sottoscritto.
+
+Roma, 8 luglio 2024
+
+Per CodeMaster Technologies S.p.A.
+_______________________
+Ing. Luca Ferrara
+Amministratore Delegato
+
+Per SmartRetail Solutions S.r.l.
+_______________________
+Dott. Antonio Russo
+Presidente del Consiglio di Amministrazione

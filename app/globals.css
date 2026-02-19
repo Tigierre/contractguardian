@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  /* Italian Legal Theme - Serious & Professional */
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  /* Primary: Deep Blue - Authority & Trust */
+  --primary: #1e3a8a;
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+
+  /* Accent: Amber - Warning & Attention */
+  --accent: #f59e0b;
+  --accent-dark: #d97706;
+  --accent-light: #fbbf24;
+
+  /* Neutrals: Slate Grays */
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-dark: #60a5fa;
+  --primary-light: #93c5fd;
+  --accent: #fbbf24;
+  --accent-dark: #f59e0b;
+  --accent-light: #fde68a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* Base Typography */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: 700;
+}

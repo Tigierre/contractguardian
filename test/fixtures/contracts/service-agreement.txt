@@ -1,0 +1,160 @@
+CONTRATTO DI FORNITURA SERVIZI DI CONSULENZA IT
+
+TRA
+
+CloudServices Italia S.p.A., con sede legale in Torino, Corso Vittorio Emanuele II 75, Partita IVA 11223344556, iscritta al Registro Imprese di Torino n. 11223344556, nella persona del Direttore Generale Dott.ssa Stefania Ferretti (di seguito "Fornitore")
+
+E
+
+MediaGroup Europa S.r.l., con sede legale in Bologna, Via dell'Indipendenza 88, Partita IVA 66778899001, nella persona dell'Amministratore Delegato Dr. Alessandro Monti (di seguito "Cliente")
+
+congiuntamente denominate "le Parti".
+
+PREMESSO CHE
+
+- Il Fornitore svolge attività professionale di consulenza informatica, sviluppo software, gestione infrastrutture cloud, servizi di cybersecurity, manutenzione sistemi e assistenza tecnica;
+- Il Cliente necessita di servizi di consulenza specialistica per la migrazione dei propri sistemi informativi verso architetture cloud-native, implementazione di soluzioni di sicurezza informatica e supporto tecnico continuativo;
+- Le Parti intendono regolare i termini economici, tecnici e giuridici della fornitura dei servizi oggetto del presente contratto.
+
+TUTTO CIÒ PREMESSO, LE PARTI CONVENGONO E STIPULANO QUANTO SEGUE:
+
+ARTICOLO 1 - OGGETTO DEL CONTRATTO
+
+1.1 Il Fornitore si impegna a fornire al Cliente i seguenti servizi di consulenza informatica:
+   a) Analisi dell'infrastruttura IT esistente e progettazione architetturale della migrazione cloud;
+   b) Implementazione e configurazione di piattaforme cloud (AWS, Azure, Google Cloud Platform);
+   c) Sviluppo di applicazioni web e mobile custom secondo specifiche fornite dal Cliente;
+   d) Servizi di cybersecurity: audit di sicurezza, penetration testing, implementazione firewall e sistemi IDS/IPS;
+   e) Assistenza tecnica e supporto help desk dalle ore 08:00 alle 20:00, 7 giorni su 7;
+   f) Monitoraggio proattivo dell'infrastruttura con alert automatici in caso di anomalie;
+   g) Backup giornalieri dei dati e disaster recovery planning;
+   h) Formazione del personale del Cliente sulle nuove tecnologie implementate.
+
+1.2 I servizi saranno erogati secondo le modalità, tempistiche e livelli di servizio (SLA) definiti negli allegati tecnici al presente contratto.
+
+ARTICOLO 2 - DURATA
+
+2.1 Il presente contratto ha durata di 36 (trentasei) mesi decorrenti dalla data di sottoscrizione.
+
+2.2 Il contratto si rinnova tacitamente per ulteriori periodi di 36 mesi, salvo disdetta da comunicarsi con lettera raccomandata A/R almeno 12 (dodici) mesi prima della scadenza naturale.
+
+2.3 Il Cliente non può recedere anticipatamente dal contratto se non per giusta causa. In caso di recesso anticipato senza giusta causa, il Cliente è tenuto al pagamento di una penale pari al corrispettivo residuo fino alla scadenza naturale del contratto.
+
+ARTICOLO 3 - CORRISPETTIVO E MODALITÀ DI PAGAMENTO
+
+3.1 Per la fornitura dei servizi di cui all'art. 1, il Cliente si impegna a corrispondere al Fornitore un canone mensile fisso di Euro 25.000,00 (venticinquemila/00) oltre IVA, da pagarsi anticipatamente entro il giorno 5 di ciascun mese.
+
+3.2 Oltre al canone mensile fisso, il Cliente corrisponderà i seguenti costi variabili:
+   a) Interventi straordinari fuori orario: Euro 180,00/ora oltre IVA;
+   b) Sviluppo di funzionalità aggiuntive non previste: Euro 150,00/ora oltre IVA;
+   c) Costi di infrastruttura cloud: a consumo secondo fatturazione dei provider, maggiorati del 35% per gestione e amministrazione;
+   d) Licenze software di terze parti: a costo pieno, maggiorate del 25% per gestione acquisti;
+   e) Trasferte e missioni: rimborso a piè di lista con maggiorazione del 40% per spese di gestione.
+
+3.3 Il corrispettivo è soggetto a revisione annuale automatica in base all'indice ISTAT dei prezzi al consumo, con incremento minimo garantito del 3% annuo.
+
+3.4 I pagamenti devono essere effettuati entro 30 giorni data fattura tramite bonifico bancario. In caso di ritardo nel pagamento, sono dovuti interessi di mora nella misura del 12% annuo, oltre al rimborso delle spese di sollecito pari a Euro 250,00 per ogni comunicazione inviata.
+
+3.5 In caso di mancato pagamento di due fatture consecutive, il Fornitore ha facoltà di sospendere immediatamente l'erogazione dei servizi senza preavviso, fermo restando l'obbligo del Cliente di continuare a corrispondere i canoni mensili.
+
+ARTICOLO 4 - LIVELLI DI SERVIZIO (SLA)
+
+4.1 Il Fornitore garantisce i seguenti livelli di servizio:
+   - Disponibilità dei sistemi (uptime): 95% mensile calcolato su base 24/7;
+   - Tempo di risposta iniziale agli incident critici: entro 4 ore lavorative dalla segnalazione;
+   - Tempo di risoluzione incident critici: "best effort", senza garanzie temporali vincolanti;
+   - Tempo di risposta per richieste non urgenti: entro 5 giorni lavorativi.
+
+4.2 In caso di mancato rispetto degli SLA di cui al punto 4.1, il Cliente non ha diritto ad alcun rimborso, indennizzo, penale o riduzione del corrispettivo. L'unico rimedio riconosciuto al Cliente è la segnalazione scritta del disservizio per iscrizione nel registro degli incident.
+
+4.3 Sono esclusi dal calcolo dell'uptime i periodi di:
+   - Manutenzione programmata comunicata con preavviso di almeno 24 ore;
+   - Interventi di emergenza per ragioni di sicurezza;
+   - Cause di forza maggiore, inclusi guasti hardware di terze parti, interruzioni di servizi di provider esterni, attacchi informatici, disastri naturali;
+   - Comportamento improprio del Cliente o dei suoi dipendenti;
+   - Utilizzo di software o hardware non approvato dal Fornitore.
+
+ARTICOLO 5 - OBBLIGHI E RESPONSABILITÀ DEL FORNITORE
+
+5.1 Il Fornitore si impegna a eseguire i servizi con diligenza professionale, utilizzando personale qualificato e strumenti tecnologici aggiornati.
+
+5.2 Il Fornitore garantisce che i servizi saranno conformi alle normative vigenti in materia di protezione dei dati personali (GDPR) e sicurezza informatica.
+
+5.3 Il Fornitore non assume alcuna responsabilità per:
+   - Perdita di dati derivante da comportamento negligente del Cliente o da eventi non imputabili al Fornitore;
+   - Interruzioni dei servizi causate da fattori esterni al proprio controllo;
+   - Danni indiretti, consequenziali, lucro cessante, perdita di opportunità commerciali, danno reputazionale;
+   - Malfunzionamenti derivanti da modifiche apportate dal Cliente senza preventiva autorizzazione scritta del Fornitore;
+   - Attacchi informatici, virus, malware, ransomware e qualsiasi forma di intrusione nei sistemi.
+
+5.4 In ogni caso, la responsabilità totale del Fornitore per qualsiasi danno derivante dall'esecuzione del contratto è limitata all'importo dei canoni effettivamente pagati dal Cliente nei 3 (tre) mesi precedenti l'evento dannoso, con esclusione di qualsiasi risarcimento per danni indiretti, perdita di profitti o danno reputazionale.
+
+ARTICOLO 6 - OBBLIGHI DEL CLIENTE
+
+6.1 Il Cliente si impegna a:
+   a) Fornire tempestivamente tutte le informazioni, credenziali di accesso, documentazione tecnica necessaria all'esecuzione dei servizi;
+   b) Designare un referente unico per le comunicazioni con il Fornitore;
+   c) Collaborare attivamente nelle fasi di test, collaudo e rilascio delle soluzioni implementate;
+   d) Effettuare backup autonomi dei propri dati critici, in aggiunta ai backup gestiti dal Fornitore;
+   e) Astenersi da qualsiasi modifica non autorizzata ai sistemi gestiti dal Fornitore.
+
+6.2 Il Cliente è l'unico responsabile della correttezza, liceità e completezza dei dati e contenuti caricati sui sistemi.
+
+6.3 Il Cliente solleva il Fornitore da qualsiasi responsabilità per violazioni di diritti di terzi, inclusi diritti di proprietà intellettuale, derivanti dai contenuti forniti dal Cliente.
+
+ARTICOLO 7 - PROPRIETÀ INTELLETTUALE
+
+7.1 Tutti i software, script, configurazioni, documentazione tecnica, architetture, design e qualsiasi altro materiale sviluppato dal Fornitore nell'ambito del presente contratto rimangono di esclusiva proprietà del Fornitore.
+
+7.2 Al Cliente è concessa una licenza d'uso non esclusiva, non trasferibile, limitata alla durata del contratto. Alla cessazione del contratto, il Cliente deve cessare immediatamente ogni utilizzo del software e restituire o distruggere tutte le copie in suo possesso.
+
+7.3 Il Cliente non può modificare, decompilare, effettuare reverse engineering o creare opere derivate del software senza autorizzazione scritta del Fornitore.
+
+ARTICOLO 8 - RISERVATEZZA
+
+8.1 Le Parti si impegnano reciprocamente a mantenere riservate tutte le informazioni scambiate nell'ambito del contratto.
+
+8.2 Gli obblighi di riservatezza permangono per 10 anni dalla cessazione del contratto.
+
+ARTICOLO 9 - MODIFICHE E VARIAZIONI
+
+9.1 Qualsiasi modifica ai servizi richiesta dal Cliente deve essere concordata per iscritto e comporterà un adeguamento del corrispettivo secondo le tariffe orarie previste all'art. 3.2.
+
+9.2 Il Fornitore si riserva il diritto di modificare unilateralmente le caratteristiche tecniche dei servizi, le piattaforme utilizzate, i livelli di servizio e i corrispettivi, con preavviso scritto di 30 giorni.
+
+ARTICOLO 10 - RISOLUZIONE E RECESSO
+
+10.1 Il Fornitore ha facoltà di risolvere il contratto con effetto immediato, senza obbligo di preavviso, nei seguenti casi:
+   a) Mancato pagamento anche di una sola fattura;
+   b) Grave inadempimento del Cliente agli obblighi contrattuali;
+   c) Comportamento del Cliente che comprometta la reputazione o gli interessi del Fornitore.
+
+10.2 In caso di risoluzione per inadempimento del Cliente, il Fornitore ha diritto al pagamento integrale di tutti i corrispettivi fino alla scadenza naturale del contratto, oltre al risarcimento dell'eventuale maggior danno.
+
+10.3 Il Cliente può risolvere il contratto solo in caso di grave e reiterato inadempimento del Fornitore, previa costituzione in mora con concessione di 60 giorni per l'adempimento.
+
+ARTICOLO 11 - FORO COMPETENTE
+
+11.1 Per qualsiasi controversia relativa all'interpretazione, esecuzione o risoluzione del presente contratto sarà esclusivamente competente il Foro di Torino.
+
+11.2 Il Cliente rinuncia espressamente a qualsiasi altro foro alternativo eventualmente competente.
+
+ARTICOLO 12 - DISPOSIZIONI FINALI
+
+12.1 Il presente contratto sostituisce e supera qualsiasi precedente accordo verbale o scritto tra le Parti avente il medesimo oggetto.
+
+12.2 Eventuali allegati tecnici formano parte integrante del presente contratto.
+
+Letto, confermato e sottoscritto.
+
+Torino, 22 marzo 2024
+
+Per CloudServices Italia S.p.A.
+_______________________
+Dott.ssa Stefania Ferretti
+Direttore Generale
+
+Per MediaGroup Europa S.r.l.
+_______________________
+Dr. Alessandro Monti
+Amministratore Delegato

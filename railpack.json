@@ -1,0 +1,5 @@
+{
+  "apt": {
+    "packages": ["libvips-dev"]
+  }
+}
