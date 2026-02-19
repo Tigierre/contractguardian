@@ -123,6 +123,11 @@
     "backHome": "Back to home"
   },
   "Common": {},
+  "confidence": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
   "contractTypes": {
     "nda": "NDA (Non-Disclosure Agreement)",
     "nda.description": "Confidentiality agreements and protection of confidential information",

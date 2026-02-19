@@ -28,13 +28,17 @@ import {
  * Returns results immediately, DB write is non-blocking.
  */
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Parse contract ID
     const { id } = await params;
     const contractId = parseInt(id, 10);
+
+    // Read language from request body (sent by FileUploader via useLocale)
+    const body = await req.json().catch(() => ({}));
+    const requestLanguage = body.language as 'it' | 'en' | undefined;
 
     if (isNaN(contractId)) {
       throw new ValidationError('ID contratto non valido');
@@ -56,13 +60,16 @@ export async function POST(
       throw new ValidationError('Contratto senza testo estratto');
     }
 
+    // Resolve language: body > DB > fallback 'it'
+    const language: 'it' | 'en' = requestLanguage ?? (contract.language as 'it' | 'en') ?? 'it';
+
     // Execute metadata extraction with timeout
     let metadata;
     try {
       metadata = await Promise.race([
         extractContractMetadata(
           contract.originalText,
-          (contract.language as 'it' | 'en') || 'it'
+          language
         ),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Timeout pre-analisi (>25s)')), 25000)
@@ -87,6 +94,7 @@ export async function POST(
         partyB: metadata.partyB.name,
         jurisdiction: metadata.jurisdiction.jurisdiction,
         metadataConfidence: overallConfidence,
+        language,
         updatedAt: new Date(),
       })
       .where(eq(contracts.id, contractId))

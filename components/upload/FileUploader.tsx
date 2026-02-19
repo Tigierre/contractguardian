@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
 import { useState } from 'react';
 import type { UploadResponse, ApiResponse } from '@/src/types/api';
@@ -15,6 +15,7 @@ interface FileUploaderProps {
 
 export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUploaderProps = {}) {
   const t = useTranslations('Upload');
+  const locale = useLocale();
   const [state, setState] = useState<UploadState>('idle');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<UploadResponse | null>(null);
@@ -63,6 +64,8 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
       // Run pre-analysis to extract metadata
       const preRes = await fetch(`/api/contracts/${result.id}/pre-analyze`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language: locale }),
       });
       const preJson = await preRes.json();
 

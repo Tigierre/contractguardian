@@ -123,6 +123,11 @@
     "backHome": "Torna alla home"
   },
   "Common": {},
+  "confidence": {
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Bassa"
+  },
   "contractTypes": {
     "nda": "NDA (Accordo di Non Divulgazione)",
     "nda.description": "Contratti di riservatezza e protezione informazioni confidenziali",
