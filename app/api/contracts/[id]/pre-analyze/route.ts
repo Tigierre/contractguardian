@@ -65,13 +65,14 @@ export async function POST(
           (contract.language as 'it' | 'en') || 'it'
         ),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout pre-analisi')), 8000)
+          setTimeout(() => reject(new Error('Timeout pre-analisi (>25s)')), 25000)
         ),
       ]);
     } catch (error) {
-      console.error('[PreAnalysis] Extraction failed:', error);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      console.error('[PreAnalysis] Extraction failed:', errMsg);
       throw new AnalysisError(
-        'Errore durante l\'estrazione dei metadati. Riprova.'
+        `Errore durante l'estrazione dei metadati: ${errMsg}. Riprova.`
       );
     }
 
