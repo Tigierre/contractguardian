@@ -29,6 +29,22 @@ ContractGuardian is the validated prototype that solved that problem. It's open 
 
 ---
 
+## Screenshots
+
+**Home — Upload your contract**
+![Home](screenshots/Screen-01.png)
+
+**Step 1 — AI extracts contract metadata automatically**
+![Pre-analysis](screenshots/Screen-02.png)
+
+**Step 2 — Validate metadata before running the full analysis**
+![Validation](screenshots/Screen-03.png)
+
+**Step 3 — Structured report with findings per actor, severity classification and legal norm citations**
+![Report](screenshots/Screen-04.png)
+
+---
+
 ## Features
 
 ### v1.0 — Core Pipeline
