@@ -29,6 +29,19 @@ ContractGuardian is the validated prototype that solved that problem. It's open 
 
 ---
 
+## Screenshots
+
+**Home — Upload your contract**
+![Home](screenshots/screenshot-1.png)
+
+**Step 1 — AI extracts and validates contract metadata**
+![Metadata Validation](screenshots/screenshot-2.png)
+
+**Step 2 — Full analysis report with per-actor findings**
+![Analysis Report](screenshots/screenshot-3.png)
+
+---
+
 ## Features
 
 ### v1.0 — Core Pipeline
