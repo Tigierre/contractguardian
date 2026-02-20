@@ -97,24 +97,22 @@ The only hard dependency is a PostgreSQL database and an OpenAI API key.
 
 ### Prerequisites
 - Node.js 20+
-- A [Supabase](https://supabase.com) project
+- A PostgreSQL database ([Supabase](https://supabase.com), [Neon](https://neon.tech), self-hosted, or any compatible provider)
 - An [OpenAI](https://platform.openai.com) API key
 
 ### Setup
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/contractguardian.git
+git clone https://github.com/Tigierre/contractguardian.git
 cd contractguardian
 
 # 2. Copy the environment template
 cp .env.example .env.local
 
 # 3. Fill in the required variables (see .env.example for guidance)
-#    - DATABASE_URL        → Supabase PostgreSQL connection string
-#    - NEXT_PUBLIC_SUPABASE_URL
-#    - NEXT_PUBLIC_SUPABASE_ANON_KEY
-#    - OPENAI_API_KEY
+#    - DATABASE_URL     → PostgreSQL connection string
+#    - OPENAI_API_KEY   → from platform.openai.com
 
 # 4. Install dependencies
 npm install
@@ -132,11 +130,11 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | Yes | Supabase PostgreSQL connection string |
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anon (public) key |
+| `DATABASE_URL` | Yes | PostgreSQL connection string (any compatible provider) |
 | `OPENAI_API_KEY` | Yes | OpenAI API key (GPT-4o-mini) |
 | `NEXT_PUBLIC_APP_URL` | No | Base URL for the app (default: `http://localhost:3000`) |
+| `NEXT_PUBLIC_SUPABASE_URL` | No | Supabase project URL (only if using Supabase Auth — not used in v1) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No | Supabase anon key (only if using Supabase Auth — not used in v1) |
 
 ---
 

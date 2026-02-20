@@ -111,7 +111,7 @@ export async function withRetry<T>(
       // Rate limit - retry with backoff
       if (error instanceof OpenAI.RateLimitError) {
         const delay = baseDelayMs * Math.pow(2, attempt);
-        console.log(
+        console.warn(
           `[AI] Rate limit hit (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`
         );
         await sleep(delay);
@@ -121,7 +121,7 @@ export async function withRetry<T>(
       // Connection error - retry with backoff
       if (error instanceof OpenAI.APIConnectionError) {
         const delay = baseDelayMs * Math.pow(2, attempt);
-        console.log(
+        console.warn(
           `[AI] Connection error (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`
         );
         await sleep(delay);
