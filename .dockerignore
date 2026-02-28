@@ -1,0 +1,39 @@
+# Dependencies (reinstalled in container)
+node_modules
+npm-debug.log*
+
+# Build output (rebuilt in container)
+.next
+
+# Environment files (injected at runtime, never baked)
+.env*
+!.env.example
+
+# Development and IDE
+.git
+.gitignore
+.vscode
+.idea
+*.md
+LICENSE
+
+# Planning and Claude config
+.planning
+.claude
+
+# Docker files (avoid recursive context)
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Railway config (not needed in container)
+railway.json
+railpack.json
+
+# Testing
+coverage
+scripts/test-*.ts
+
+# Database dev tools
+db/seed.ts
+drizzle.config.ts
