@@ -4,6 +4,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)
 ![Railway](https://img.shields.io/badge/Railway-deploy-B53BFF?style=flat-square&logo=railway)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)
 
 **Automated AI-powered contract analysis. Identify legal and business risks before you sign.**
@@ -151,6 +152,43 @@ Steps:
 4. Railway will auto-detect the build command and deploy
 
 For production, use the **Session pooling** Supabase connection string (port `5432`) in `DATABASE_URL`.
+
+---
+
+## Docker
+
+You can build and run ContractGuardian as a Docker container on any platform.
+
+### Build the image
+
+```bash
+docker build -t contractguardian .
+```
+
+### Run the container
+
+```bash
+docker run -p 3000:3000 \
+  -e DATABASE_URL="postgresql://user:password@host:5432/postgres" \
+  -e OPENAI_API_KEY="sk-proj-xxx" \
+  contractguardian
+```
+
+Or pass all variables from a file:
+
+```bash
+docker run -p 3000:3000 --env-file .env.local contractguardian
+```
+
+The container runs as a non-root user (`nextjs`), listens on port 3000 by default, and reads `PORT` from the environment if you need a different port.
+
+### A note on portability
+
+The current implementation is built on **Supabase** (PostgreSQL) and deployed to **Railway**. The Dockerfile and standalone build are provider-agnostic — they work anywhere Docker runs.
+
+Migrating to a different infrastructure (e.g. Azure, AWS, GCP) requires adapting the database connection string and, potentially, the storage/auth configuration. The codebase uses standard PostgreSQL via Drizzle ORM, so switching database providers is straightforward as long as the target is PostgreSQL-compatible.
+
+Contributions to improve portability are welcome — open an issue or PR.
 
 ---
 
