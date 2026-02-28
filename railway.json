@@ -5,7 +5,7 @@
     "buildCommand": "npm run build"
   },
   "deploy": {
-    "startCommand": "NODE_OPTIONS='--no-deprecation' next start -p ${PORT:-3000}",
+    "startCommand": "NODE_OPTIONS='--no-deprecation' node .next/standalone/server.js",
     "healthcheckPath": "/api/health",
     "healthcheckTimeout": 30,
     "restartPolicyType": "ON_FAILURE",
