@@ -88,3 +88,13 @@ export interface EnhancedFindingResult extends FindingResult {
   actor: 'partyA' | 'partyB' | 'general' | null;
   normIds: string[];
 }
+
+export interface MergeContractsRequest {
+  contractIds: number[];
+  language: 'it' | 'en';
+}
+
+export interface MergeContractsResponse {
+  contractId: number;
+  filename: string;
+}

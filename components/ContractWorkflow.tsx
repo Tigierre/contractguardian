@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FileUploader } from '@/components/upload/FileUploader';
+import { BatchUploader } from '@/components/upload/BatchUploader';
 import { MetadataValidationCard } from '@/components/validation/MetadataValidationCard';
 import { useRouter } from '@/i18n/navigation';
 import type { PreAnalysis } from '@/lib/ai/schemas';
@@ -44,8 +44,8 @@ export function ContractWorkflow() {
   }
 
   return (
-    <FileUploader
-      onPreAnalysisComplete={handlePreAnalysisComplete}
+    <BatchUploader
+      onSingleFileComplete={handlePreAnalysisComplete}
     />
   );
 }
