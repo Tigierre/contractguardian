@@ -30,8 +30,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Runtime system dependencies for sharp (image processing) and Tesseract.js
-RUN apk add --no-cache libvips-dev
+# Runtime system dependencies for sharp (image processing) and Tesseract.js.
+# Note: Alpine renamed libvips-dev to vips-dev starting from Alpine 3.20
+# (used by node:20-alpine since late 2024).
+RUN apk add --no-cache vips-dev
 
 # Create non-root user and group for security
 RUN addgroup --system --gid 1001 nodejs
