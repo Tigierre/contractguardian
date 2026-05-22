@@ -8,7 +8,7 @@
  */
 
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { openai } from './client';
+import { openai, MODEL_ANALISI } from './client';
 import {
   EnhancedChunkAnalysisSchema,
   ExecutiveSummarySchema,
@@ -22,8 +22,6 @@ import { queryNormsByTypeAndJurisdiction, type LegalNorm, type Jurisdiction } fr
 import type { ContractTypeId } from '@/lib/taxonomies/contract-types';
 import * as itEnhancedPrompts from './prompts/it-enhanced';
 import * as enEnhancedPrompts from './prompts/en-enhanced';
-
-const MODEL = 'gpt-4o-mini';
 
 /**
  * Validated metadata for enhanced analysis
@@ -75,13 +73,13 @@ export async function analyzeChunkEnhanced(
 
   return withRetry(async () => {
     const response = await openai.chat.completions.parse({
-      model: MODEL,
+      model: MODEL_ANALISI,
+      reasoning_effort: 'medium',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       response_format: zodResponseFormat(EnhancedChunkAnalysisSchema, 'enhanced_analysis'),
-      temperature: 0.3,
     });
 
     const parsed = response.choices[0]?.message?.parsed;
@@ -163,13 +161,13 @@ Generate:
 
   return withRetry(async () => {
     const response = await openai.chat.completions.parse({
-      model: MODEL,
+      model: MODEL_ANALISI,
+      reasoning_effort: 'medium',
       messages: [
         { role: 'system', content: systemPromptText },
         { role: 'user', content: summaryPrompt },
       ],
       response_format: zodResponseFormat(ExecutiveSummarySchema, 'executive_summary'),
-      temperature: 0.3,
     });
 
     const parsed = response.choices[0]?.message?.parsed;

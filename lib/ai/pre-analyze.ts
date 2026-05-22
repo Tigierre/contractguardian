@@ -8,7 +8,7 @@
  */
 
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { openai } from './client';
+import { openai, MODEL_PREANALISI } from './client';
 import {
   PreAnalysisSchema,
   type PreAnalysis,
@@ -23,8 +23,6 @@ import {
   buildPreAnalysisSystemPrompt as buildEnSystemPrompt,
   buildPreAnalysisUserPrompt as buildEnUserPrompt,
 } from './prompts/en-pre-analysis';
-
-const MODEL = 'gpt-4o-mini';
 
 /**
  * Length of header excerpt (first N chars)
@@ -115,13 +113,15 @@ export async function extractContractMetadata(
   // Call OpenAI with retry logic
   return withRetry(async () => {
     const response = await openai.chat.completions.parse({
-      model: MODEL,
+      model: MODEL_PREANALISI,
+      // GPT-5.x: niente `temperature`. reasoning_effort 'minimal' —
+      // l'estrazione metadati è un triage leggero.
+      reasoning_effort: 'minimal',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       response_format: zodResponseFormat(PreAnalysisSchema, 'pre_analysis'),
-      temperature: 0.3,
     });
 
     // Check for refusal

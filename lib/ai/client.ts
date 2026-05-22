@@ -17,20 +17,26 @@ if (!process.env.OPENAI_API_KEY) {
 /**
  * Configured OpenAI client instance
  *
- * Uses GPT-4o-mini by default for cost-effective contract analysis.
  * The client is shared across the application to manage rate limits
- * and connection pooling efficiently.
- *
- * @example
- * ```typescript
- * import { openai } from '@/lib/ai/client';
- *
- * const response = await openai.chat.completions.create({
- *   model: 'gpt-4o-mini',
- *   messages: [{ role: 'user', content: 'Hello' }],
- * });
- * ```
+ * and connection pooling efficiently. I modelli usati per l'analisi
+ * sono definiti sotto (MODEL_PREANALISI, MODEL_ANALISI).
  */
 export const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY?.replace(/[^\x20-\x7E]/g, ''),
 });
+
+/**
+ * Modello per la pre-analisi (estrazione metadati / triage).
+ * Default gpt-5.4-nano: veloce ed economico, tarato su estrazione dati.
+ * Override via env `OPENAI_MODEL_PREANALYSIS`.
+ */
+export const MODEL_PREANALISI =
+  process.env.OPENAI_MODEL_PREANALYSIS?.trim() || 'gpt-5.4-nano';
+
+/**
+ * Modello per l'analisi delle clausole (chunk analysis + executive summary).
+ * Default gpt-5.4-mini: qualità sul ragionamento legale, dove conta.
+ * Override via env `OPENAI_MODEL_ANALYSIS`.
+ */
+export const MODEL_ANALISI =
+  process.env.OPENAI_MODEL_ANALYSIS?.trim() || 'gpt-5.4-mini';

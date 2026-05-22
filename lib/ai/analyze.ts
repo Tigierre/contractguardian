@@ -8,7 +8,7 @@
  */
 
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { openai } from './client';
+import { openai, MODEL_ANALISI } from './client';
 import {
   ChunkAnalysisSchema,
   ExecutiveSummarySchema,
@@ -20,8 +20,6 @@ import { withRetry, AIError, AI_ERROR_CODES, AI_ERROR_MESSAGES } from './retry';
 import type { Policy } from '@/db/schema';
 import * as itPrompts from './prompts/it';
 import * as enPrompts from './prompts/en';
-
-const MODEL = 'gpt-4o-mini';
 
 /**
  * Analyze a single chunk of contract text from a specific perspective
@@ -39,13 +37,13 @@ export async function analyzeChunk(
 
   return withRetry(async () => {
     const response = await openai.chat.completions.parse({
-      model: MODEL,
+      model: MODEL_ANALISI,
+      reasoning_effort: 'medium',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       response_format: zodResponseFormat(ChunkAnalysisSchema, 'chunk_analysis'),
-      temperature: 0.3,
     });
 
     const parsed = response.choices[0]?.message?.parsed;
@@ -72,13 +70,13 @@ export async function generateExecutiveSummary(
 
   return withRetry(async () => {
     const response = await openai.chat.completions.parse({
-      model: MODEL,
+      model: MODEL_ANALISI,
+      reasoning_effort: 'medium',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       response_format: zodResponseFormat(ExecutiveSummarySchema, 'executive_summary'),
-      temperature: 0.3,
     });
 
     const parsed = response.choices[0]?.message?.parsed;
