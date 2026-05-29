@@ -250,6 +250,34 @@ API throws `relation "contracts" does not exist`.
 migrations folder and the script are copied into the runner stage
 explicitly — the standalone tracer does not include `.sql` files on its own.
 
+The script also copies `drizzle-orm` and `postgres` from the deps stage:
+Next.js standalone bundles them into `server.js` but does not preserve
+them as resolvable packages in `node_modules`, so a plain Node.js script
+cannot `import` them otherwise.
+
+### 3. Drizzle SQL migrations must be in git
+
+A Prisma-style `db/migrations/*.sql` exclusion in `.gitignore` is a
+foot-gun with Drizzle. Drizzle's `meta/_journal.json` references each
+`.sql` file by name and applies them at runtime; without the files in
+the repository, every fresh container starts with an empty database and
+never converges. Keep the SQL files committed — they are not "generated
+artifacts" in the Prisma sense, they are the authoritative description
+of the schema.
+
+### 4. OpenAI `reasoning_effort` values changed for GPT-5.x
+
+Older GPT-5 nano accepted `reasoning_effort: 'minimal'`. The current
+`gpt-5.4-nano` (the default for pre-analysis) only accepts
+`'none' | 'low' | 'medium' | 'high' | 'xhigh'`, and returns a 400
+`invalid_request_error` for `'minimal'`. ContractGuardian uses `'low'`
+for pre-analysis (a light triage) and `'medium'` for the deep analysis
+pass.
+
+If you pin a different model via `OPENAI_MODEL_PREANALYSIS` /
+`OPENAI_MODEL_ANALYSIS`, verify which `reasoning_effort` values it
+accepts — OpenAI changes the supported scale between model generations.
+
 ---
 
 ## Roadmap — v2 ideas
