@@ -114,9 +114,11 @@ export async function extractContractMetadata(
   return withRetry(async () => {
     const response = await openai.chat.completions.parse({
       model: MODEL_PREANALISI,
-      // GPT-5.x: niente `temperature`. reasoning_effort 'minimal' —
-      // l'estrazione metadati è un triage leggero.
-      reasoning_effort: 'minimal',
+      // GPT-5.x: niente `temperature`. reasoning_effort 'low' —
+      // l'estrazione metadati è un triage leggero (gpt-5.4-nano accetta
+      // solo none/low/medium/high/xhigh; 'minimal' del vecchio nano non
+      // e' piu' valido).
+      reasoning_effort: 'low',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
