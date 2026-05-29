@@ -41,8 +41,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# database migrations (generated)
-db/migrations/*.sql
+# Drizzle SQL migrations are committed (alongside meta/) so a fresh deploy
+# can reproduce the schema. The previous exclusion was a leftover convention
+# from Prisma-style setups and broke first-boot deploys on any new host.
 
 # claude code
 .claude/
