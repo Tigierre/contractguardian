@@ -182,13 +182,73 @@ docker run -p 3000:3000 --env-file .env.local contractguardian
 
 The container runs as a non-root user (`nextjs`), listens on port 3000 by default, and reads `PORT` from the environment if you need a different port.
 
+### Migrations on boot
+
+The container entrypoint applies any pending Drizzle migrations from
+`./db/migrations` **before** starting the server. This means you do not need
+to run `npm run db:migrate` manually after a deploy — point the container at
+an empty (or up-to-date) PostgreSQL database and it converges. Applied
+migrations are tracked in the `__drizzle_migrations` table, so re-runs are
+idempotent.
+
+If you prefer to manage migrations out of band, leave `DATABASE_URL` set but
+remove the `./db/migrations` folder from the image; the entrypoint will skip
+the step.
+
 ### A note on portability
 
 The current implementation is built on **Supabase** (PostgreSQL) and deployed to **Railway**. The Dockerfile and standalone build are provider-agnostic — they work anywhere Docker runs.
 
+It has been tested in production on:
+- **Railway** (the original deploy target)
+- **Coolify on a self-hosted VPS** (Hetzner) with Traefik forward-auth via Authentik
+
 Migrating to a different infrastructure (e.g. Azure, AWS, GCP) requires adapting the database connection string and, potentially, the storage/auth configuration. The codebase uses standard PostgreSQL via Drizzle ORM, so switching database providers is straightforward as long as the target is PostgreSQL-compatible.
 
 Contributions to improve portability are welcome — open an issue or PR.
+
+---
+
+## Known gotchas when self-hosting
+
+Two issues you may hit when building the Docker image on your own
+infrastructure (anything not Railway). Both are fixed in the current
+Dockerfile — documented here so future contributors don't re-introduce them.
+
+### 1. `pdf-parse` and Next.js standalone tracing
+
+`pdf-parse@1.x` ships a debug autotest at the top of its `index.js` that
+reads `./test/data/05-versions-space.pdf` the first time the module is
+required when `module.parent` is falsy. Next.js' standalone output traces
+required modules but does **not** copy the test fixture, so at runtime the
+package crashes with:
+
+```
+Error: ENOENT: no such file or directory, open './test/data/05-versions-space.pdf'
+```
+
+The crash bubbles up as an HTML error page from `/api/upload`, and the
+client sees `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`.
+
+**Fix:** import the internal file directly, bypassing the autotest:
+
+```ts
+// lib/pdf/extractor.ts
+const pdfParse = require('pdf-parse/lib/pdf-parse.js'); // ✓
+// const pdfParse = require('pdf-parse');                // ✗ crashes
+```
+
+### 2. Migrations are not auto-run by Next.js
+
+`next start` (or the standalone `server.js`) does not touch your database
+schema. On a fresh deploy this leaves the `contracts` table missing and the
+API throws `relation "contracts" does not exist`.
+
+**Fix:** the Dockerfile uses a `docker-entrypoint.sh` that runs
+`scripts/migrate.mjs` (a small standalone script using
+`drizzle-orm/postgres-js/migrator`) before `exec node server.js`. The
+migrations folder and the script are copied into the runner stage
+explicitly — the standalone tracer does not include `.sql` files on its own.
 
 ---
 

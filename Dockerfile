@@ -51,8 +51,16 @@ COPY --from=builder /app/public ./public
 # Copy messages directory required by next-intl i18n at runtime
 COPY --from=builder /app/messages ./messages
 
+# Copy DB migrations + boot-time migration runner.
+# Next.js standalone tracing does NOT copy .sql files or scripts/, so we add
+# them explicitly. The entrypoint applies pending migrations on every boot.
+COPY --from=builder /app/db/migrations ./db/migrations
+COPY --from=builder /app/scripts/migrate.mjs ./scripts/migrate.mjs
+COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
+
 # Set ownership of .next directory to the non-root user
-RUN chown -R nextjs:nodejs .next
+RUN chown -R nextjs:nodejs .next db scripts docker-entrypoint.sh
 
 # Switch to non-root user
 USER nextjs
@@ -62,5 +70,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the standalone server (not `next start` or `npm start`)
-CMD ["node", "server.js"]
+# Apply migrations, then start the standalone server.
+CMD ["./docker-entrypoint.sh"]
