@@ -51,13 +51,16 @@ COPY --from=builder /app/public ./public
 # Copy messages directory required by next-intl i18n at runtime
 COPY --from=builder /app/messages ./messages
 
-# Copy DB migrations + boot-time migration runner.
-# Next.js standalone tracing does NOT copy .sql files or scripts/, so we add
-# them explicitly. The entrypoint applies pending migrations on every boot.
-COPY --from=builder /app/db/migrations ./db/migrations
-COPY --from=builder /app/scripts/migrate.mjs ./scripts/migrate.mjs
-COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
-RUN chmod +x ./docker-entrypoint.sh
+# Copy DB migrations + boot-time migration runner from the build context
+# (not from --from=builder, which can lose non-traced files in some setups).
+# Next.js standalone does NOT include .sql files or arbitrary scripts/.
+# The entrypoint applies pending migrations on every boot.
+COPY db/migrations ./db/migrations
+COPY scripts/migrate.mjs ./scripts/migrate.mjs
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh \
+ && echo "[build] migrations folder contents:" \
+ && ls -1 ./db/migrations
 
 # Next.js standalone bundles drizzle-orm + postgres into server.js but does
 # NOT copy them as separate packages, so our standalone migrate.mjs script
