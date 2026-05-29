@@ -21,9 +21,19 @@ import { deduplicateFindings, sortFindings } from './deduplicate';
 import type { Finding, EnhancedFinding } from './schemas';
 
 /**
- * Analysis timeout in milliseconds (5 minutes)
+ * Analysis timeout in milliseconds (10 minutes).
+ * Each chunk is one gpt-5.4-mini call with reasoning_effort=medium, ~20-60s.
+ * A typical multi-page contract produces 5-15 chunks. We parallelize at
+ * CHUNK_BATCH_SIZE, but 10 min gives headroom for very long contracts.
  */
-const ANALYSIS_TIMEOUT_MS = 5 * 60 * 1000;
+const ANALYSIS_TIMEOUT_MS = 10 * 60 * 1000;
+
+/**
+ * How many chunk-analysis calls to run in parallel.
+ * 3 is a safe ceiling: low enough not to trip OpenAI tier-1 RPM limits,
+ * high enough to cut wall-clock by ~3x on multi-chunk contracts.
+ */
+const CHUNK_BATCH_SIZE = 3;
 
 /**
  * Create a timeout promise that rejects after specified ms
@@ -159,15 +169,14 @@ export async function runAnalysis(
     // Get language from contract (default to 'it' for backward compatibility)
     const language: 'it' | 'en' = (contract.language as 'it' | 'en') ?? 'it';
 
-    // 5. Analyze each chunk
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i];
-      if (!chunk) continue;
-
-      const progressMsg = `Analisi chunk ${i + 1}/${totalChunks}...`;
+    // 5. Analyze chunks in parallel batches (see CHUNK_BATCH_SIZE).
+    for (let i = 0; i < chunks.length; i += CHUNK_BATCH_SIZE) {
+      const batch = chunks.slice(i, i + CHUNK_BATCH_SIZE);
+      const lastInBatch = Math.min(i + batch.length, totalChunks);
+      const progressMsg = `Analisi chunk ${lastInBatch}/${totalChunks}...`;
       onProgress?.({
         status: 'analyzing',
-        currentChunk: i + 1,
+        currentChunk: lastInBatch,
         totalChunks,
         message: progressMsg,
       });
@@ -178,13 +187,21 @@ export async function runAnalysis(
         .set({
           progressStage: 'analyzing',
           progressDetail: progressMsg,
-          currentChunk: i + 1,
+          currentChunk: lastInBatch,
         })
         .where(eq(analyses.id, analysisId));
 
       const perspectiveValue = perspective ?? 'cliente';
-      const result = await analyzeChunk(chunk.text, allPolicies, i, perspectiveValue, language);
-      allFindings = [...allFindings, ...result.findings];
+      const results = await Promise.all(
+        batch.map((chunk, j) =>
+          chunk
+            ? analyzeChunk(chunk.text, allPolicies, i + j, perspectiveValue, language)
+            : Promise.resolve({ findings: [] as Finding[] })
+        )
+      );
+      for (const r of results) {
+        allFindings = [...allFindings, ...r.findings];
+      }
     }
 
     // 6. Deduplicate and sort
@@ -405,37 +422,40 @@ export async function runEnhancedAnalysis(
         // Get language from contract (default to 'it' for backward compatibility)
         const language: 'it' | 'en' = (contract.language as 'it' | 'en') ?? 'it';
 
-        // 6. Analyze each chunk with enhanced context
-        for (let i = 0; i < chunks.length; i++) {
-          const chunk = chunks[i];
-          if (!chunk) continue;
-
-          const progressMsg = `Analisi chunk ${i + 1}/${totalChunks}...`;
+        // 6. Analyze chunks in parallel batches.
+        // Sequential `for` loop x ~30s per chunk hit the 5min wall easily;
+        // batching cuts wall-clock by CHUNK_BATCH_SIZE while keeping
+        // request rate within OpenAI's default tier-1 limits.
+        for (let i = 0; i < chunks.length; i += CHUNK_BATCH_SIZE) {
+          const batch = chunks.slice(i, i + CHUNK_BATCH_SIZE);
+          const lastInBatch = Math.min(i + batch.length, totalChunks);
+          const progressMsg = `Analisi chunk ${lastInBatch}/${totalChunks}...`;
           onProgress?.({
             status: 'analyzing',
-            currentChunk: i + 1,
+            currentChunk: lastInBatch,
             totalChunks,
             message: progressMsg,
           });
 
-          // Update DB progress
           await db
             .update(analyses)
             .set({
               progressStage: 'analyzing',
               progressDetail: progressMsg,
-              currentChunk: i + 1,
+              currentChunk: lastInBatch,
             })
             .where(eq(analyses.id, analysisId));
 
-          const result = await analyzeChunkEnhanced(
-            chunk.text,
-            allPolicies,
-            i,
-            metadata,
-            language
+          const results = await Promise.all(
+            batch.map((chunk, j) =>
+              chunk
+                ? analyzeChunkEnhanced(chunk.text, allPolicies, i + j, metadata, language)
+                : Promise.resolve({ findings: [] as EnhancedFinding[] })
+            )
           );
-          allFindings = [...allFindings, ...result.findings];
+          for (const r of results) {
+            allFindings = [...allFindings, ...r.findings];
+          }
         }
 
         // 7. Deduplicate and sort
