@@ -8,9 +8,13 @@
  * @module lib/pdf/extractor
  */
 
-// pdf-parse v1 uses CommonJS default export
+// pdf-parse v1 uses CommonJS default export.
+// IMPORTANT: import the internal module path, not the package root.
+// The root index.js contains a debug autotest that tries to read
+// ./test/data/05-versions-space.pdf at runtime, which doesn't exist
+// in Next.js standalone production builds (ENOENT crash on first call).
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require('pdf-parse');
+const pdfParse = require('pdf-parse/lib/pdf-parse.js');
 
 /** Minimum text length required for a valid extraction */
 const MIN_TEXT_LENGTH = 50;
