@@ -59,6 +59,13 @@ COPY --from=builder /app/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 
+# Next.js standalone bundles drizzle-orm + postgres into server.js but does
+# NOT copy them as separate packages, so our standalone migrate.mjs script
+# cannot resolve them at runtime. Copy the two packages explicitly from the
+# deps stage. Both are zero-runtime-deps, so no transitive copies needed.
+COPY --from=deps /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
+COPY --from=deps /app/node_modules/postgres ./node_modules/postgres
+
 # Set ownership of .next directory to the non-root user
 RUN chown -R nextjs:nodejs .next db scripts docker-entrypoint.sh
 
