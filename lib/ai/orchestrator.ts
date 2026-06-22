@@ -18,22 +18,64 @@ import { chunkContract } from './chunker';
 import { analyzeChunk, generateExecutiveSummary } from './analyze';
 import { analyzeChunkEnhanced, generateEnhancedExecutiveSummary, type ValidatedMetadata } from './enhanced-analyze';
 import { deduplicateFindings, sortFindings } from './deduplicate';
+import { withAnalysisSlot } from './concurrency';
 import type { Finding, EnhancedFinding } from './schemas';
 
 /**
- * Analysis timeout in milliseconds (10 minutes).
+ * Analysis timeout in milliseconds (default 10 minutes). Override via ANALYSIS_TIMEOUT_MS.
  * Each chunk is one gpt-5.4-mini call with reasoning_effort=medium, ~20-60s.
- * A typical multi-page contract produces 5-15 chunks. We parallelize at
- * CHUNK_BATCH_SIZE, but 10 min gives headroom for very long contracts.
+ * A typical multi-page contract produces 5-15 chunks, parallelized at CHUNK_BATCH_SIZE;
+ * 10 min gives headroom for very long contracts and garbage-collects stuck runs.
  */
-const ANALYSIS_TIMEOUT_MS = 10 * 60 * 1000;
+const ANALYSIS_TIMEOUT_MS = Math.max(
+  60_000,
+  Number(process.env.ANALYSIS_TIMEOUT_MS) || 10 * 60 * 1000
+);
 
 /**
- * How many chunk-analysis calls to run in parallel.
- * 3 is a safe ceiling: low enough not to trip OpenAI tier-1 RPM limits,
- * high enough to cut wall-clock by ~3x on multi-chunk contracts.
+ * How many chunk-analysis calls to run in parallel within a single analysis.
+ * Default 3: low enough not to trip OpenAI tier-1 RPM limits, high enough to cut
+ * wall-clock by ~3x on multi-chunk contracts. Override via CHUNK_BATCH_SIZE.
  */
-const CHUNK_BATCH_SIZE = 3;
+const CHUNK_BATCH_SIZE = Math.max(1, Number(process.env.CHUNK_BATCH_SIZE) || 3);
+
+/**
+ * Hard ceiling on chunks analyzed per contract (CPERF-2): bounds cost and
+ * wall-clock for pathologically long documents. Beyond this the analysis covers
+ * the first ANALYSIS_MAX_CHUNKS chunks and flags the truncation in the executive
+ * summary. Override via ANALYSIS_MAX_CHUNKS.
+ */
+const ANALYSIS_MAX_CHUNKS = Math.max(1, Number(process.env.ANALYSIS_MAX_CHUNKS) || 40);
+
+/** Human-readable timeout message, kept in sync with the configured timeout. */
+const TIMEOUT_MESSAGE = `Analisi scaduta: tempo massimo superato (${Math.round(
+  ANALYSIS_TIMEOUT_MS / 60_000
+)} minuti)`;
+
+/**
+ * Cap the chunk list at ANALYSIS_MAX_CHUNKS and report whether truncation happened.
+ * Returns the (possibly shortened) chunks plus the original count for the warning.
+ */
+function capChunks<T>(chunks: T[]): { chunks: T[]; truncated: boolean; originalCount: number } {
+  const originalCount = chunks.length;
+  const truncated = originalCount > ANALYSIS_MAX_CHUNKS;
+  return {
+    chunks: truncated ? chunks.slice(0, ANALYSIS_MAX_CHUNKS) : chunks,
+    truncated,
+    originalCount,
+  };
+}
+
+/**
+ * Localized note prepended to the executive summary when chunks were capped,
+ * so the user knows the analysis did not cover the whole document.
+ */
+function truncationNote(truncated: boolean, originalCount: number, language: 'it' | 'en'): string {
+  if (!truncated) return '';
+  return language === 'en'
+    ? `> ⚠️ Document very long: analysis limited to the first ${ANALYSIS_MAX_CHUNKS} of ${originalCount} sections.\n\n`
+    : `> ⚠️ Documento molto lungo: analisi limitata alle prime ${ANALYSIS_MAX_CHUNKS} sezioni su ${originalCount}.\n\n`;
+}
 
 /**
  * Create a timeout promise that rejects after specified ms
@@ -142,8 +184,9 @@ export async function runAnalysis(
   }
 
   try {
-    // Race the analysis pipeline against timeout
-    await Promise.race([
+    // Bound concurrent analyses (CPERF-2), then race the pipeline against timeout.
+    await withAnalysisSlot(
+      () => Promise.race([
       // Main analysis pipeline
       (async () => {
         // 4. Chunking stage
@@ -156,7 +199,9 @@ export async function runAnalysis(
           })
           .where(eq(analyses.id, analysisId));
 
-    const { chunks, totalChunks } = chunkContract(contract.originalText);
+    const capped = capChunks(chunkContract(contract.originalText).chunks);
+    const chunks = capped.chunks;
+    const totalChunks = chunks.length;
 
     // Update total chunks for progress calculation
     await db
@@ -219,6 +264,8 @@ export async function runAnalysis(
 
     const perspectiveForSummary = perspective ?? 'cliente';
     const summary = await generateExecutiveSummary(uniqueFindings, contract.filename, perspectiveForSummary, language);
+    const summaryText =
+      truncationNote(capped.truncated, capped.originalCount, language) + summary.summary;
 
     // 8. Count by type and priority
     const counts = {
@@ -244,7 +291,7 @@ export async function runAnalysis(
       .set({
         status: 'completed',
         completedAt: new Date(),
-        executiveSummary: summary.summary,
+        executiveSummary: summaryText,
         totalFindings: uniqueFindings.length,
         importanteCount: counts.importante,
         consigliatoCount: counts.consigliato,
@@ -279,11 +326,17 @@ export async function runAnalysis(
       })(),
 
       // Timeout promise
-      createTimeout(
-        ANALYSIS_TIMEOUT_MS,
-        'Analisi scaduta: tempo massimo superato (5 minuti)'
-      ),
-    ]);
+      createTimeout(ANALYSIS_TIMEOUT_MS, TIMEOUT_MESSAGE),
+    ]),
+      // onQueued: surface the in-process wait while a slot frees up.
+      async () => {
+        onProgress?.({ status: 'chunking', message: 'In coda...' });
+        await db
+          .update(analyses)
+          .set({ progressStage: 'chunking', progressDetail: 'In coda (limite analisi concorrenti)...' })
+          .where(eq(analyses.id, analysisId));
+      }
+    );
 
     return analysisId;
   } catch (error) {
@@ -395,8 +448,9 @@ export async function runEnhancedAnalysis(
   }
 
   try {
-    // Race the analysis pipeline against timeout
-    await Promise.race([
+    // Bound concurrent analyses (CPERF-2), then race the pipeline against timeout.
+    await withAnalysisSlot(
+      () => Promise.race([
       // Main analysis pipeline
       (async () => {
         // 5. Chunking stage
@@ -409,7 +463,9 @@ export async function runEnhancedAnalysis(
           })
           .where(eq(analyses.id, analysisId));
 
-        const { chunks, totalChunks } = chunkContract(contract.originalText);
+        const capped = capChunks(chunkContract(contract.originalText).chunks);
+        const chunks = capped.chunks;
+        const totalChunks = chunks.length;
 
         // Update total chunks for progress calculation
         await db
@@ -481,6 +537,8 @@ export async function runEnhancedAnalysis(
           metadata.partyB,
           language
         );
+        const summaryText =
+          truncationNote(capped.truncated, capped.originalCount, language) + summary.summary;
 
         // 9. Count by type and priority
         const counts = {
@@ -506,7 +564,7 @@ export async function runEnhancedAnalysis(
           .set({
             status: 'completed',
             completedAt: new Date(),
-            executiveSummary: summary.summary,
+            executiveSummary: summaryText,
             totalFindings: uniqueFindings.length,
             importanteCount: counts.importante,
             consigliatoCount: counts.consigliato,
@@ -543,11 +601,17 @@ export async function runEnhancedAnalysis(
       })(),
 
       // Timeout promise
-      createTimeout(
-        ANALYSIS_TIMEOUT_MS,
-        'Analisi scaduta: tempo massimo superato (5 minuti)'
-      ),
-    ]);
+      createTimeout(ANALYSIS_TIMEOUT_MS, TIMEOUT_MESSAGE),
+    ]),
+      // onQueued: surface the in-process wait while a slot frees up.
+      async () => {
+        onProgress?.({ status: 'chunking', message: 'In coda...' });
+        await db
+          .update(analyses)
+          .set({ progressStage: 'chunking', progressDetail: 'In coda (limite analisi concorrenti)...' })
+          .where(eq(analyses.id, analysisId));
+      }
+    );
 
     return analysisId;
   } catch (error) {
