@@ -17,7 +17,10 @@ import {
   createErrorResponse,
   ValidationError,
   NotFoundError,
+  ForbiddenError,
 } from '@/lib/errors';
+import { requireIdentity, assertSameOrigin, clientIp } from '@/lib/auth/context';
+import { writeAudit } from '@/lib/audit/audit';
 import { ZodError } from 'zod/v4';
 
 /**
@@ -31,6 +34,9 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    assertSameOrigin(req);
+    const me = requireIdentity(req);
+
     // Parse contract ID
     const { id } = await params;
     const contractId = parseInt(id, 10);
@@ -39,14 +45,14 @@ export async function PATCH(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB
+    // Fetch contract from DB + ownership
     const [contract] = await db
       .select()
       .from(contracts)
       .where(eq(contracts.id, contractId))
       .limit(1);
 
-    if (!contract) {
+    if (!contract || contract.owner !== me.username) {
       throw new NotFoundError('Contratto non trovato');
     }
 
@@ -67,6 +73,12 @@ export async function PATCH(
         updatedAt: validatedAt,
       })
       .where(eq(contracts.id, contractId));
+
+    await writeAudit({
+      actor: me.username, actorGroups: me.declaredGroups,
+      action: 'metadata.validate', entity: 'contract', entityId: contractId,
+      ip: clientIp(req), detail: { contractType: validated.contractType },
+    });
 
     // Return success
     return NextResponse.json(
@@ -97,7 +109,11 @@ export async function PATCH(
     }
 
     // Handle known errors
-    if (error instanceof ValidationError || error instanceof NotFoundError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof NotFoundError ||
+      error instanceof ForbiddenError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

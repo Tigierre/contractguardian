@@ -189,6 +189,30 @@ export class NotFoundError extends AppError {
 }
 
 // =============================================================================
+// Authorization Errors (403)
+// =============================================================================
+
+/**
+ * Authorization / access errors.
+ *
+ * Use for:
+ * - Missing Authentik identity (app must run behind forward-auth)
+ * - Cross-origin (CSRF) requests on mutating endpoints
+ * - Access to a resource owned by another user
+ *
+ * @example
+ * ```typescript
+ * throw new ForbiddenError('Origine non consentita');
+ * ```
+ */
+export class ForbiddenError extends AppError {
+  constructor(message: string = 'Accesso non consentito') {
+    super('FORBIDDEN', message, 403);
+    this.name = 'ForbiddenError';
+  }
+}
+
+// =============================================================================
 // Database Errors (500)
 // =============================================================================
 

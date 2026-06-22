@@ -8,24 +8,40 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
-import { analyses } from '@/db/schema';
+import { analyses, contracts } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import {
   createSuccessResponse,
   createErrorResponse,
   ValidationError,
+  NotFoundError,
+  ForbiddenError,
 } from '@/lib/errors';
+import { requireIdentity } from '@/lib/auth/context';
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const me = requireIdentity(req);
+
     const { id } = await params;
     const contractId = parseInt(id, 10);
 
     if (isNaN(contractId)) {
       throw new ValidationError('ID contratto non valido');
+    }
+
+    // Ownership: il contratto dev'essere del chiamante
+    const [contract] = await db
+      .select({ owner: contracts.owner })
+      .from(contracts)
+      .where(eq(contracts.id, contractId))
+      .limit(1);
+
+    if (!contract || contract.owner !== me.username) {
+      throw new NotFoundError('Contratto non trovato');
     }
 
     const contractAnalyses = await db
@@ -53,7 +69,11 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Get contract analyses error:', error);
 
-    if (error instanceof ValidationError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof NotFoundError ||
+      error instanceof ForbiddenError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

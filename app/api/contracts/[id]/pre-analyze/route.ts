@@ -19,7 +19,9 @@ import {
   ValidationError,
   NotFoundError,
   AnalysisError,
+  ForbiddenError,
 } from '@/lib/errors';
+import { requireIdentity, assertSameOrigin } from '@/lib/auth/context';
 
 /**
  * POST handler - Trigger pre-analysis metadata extraction
@@ -32,6 +34,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    assertSameOrigin(req);
+    const me = requireIdentity(req);
+
     // Parse contract ID
     const { id } = await params;
     const contractId = parseInt(id, 10);
@@ -44,14 +49,14 @@ export async function POST(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB
+    // Fetch contract from DB + ownership
     const [contract] = await db
       .select()
       .from(contracts)
       .where(eq(contracts.id, contractId))
       .limit(1);
 
-    if (!contract) {
+    if (!contract || contract.owner !== me.username) {
       throw new NotFoundError('Contratto non trovato');
     }
 
@@ -122,7 +127,8 @@ export async function POST(
     if (
       error instanceof ValidationError ||
       error instanceof NotFoundError ||
-      error instanceof AnalysisError
+      error instanceof AnalysisError ||
+      error instanceof ForbiddenError
     ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
@@ -143,10 +149,12 @@ export async function POST(
  * Returns 404 if pre-analysis not yet executed.
  */
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const me = requireIdentity(req);
+
     // Parse contract ID
     const { id } = await params;
     const contractId = parseInt(id, 10);
@@ -155,14 +163,14 @@ export async function GET(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB
+    // Fetch contract from DB + ownership
     const [contract] = await db
       .select()
       .from(contracts)
       .where(eq(contracts.id, contractId))
       .limit(1);
 
-    if (!contract) {
+    if (!contract || contract.owner !== me.username) {
       throw new NotFoundError('Contratto non trovato');
     }
 
@@ -188,7 +196,11 @@ export async function GET(
   } catch (error: unknown) {
     console.error('[PreAnalysis] GET error:', error);
 
-    if (error instanceof ValidationError || error instanceof NotFoundError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof NotFoundError ||
+      error instanceof ForbiddenError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

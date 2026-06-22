@@ -23,13 +23,20 @@ import {
   ValidationError,
   ExtractionError,
   DatabaseError,
+  ForbiddenError,
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/errors';
+import { requireIdentity, assertSameOrigin, clientIp } from '@/lib/auth/context';
+import { writeAudit } from '@/lib/audit/audit';
 import type { UploadResponse } from '@/src/types/api';
 
 export async function POST(req: NextRequest) {
   try {
+    // CSRF same-origin (F5) + identità Authentik obbligatoria (ownership/audit).
+    assertSameOrigin(req);
+    const me = requireIdentity(req);
+
     // 1. Parse multipart/form-data using Next.js 15 native formData
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
@@ -88,6 +95,7 @@ export async function POST(req: NextRequest) {
           filename: file.name,
           originalText: extractedText,
           status: 'uploaded',
+          owner: me.username,
         })
         .returning();
 
@@ -113,6 +121,16 @@ export async function POST(req: NextRequest) {
       qualityWarning,
     };
 
+    await writeAudit({
+      actor: me.username,
+      actorGroups: me.declaredGroups,
+      action: 'contract.upload',
+      entity: 'contract',
+      entityId: contract.id,
+      ip: clientIp(req),
+      detail: { filename: file.name, pageCount, extractionMethod },
+    });
+
     return NextResponse.json(createSuccessResponse(responseData), {
       status: 201,
     });
@@ -123,7 +141,8 @@ export async function POST(req: NextRequest) {
     if (
       error instanceof ValidationError ||
       error instanceof ExtractionError ||
-      error instanceof DatabaseError
+      error instanceof DatabaseError ||
+      error instanceof ForbiddenError
     ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,

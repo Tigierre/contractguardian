@@ -22,13 +22,19 @@ import type { Jurisdiction } from '@/lib/legal-norms/query';
 import {
   ValidationError,
   AnalysisError,
+  ForbiddenError,
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/errors';
+import { requireIdentity, assertSameOrigin, clientIp } from '@/lib/auth/context';
+import { writeAudit } from '@/lib/audit/audit';
 import { AIError, AI_ERROR_CODES } from '@/lib/ai/retry';
 
 export async function POST(req: NextRequest) {
   try {
+    assertSameOrigin(req);
+    const me = requireIdentity(req);
+
     const body = await req.json();
     const { contractId, language } = body;
 
@@ -39,14 +45,14 @@ export async function POST(req: NextRequest) {
     // Validate language if provided
     const contractLanguage: 'it' | 'en' = language && ['it', 'en'].includes(language) ? language : 'it';
 
-    // Verify contract exists
+    // Verify contract exists + ownership (non si analizzano contratti altrui)
     const [contract] = await db
       .select()
       .from(contracts)
       .where(eq(contracts.id, contractId))
       .limit(1);
 
-    if (!contract) {
+    if (!contract || contract.owner !== me.username) {
       throw new ValidationError(`Contratto ${contractId} non trovato`);
     }
 
@@ -91,6 +97,12 @@ export async function POST(req: NextRequest) {
     }
 
     const analysisId = newAnalysis.id;
+
+    await writeAudit({
+      actor: me.username, actorGroups: me.declaredGroups,
+      action: 'analysis.start', entity: 'analysis', entityId: analysisId,
+      ip: clientIp(req), detail: { contractId },
+    });
 
     // Check if contract has validated metadata to determine which analysis flow to use
     const hasValidatedMetadata = contract.metadataValidatedAt !== null;
@@ -143,7 +155,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error('Analyze error:', error);
 
-    if (error instanceof ValidationError) {
+    if (error instanceof ValidationError || error instanceof ForbiddenError) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

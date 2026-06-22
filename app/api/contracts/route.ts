@@ -1,14 +1,18 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts, analyses } from '@/db/schema';
 import { desc, eq } from 'drizzle-orm';
-import { createSuccessResponse, createErrorResponse } from '@/lib/errors';
+import { createSuccessResponse, createErrorResponse, ForbiddenError } from '@/lib/errors';
+import { requireIdentity } from '@/lib/auth/context';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    // Ownership: ogni utente vede solo i propri contratti (CG-1).
+    const me = requireIdentity(req);
     const allContracts = await db
       .select()
       .from(contracts)
+      .where(eq(contracts.owner, me.username))
       .orderBy(desc(contracts.createdAt));
 
     const result = await Promise.all(
@@ -48,6 +52,9 @@ export async function GET() {
     return NextResponse.json(createSuccessResponse(result));
   } catch (error: unknown) {
     console.error('Contracts list error:', error);
+    if (error instanceof ForbiddenError) {
+      return NextResponse.json(createErrorResponse(error), { status: error.statusCode });
+    }
     return NextResponse.json(
       createErrorResponse(error),
       { status: 500 }

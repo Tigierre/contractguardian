@@ -15,13 +15,19 @@ import {
   createErrorResponse,
   ValidationError,
   NotFoundError,
+  ForbiddenError,
 } from '@/lib/errors';
+import { requireIdentity, assertSameOrigin, clientIp } from '@/lib/auth/context';
+import { writeAudit } from '@/lib/audit/audit';
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    assertSameOrigin(req);
+    const me = requireIdentity(req);
+
     const { id } = await params;
     const contractId = parseInt(id, 10);
 
@@ -29,14 +35,21 @@ export async function DELETE(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Check contract exists
+    // Check contract exists + ownership (404 anche se di un altro utente: non si rivela l'esistenza)
     const [contract] = await db
-      .select({ id: contracts.id })
+      .select({ id: contracts.id, owner: contracts.owner })
       .from(contracts)
       .where(eq(contracts.id, contractId))
       .limit(1);
 
-    if (!contract) {
+    if (!contract || contract.owner !== me.username) {
+      if (contract) {
+        await writeAudit({
+          actor: me.username, actorGroups: me.declaredGroups,
+          action: 'contract.delete', entity: 'contract', entityId: contractId,
+          outcome: 'denied', ip: clientIp(req), detail: { reason: 'not-owner' },
+        });
+      }
       throw new NotFoundError('Contratto non trovato');
     }
 
@@ -57,13 +70,23 @@ export async function DELETE(
     // Delete contract
     await db.delete(contracts).where(eq(contracts.id, contractId));
 
+    await writeAudit({
+      actor: me.username, actorGroups: me.declaredGroups,
+      action: 'contract.delete', entity: 'contract', entityId: contractId,
+      ip: clientIp(req), detail: { analysesDeleted: contractAnalyses.length },
+    });
+
     return NextResponse.json(
       createSuccessResponse({ deleted: true, contractId })
     );
   } catch (error: unknown) {
     console.error('Delete contract error:', error);
 
-    if (error instanceof ValidationError || error instanceof NotFoundError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof NotFoundError ||
+      error instanceof ForbiddenError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

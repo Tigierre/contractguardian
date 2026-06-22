@@ -7,13 +7,18 @@ import {
   createErrorResponse,
   ValidationError,
   NotFoundError,
+  ForbiddenError,
 } from '@/lib/errors';
+import { requireIdentity, clientIp } from '@/lib/auth/context';
+import { writeAudit } from '@/lib/audit/audit';
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const me = requireIdentity(req);
+
     const { id } = await params;
     const analysisId = parseInt(id, 10);
 
@@ -43,7 +48,7 @@ export async function GET(
       .where(eq(contracts.id, analysis.contractId))
       .limit(1);
 
-    if (!contract) {
+    if (!contract || contract.owner !== me.username) {
       throw new NotFoundError('Contratto associato non trovato');
     }
 
@@ -162,6 +167,12 @@ export async function GET(
       .replace(/\.pdf$/i, '')
       .replace(/[^a-zA-Z0-9_-]/g, '_');
 
+    await writeAudit({
+      actor: me.username, actorGroups: me.declaredGroups,
+      action: 'report.export', entity: 'report', entityId: analysisId,
+      ip: clientIp(req), detail: { contractId: contract.id, findings: analysisFindings.length },
+    });
+
     return new NextResponse(Buffer.from(pdfBytes), {
       headers: {
         'Content-Type': 'application/pdf',
@@ -172,7 +183,11 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Export PDF error:', error);
 
-    if (error instanceof ValidationError || error instanceof NotFoundError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof NotFoundError ||
+      error instanceof ForbiddenError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

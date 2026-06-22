@@ -14,17 +14,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
-import { inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import {
   ValidationError,
   DatabaseError,
+  ForbiddenError,
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/errors';
+import { requireIdentity, assertSameOrigin, clientIp } from '@/lib/auth/context';
+import { writeAudit } from '@/lib/audit/audit';
 import type { MergeContractsRequest, MergeContractsResponse } from '@/src/types/api';
 
 export async function POST(req: NextRequest) {
   try {
+    assertSameOrigin(req);
+    const me = requireIdentity(req);
+
     const body: MergeContractsRequest = await req.json();
     const { contractIds, language: rawLanguage } = body;
     const language: 'it' | 'en' = rawLanguage === 'en' ? 'en' : 'it';
@@ -37,7 +43,7 @@ export async function POST(req: NextRequest) {
       throw new ValidationError('Massimo 10 file per unione');
     }
 
-    // Fetch all contracts in the order provided
+    // Fetch only contracts OWNED by the caller (ownership: non si uniscono altrui)
     const rows = await db
       .select({
         id: contracts.id,
@@ -45,7 +51,7 @@ export async function POST(req: NextRequest) {
         originalText: contracts.originalText,
       })
       .from(contracts)
-      .where(inArray(contracts.id, contractIds));
+      .where(and(inArray(contracts.id, contractIds), eq(contracts.owner, me.username)));
 
     // Sort by the order of contractIds (preserves upload order)
     const sortedRows = contractIds
@@ -65,20 +71,29 @@ export async function POST(req: NextRequest) {
       .join('\n\n')
       .trim();
 
-    // Create merged contract
+    // Create merged contract (owned by the caller)
     const [merged] = await db.insert(contracts).values({
       filename: combinedFilename,
       originalText: combinedText,
       status: 'uploaded',
       language,
+      owner: me.username,
     }).returning();
 
     if (!merged) {
       throw new DatabaseError('Errore durante la creazione del contratto unito');
     }
 
-    // Delete temporary contracts
-    await db.delete(contracts).where(inArray(contracts.id, contractIds));
+    // Delete only the temporary contracts that were actually merged (owned ids),
+    // mai gli id passati ma non posseduti (non si toccano i contratti altrui).
+    const mergedIds = sortedRows.map((r) => r.id);
+    await db.delete(contracts).where(inArray(contracts.id, mergedIds));
+
+    await writeAudit({
+      actor: me.username, actorGroups: me.declaredGroups,
+      action: 'contract.merge', entity: 'contract', entityId: merged.id,
+      ip: clientIp(req), detail: { mergedFrom: mergedIds, count: mergedIds.length },
+    });
 
     return NextResponse.json(
       createSuccessResponse<MergeContractsResponse>({
@@ -90,7 +105,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error('Merge contracts error:', error);
 
-    if (error instanceof ValidationError) {
+    if (error instanceof ValidationError || error instanceof ForbiddenError) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });
