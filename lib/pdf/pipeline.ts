@@ -52,9 +52,23 @@ export async function extractText(buffer: Buffer): Promise<ExtractionPipelineRes
     );
   }
 
-  const qualityWarning = ocr.confidence < OCR_CONFIDENCE_WARNING
-    ? `La qualità dell'estrazione OCR è moderata (${ocr.confidence}%). Verifica i risultati dell'analisi.`
-    : undefined;
+  const warnings: string[] = [];
+
+  if (ocr.truncated) {
+    warnings.push(
+      `Il documento ha ${ocr.pageCount} pagine: l'OCR è stato limitato alle prime ` +
+      `${ocr.pagesProcessed} per contenere i tempi di elaborazione. ` +
+      'L\'analisi coprirà solo la parte estratta.'
+    );
+  }
+
+  if (ocr.confidence < OCR_CONFIDENCE_WARNING) {
+    warnings.push(
+      `La qualità dell'estrazione OCR è moderata (${ocr.confidence}%). Verifica i risultati dell'analisi.`
+    );
+  }
+
+  const qualityWarning = warnings.length > 0 ? warnings.join(' ') : undefined;
 
   return {
     text: ocr.text,
