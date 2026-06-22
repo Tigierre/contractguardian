@@ -102,7 +102,25 @@
     "importanti": "importanti",
     "totali": "totali",
     "deleteTitle": "Elimina contratto",
-    "deleteConfirm": "Eliminare questo contratto e tutte le sue analisi?"
+    "deleteConfirm": "Il contratto e le sue analisi verranno spostati nel cestino. Un amministratore potrà ripristinarli entro 20 giorni; dopo, l'eliminazione è definitiva.",
+    "deleteConfirmButton": "Sposta nel cestino",
+    "cancel": "Annulla"
+  },
+  "Trash": {
+    "title": "Cestino",
+    "linkLabel": "Cestino",
+    "subtitle": "I contratti eliminati restano recuperabili per {days} giorni, poi vengono rimossi definitivamente.",
+    "loading": "Caricamento del cestino…",
+    "forbidden": "Area riservata agli amministratori.",
+    "empty": "Il cestino è vuoto.",
+    "owner": "Proprietario",
+    "deletedBy": "Eliminato da",
+    "daysLeft": "{n} giorni rimasti",
+    "expired": "Scaduto",
+    "restore": "Ripristina",
+    "emptyTrash": "Svuota cestino",
+    "emptyConfirm": "Eliminare definitivamente tutti i contratti nel cestino? L'operazione non è reversibile.",
+    "cancel": "Annulla"
   },
   "Progress": {
     "preparing": "Preparazione documento...",

@@ -1,5 +1,6 @@
 import 'server-only';
 import type { NextRequest } from 'next/server';
+import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { ForbiddenError } from '@/lib/errors';
 
 // =============================================================================
@@ -102,4 +103,93 @@ export function clientIp(req: Request): string | null {
   const xff = req.headers.get('x-forwarded-for');
   if (xff) return xff.split(',')[0]!.trim() || null;
   return req.headers.get('x-real-ip');
+}
+
+// =============================================================================
+// Autorizzazione per ruolo (admin) — gruppi dal JWT VALIDATO, non dall'header
+// =============================================================================
+// Il ripristino di un contratto cestinato (e lo svuota-cestino) è riservato
+// all'admin. Il privilegio NON si deriva dall'header testuale `X-authentik-groups`
+// (falsificabile da chi raggiunge il backend, vedi avviso in testa al file): si
+// deriva dal claim `groups` del JWT `X-authentik-jwt` VALIDATO contro il JWKS di
+// Authentik (firma + exp/nbf [+ iss/aud se configurati]). Stesso pattern del
+// portale (src/lib/auth.ts, hardening F3/HI-4), riusato per uniformità d'hub.
+//
+// Fail-closed: se il JWT manca o non valida, isAdmin = false.
+// -----------------------------------------------------------------------------
+
+function env(name: string): string | undefined {
+  const v = process.env[name];
+  return v && v.trim() ? v.trim() : undefined;
+}
+
+// I gruppi-admin: una o più label Authentik separate da virgola (CG_ADMIN_GROUP).
+function adminGroups(): string[] {
+  return (env('CG_ADMIN_GROUP') ?? '')
+    .split(',')
+    .map((g) => g.trim())
+    .filter(Boolean);
+}
+
+// JWKS remoto cachato per URL (jose gestisce cache + refresh delle chiavi).
+const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
+
+function getJwks(url: string) {
+  let jwks = jwksCache.get(url);
+  if (!jwks) {
+    jwks = createRemoteJWKSet(new URL(url));
+    jwksCache.set(url, jwks);
+  }
+  return jwks;
+}
+
+/** Risolve l'URL del JWKS: env esplicita → header runtime dell'outpost. */
+function resolveJwksUrl(h: HeaderSource): string | null {
+  return env('AUTHENTIK_JWKS_URL') ?? h.get('x-authentik-meta-jwks') ?? null;
+}
+
+/** Gruppi AUTOREVOLI dal JWT validato col JWKS. `[]` se il JWT manca/non valida. */
+async function verifyGroups(h: HeaderSource): Promise<string[]> {
+  const jwt = h.get('x-authentik-jwt');
+  const jwksUrl = resolveJwksUrl(h);
+  if (!jwt || !jwksUrl) return [];
+  try {
+    const issuer = env('AUTHENTIK_JWT_ISSUER');
+    const audience = env('AUTHENTIK_JWT_AUDIENCE');
+    const { payload } = await jwtVerify(jwt, getJwks(jwksUrl), {
+      ...(issuer ? { issuer } : {}),
+      ...(audience ? { audience } : {}),
+      clockTolerance: 30, // tolleranza minima per skew d'orologio
+    });
+    const claim = (payload as JWTPayload & { groups?: unknown }).groups;
+    return Array.isArray(claim) ? claim.filter((g): g is string => typeof g === 'string') : [];
+  } catch (e) {
+    // Firma/scadenza/issuer non validi → nessun gruppo autorevole (fail-closed).
+    console.error('[auth] verifica JWT fallita:', e instanceof Error ? e.message : e);
+    return [];
+  }
+}
+
+/** true se l'utente appartiene a un gruppo-admin, derivato dai SOLI gruppi validati. */
+export async function isAdmin(req: { headers: HeaderSource }): Promise<boolean> {
+  const wanted = adminGroups();
+  if (wanted.length === 0) return false; // nessun gruppo-admin configurato → nessuno è admin
+  const groups = await verifyGroups(req.headers);
+  return groups.some((g) => wanted.includes(g));
+}
+
+/**
+ * Identità OBBLIGATORIA + privilegio admin. Lancia ForbiddenError (403) se non admin.
+ * In sviluppo (no Authentik), `CG_DEV_ADMIN=true` concede l'admin all'utente fittizio
+ * così il flusso di ripristino/cestino è testabile in locale (come CG_DEV_USER).
+ */
+export async function requireAdmin(req: { headers: HeaderSource }): Promise<Identity> {
+  const id = requireIdentity(req);
+  if (process.env.NODE_ENV !== 'production' && !id.fromProxy && env('CG_DEV_ADMIN') === 'true') {
+    return id;
+  }
+  if (!(await isAdmin(req))) {
+    throw new ForbiddenError('Azione riservata agli amministratori');
+  }
+  return id;
 }

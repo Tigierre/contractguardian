@@ -13,7 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { analyses, findings, contracts } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -44,7 +44,8 @@ export async function GET(
       throw new NotFoundError('Analisi non trovata');
     }
 
-    // Load contract to get party names
+    // Load contract to get party names — escluso se cestinato (CG-8): un'analisi
+    // il cui contratto è nel cestino non dev'essere più consultabile.
     const [contract] = await db
       .select({
         partyA: contracts.partyA,
@@ -55,8 +56,13 @@ export async function GET(
         metadataValidatedAt: contracts.metadataValidatedAt,
       })
       .from(contracts)
-      .where(eq(contracts.id, analysis.contractId))
+      .where(and(eq(contracts.id, analysis.contractId), isNull(contracts.deletedAt)))
       .limit(1);
+
+    if (!contract) {
+      // Contratto inesistente o cestinato → l'analisi non è consultabile.
+      throw new NotFoundError('Analisi non trovata');
+    }
 
     // Load findings if analysis is completed
     let analysisFindings: Array<{

@@ -13,6 +13,13 @@ export const contracts = pgTable('contracts', {
   language: text('language').notNull().default('it'), // 'it' | 'en'
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
+  // Soft-delete (CG-8, migrazione 0005). "Eliminare" marca la riga come cestinata
+  // invece di cancellarla: deletedAt = istante del cestinamento, deletedBy = chi l'ha
+  // fatto. Le letture escludono i cestinati (deletedAt IS NULL). Ripristino = solo
+  // admin entro 20 giorni; oltre il cap, purge fisico. Gli indici (FK + cestino) sono
+  // nella migrazione SQL, non qui (stessa prassi degli indici di audit_log).
+  deletedAt: timestamp('deleted_at', { mode: 'date' }), // NULL = attivo, valorizzato = cestinato
+  deletedBy: text('deleted_by'), // username Authentik di chi ha eliminato (contesto/audit)
   // Pre-analysis metadata (v1.1)
   contractType: text('contract_type'), // 'servizio' | 'vendita' | 'consulenza' | 'nda' | 'altro'
   partyA: text('party_a'), // Nome parte A (es. fornitore)

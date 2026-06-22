@@ -8,8 +8,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
-import { contracts, analyses, findings } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { contracts } from '@/db/schema';
+import { and, eq, isNull } from 'drizzle-orm';
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -35,11 +35,12 @@ export async function DELETE(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Check contract exists + ownership (404 anche se di un altro utente: non si rivela l'esistenza)
+    // Check contract exists + ownership + non già cestinato (404 in tutti gli altri casi:
+    // non si rivela l'esistenza di un contratto altrui né di uno già nel cestino).
     const [contract] = await db
       .select({ id: contracts.id, owner: contracts.owner })
       .from(contracts)
-      .where(eq(contracts.id, contractId))
+      .where(and(eq(contracts.id, contractId), isNull(contracts.deletedAt)))
       .limit(1);
 
     if (!contract || contract.owner !== me.username) {
@@ -53,31 +54,22 @@ export async function DELETE(
       throw new NotFoundError('Contratto non trovato');
     }
 
-    // Get all analyses for this contract
-    const contractAnalyses = await db
-      .select({ id: analyses.id })
-      .from(analyses)
-      .where(eq(analyses.contractId, contractId));
-
-    // Delete findings for each analysis
-    for (const analysis of contractAnalyses) {
-      await db.delete(findings).where(eq(findings.analysisId, analysis.id));
-    }
-
-    // Delete analyses
-    await db.delete(analyses).where(eq(analyses.contractId, contractId));
-
-    // Delete contract
-    await db.delete(contracts).where(eq(contracts.id, contractId));
+    // Soft-delete (CG-8): si marca la riga come cestinata invece di cancellarla.
+    // Le analisi/findings restano e tornano visibili se l'admin ripristina entro il
+    // cap di retention; oltre il cap il purge a cascata le rimuove definitivamente.
+    await db
+      .update(contracts)
+      .set({ deletedAt: new Date(), deletedBy: me.username })
+      .where(eq(contracts.id, contractId));
 
     await writeAudit({
       actor: me.username, actorGroups: me.declaredGroups,
       action: 'contract.delete', entity: 'contract', entityId: contractId,
-      ip: clientIp(req), detail: { analysesDeleted: contractAnalyses.length },
+      ip: clientIp(req), detail: { soft: true },
     });
 
     return NextResponse.json(
-      createSuccessResponse({ deleted: true, contractId })
+      createSuccessResponse({ deleted: true, contractId, soft: true })
     );
   } catch (error: unknown) {
     console.error('Delete contract error:', error);

@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import type { ApiResponse } from '@/src/types/api';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 
 interface ContractWithAnalysis {
   id: number;
@@ -26,6 +27,8 @@ export function AnalysisHistoryList() {
   const [contracts, setContracts] = useState<ContractWithAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
+  // Contratto in attesa di conferma di eliminazione (apre il ConfirmDialog).
+  const [pendingDelete, setPendingDelete] = useState<number | null>(null);
 
   const STATUS_BADGE: Record<string, { label: string; style: string }> = {
     completed: { label: t('completed'), style: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' },
@@ -45,10 +48,15 @@ export function AnalysisHistoryList() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (e: React.MouseEvent, contractId: number) => {
+  // Lo stop propagation evita che il click sul cestino apra anche il report.
+  const askDelete = (e: React.MouseEvent, contractId: number) => {
     e.stopPropagation();
-    if (!confirm(t('deleteConfirm'))) return;
+    setPendingDelete(contractId);
+  };
 
+  const confirmDelete = async () => {
+    const contractId = pendingDelete;
+    if (contractId == null) return;
     setDeleting(contractId);
     try {
       const res = await fetch(`/api/contracts/${contractId}`, { method: 'DELETE' });
@@ -58,6 +66,7 @@ export function AnalysisHistoryList() {
       }
     } finally {
       setDeleting(null);
+      setPendingDelete(null);
     }
   };
 
@@ -85,7 +94,19 @@ export function AnalysisHistoryList() {
   }
 
   return (
-    <div className="space-y-2">
+    <>
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title={t('deleteTitle')}
+        message={t('deleteConfirm')}
+        confirmLabel={t('deleteConfirmButton')}
+        cancelLabel={t('cancel')}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+        busy={deleting !== null}
+        danger
+      />
+      <div className="space-y-2">
       {contracts.map((c) => {
         const status = c.analysisStatus ? STATUS_BADGE[c.analysisStatus] ?? STATUS_BADGE.pending : null;
         const hasReport = c.analysisId && c.analysisStatus === 'completed';
@@ -145,7 +166,7 @@ export function AnalysisHistoryList() {
               )}
 
               <button
-                onClick={(e) => handleDelete(e, c.id)}
+                onClick={(e) => askDelete(e, c.id)}
                 disabled={deleting === c.id}
                 className="flex-shrink-0 p-1.5 text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 transition-colors rounded hover:bg-red-50 dark:hover:bg-red-900/20"
                 title={t('deleteTitle')}
@@ -162,6 +183,7 @@ export function AnalysisHistoryList() {
           </div>
         );
       })}
-    </div>
+      </div>
+    </>
   );
 }

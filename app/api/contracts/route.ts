@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts, analyses } from '@/db/schema';
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { createSuccessResponse, createErrorResponse, ForbiddenError } from '@/lib/errors';
 import { requireIdentity } from '@/lib/auth/context';
+import { purgeExpiredDeletedThrottled } from '@/lib/contracts/retention';
 
 export async function GET(req: NextRequest) {
   try {
     // Ownership: ogni utente vede solo i propri contratti (CG-1).
     const me = requireIdentity(req);
+    // Rete di sicurezza retention: purga (throttled) i contratti cestinati oltre il cap.
+    await purgeExpiredDeletedThrottled();
     const allContracts = await db
       .select()
       .from(contracts)
-      .where(eq(contracts.owner, me.username))
+      // Esclude i cestinati (soft-delete CG-8): deletedAt IS NULL = solo contratti attivi.
+      .where(and(eq(contracts.owner, me.username), isNull(contracts.deletedAt)))
       .orderBy(desc(contracts.createdAt));
 
     const result = await Promise.all(

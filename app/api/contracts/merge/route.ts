@@ -14,7 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 import {
   ValidationError,
   DatabaseError,
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         originalText: contracts.originalText,
       })
       .from(contracts)
-      .where(and(inArray(contracts.id, contractIds), eq(contracts.owner, me.username)));
+      .where(and(inArray(contracts.id, contractIds), eq(contracts.owner, me.username), isNull(contracts.deletedAt)));
 
     // Sort by the order of contractIds (preserves upload order)
     const sortedRows = contractIds
@@ -84,10 +84,15 @@ export async function POST(req: NextRequest) {
       throw new DatabaseError('Errore durante la creazione del contratto unito');
     }
 
-    // Delete only the temporary contracts that were actually merged (owned ids),
-    // mai gli id passati ma non posseduti (non si toccano i contratti altrui).
+    // Soft-delete dei sorgenti effettivamente uniti (owned ids): mai gli id passati
+    // ma non posseduti (non si toccano i contratti altrui). Coerente con CG-8: nessun
+    // hard-delete dall'app → i sorgenti finiscono nel cestino (recuperabili dall'admin,
+    // purgati col cap di retention); il loro testo è comunque preservato nel contratto unito.
     const mergedIds = sortedRows.map((r) => r.id);
-    await db.delete(contracts).where(inArray(contracts.id, mergedIds));
+    await db
+      .update(contracts)
+      .set({ deletedAt: new Date(), deletedBy: me.username })
+      .where(inArray(contracts.id, mergedIds));
 
     await writeAudit({
       actor: me.username, actorGroups: me.declaredGroups,

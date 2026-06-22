@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { MetadataValidationSchema } from '@/lib/ai/schemas';
 import {
   createSuccessResponse,
@@ -45,11 +45,11 @@ export async function PATCH(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB + ownership
+    // Fetch contract from DB + ownership + non cestinato (CG-8)
     const [contract] = await db
       .select()
       .from(contracts)
-      .where(eq(contracts.id, contractId))
+      .where(and(eq(contracts.id, contractId), isNull(contracts.deletedAt)))
       .limit(1);
 
     if (!contract || contract.owner !== me.username) {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { analyses, findings, contracts } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { generateReportPDF } from '@/lib/pdf/report-generator';
 import {
   createErrorResponse,
@@ -55,11 +55,11 @@ export async function GET(
       throw new ValidationError('Analisi non ancora completata. Attendi il completamento prima di esportare.');
     }
 
-    // Load contract
+    // Load contract — escluso se cestinato (CG-8)
     const [contract] = await db
       .select()
       .from(contracts)
-      .where(eq(contracts.id, analysis.contractId))
+      .where(and(eq(contracts.id, analysis.contractId), isNull(contracts.deletedAt)))
       .limit(1);
 
     if (!contract || contract.owner !== me.username) {

@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { analyses, contracts } from '@/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { and, eq, desc, isNull } from 'drizzle-orm';
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -33,11 +33,11 @@ export async function GET(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Ownership: il contratto dev'essere del chiamante
+    // Ownership: il contratto dev'essere del chiamante e non cestinato (CG-8)
     const [contract] = await db
       .select({ owner: contracts.owner })
       .from(contracts)
-      .where(eq(contracts.id, contractId))
+      .where(and(eq(contracts.id, contractId), isNull(contracts.deletedAt)))
       .limit(1);
 
     if (!contract || contract.owner !== me.username) {

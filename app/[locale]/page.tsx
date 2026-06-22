@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ContractWorkflow } from '@/components/ContractWorkflow';
 import { AnalysisHistoryList } from '@/components/report/AnalysisHistoryList';
+import { AdminTrashLink } from '@/components/admin/AdminTrashLink';
 
 export default async function Home({
   params,
@@ -31,9 +32,12 @@ export default async function Home({
 
       {/* History section */}
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-          {t('historyTitle')}
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            {t('historyTitle')}
+          </h2>
+          <AdminTrashLink />
+        </div>
         <AnalysisHistoryList />
       </div>
 

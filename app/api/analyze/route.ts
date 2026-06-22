@@ -15,7 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts, analyses } from '@/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { and, eq, desc, isNull } from 'drizzle-orm';
 import { runAnalysis, runEnhancedAnalysis } from '@/lib/ai/orchestrator';
 import type { ContractTypeId } from '@/lib/taxonomies/contract-types';
 import type { Jurisdiction } from '@/lib/legal-norms/query';
@@ -45,11 +45,11 @@ export async function POST(req: NextRequest) {
     // Validate language if provided
     const contractLanguage: 'it' | 'en' = language && ['it', 'en'].includes(language) ? language : 'it';
 
-    // Verify contract exists + ownership (non si analizzano contratti altrui)
+    // Verify contract exists + ownership + non cestinato (non si analizzano contratti altrui o nel cestino)
     const [contract] = await db
       .select()
       .from(contracts)
-      .where(eq(contracts.id, contractId))
+      .where(and(eq(contracts.id, contractId), isNull(contracts.deletedAt)))
       .limit(1);
 
     if (!contract || contract.owner !== me.username) {

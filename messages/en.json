@@ -102,7 +102,25 @@
     "importanti": "important",
     "totali": "total",
     "deleteTitle": "Delete contract",
-    "deleteConfirm": "Delete this contract and all its analyses?"
+    "deleteConfirm": "The contract and its analyses will be moved to the trash. An administrator can restore them within 20 days; after that, deletion is permanent.",
+    "deleteConfirmButton": "Move to trash",
+    "cancel": "Cancel"
+  },
+  "Trash": {
+    "title": "Trash",
+    "linkLabel": "Trash",
+    "subtitle": "Deleted contracts remain recoverable for {days} days, then they are permanently removed.",
+    "loading": "Loading trash…",
+    "forbidden": "Administrators only.",
+    "empty": "The trash is empty.",
+    "owner": "Owner",
+    "deletedBy": "Deleted by",
+    "daysLeft": "{n} days left",
+    "expired": "Expired",
+    "restore": "Restore",
+    "emptyTrash": "Empty trash",
+    "emptyConfirm": "Permanently delete all contracts in the trash? This cannot be undone.",
+    "cancel": "Cancel"
   },
   "Progress": {
     "preparing": "Preparing document...",
