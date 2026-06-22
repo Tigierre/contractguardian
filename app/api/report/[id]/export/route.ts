@@ -12,6 +12,20 @@ import {
 import { requireIdentity, clientIp } from '@/lib/auth/context';
 import { writeAudit } from '@/lib/audit/audit';
 
+/**
+ * Parse the stored normIds JSON defensively (CG-9): a malformed value must not
+ * 500 the whole export. Returns only an array of strings, else an empty array.
+ */
+function parseNormIds(raw: string | null): string[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -90,7 +104,7 @@ export async function GET(
         explanation: f.explanation,
         redlineSuggestion: f.redlineSuggestion,
         actor: f.actor ?? 'general',
-        normIds: f.normIds ? JSON.parse(f.normIds) as string[] : [],
+        normIds: parseNormIds(f.normIds),
       }));
 
       findingsByActor = {

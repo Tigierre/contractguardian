@@ -8,6 +8,7 @@
  */
 
 import { CONTRACT_TYPES } from '@/lib/taxonomies/contract-types';
+import { ANTI_INJECTION_IT, wrapUntrusted } from './guard';
 
 /**
  * Build system prompt for pre-analysis metadata extraction (Italian)
@@ -275,7 +276,7 @@ Il presente contratto è regolato dal Codice Civile italiano, artt. 1571 e segue
 # OUTPUT
 
 Restituisci un oggetto JSON con la struttura PreAnalysisSchema.
-Ogni campo deve avere name/typeId/jurisdiction, confidence, e reasoning.`;
+Ogni campo deve avere name/typeId/jurisdiction, confidence, e reasoning.${ANTI_INJECTION_IT}`;
 }
 
 /**
@@ -284,9 +285,7 @@ Ogni campo deve avere name/typeId/jurisdiction, confidence, e reasoning.`;
 export function buildPreAnalysisUserPrompt(excerpts: string): string {
   return `Analizza il seguente estratto contrattuale ed estrai i metadati richiesti.
 
----
-${excerpts}
----
+${wrapUntrusted(excerpts)}
 
 Restituisci:
 1. partyA e partyB con name (null se non trovato), confidence, reasoning

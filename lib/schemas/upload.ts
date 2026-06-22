@@ -74,6 +74,26 @@ export const UploadMetadataSchema = z.object({
 });
 
 /**
+ * Sanitize an uploaded filename before persisting it (CG-9).
+ *
+ * The upload route stored `file.name` raw. We strip any directory component and
+ * the path/wildcard chars rejected by UploadMetadataSchema, drop control chars,
+ * trim leading/trailing dots and spaces, and cap the length. We sanitize (rather
+ * than reject) so a valid PDF is never refused over an odd OS filename; a name
+ * that collapses to empty falls back to a safe default.
+ */
+export function sanitizeFilename(name: string): string {
+  const base = (name ?? '').split(/[/\\]/).pop() ?? '';
+  const cleaned = base
+    .replace(/[<>:"/\\|?*]/g, '') // chars forbidden by UploadMetadataSchema
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\x00-\x1f]/g, '') // control chars
+    .replace(/^[.\s]+|[.\s]+$/g, '') // leading/trailing dots & spaces
+    .slice(0, 255);
+  return cleaned || 'documento.pdf';
+}
+
+/**
  * Combined schema for upload with optional metadata
  */
 export const UploadWithMetadataSchema = UploadSchema.merge(UploadMetadataSchema);

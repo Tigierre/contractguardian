@@ -10,6 +10,7 @@
  */
 
 import { CONTRACT_TYPES } from '@/lib/taxonomies/contract-types';
+import { ANTI_INJECTION_EN, wrapUntrusted } from './guard';
 
 /**
  * Build system prompt for pre-analysis metadata extraction (English)
@@ -281,7 +282,7 @@ This agreement is governed by the Italian Civil Code, articles 1571 et seq."
 Return a JSON object with the PreAnalysisSchema structure.
 Each field must have name/typeId/jurisdiction, confidence, and reasoning.
 
-REMEMBER: Use Italian enum values for jurisdiction ("italia", "eu", "usa", "unknown"). These are database identifiers.`;
+REMEMBER: Use Italian enum values for jurisdiction ("italia", "eu", "usa", "unknown"). These are database identifiers.${ANTI_INJECTION_EN}`;
 }
 
 /**
@@ -290,9 +291,7 @@ REMEMBER: Use Italian enum values for jurisdiction ("italia", "eu", "usa", "unkn
 export function buildPreAnalysisUserPrompt(excerpts: string): string {
   return `Analyze the following contract excerpt and extract the requested metadata.
 
----
-${excerpts}
----
+${wrapUntrusted(excerpts)}
 
 Return:
 1. partyA and partyB with name (null if not found), confidence, reasoning

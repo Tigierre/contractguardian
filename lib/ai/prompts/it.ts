@@ -9,6 +9,7 @@
 
 import type { Policy } from '@/db/schema';
 import type { Finding } from '../schemas';
+import { ANTI_INJECTION_IT, wrapUntrusted } from './guard';
 
 /**
  * Build system prompt with company policies and perspective (Italian)
@@ -47,7 +48,7 @@ STILE:
 - NON inventare problemi: se non trovi nulla di rilevante, restituisci array vuoto
 
 POLICY AZIENDALI:
-${policyList}`;
+${policyList}${ANTI_INJECTION_IT}`;
 }
 
 /**
@@ -56,9 +57,7 @@ ${policyList}`;
 export function buildUserPrompt(chunkText: string, chunkIndex: number, perspective: 'cliente' | 'fornitore'): string {
   return `Analizza il seguente estratto contrattuale (chunk ${chunkIndex + 1}) dal punto di vista del ${perspective}.
 
----
-${chunkText}
----
+${wrapUntrusted(chunkText)}
 
 Identifica punti di forza E aree di miglioramento rispetto alle policy aziendali.
 Per ogni elemento fornisci: titolo breve, tipo, policy di riferimento, priorità (null per punti di forza), spiegazione concisa, e suggerimento di modifica (null per punti di forza).

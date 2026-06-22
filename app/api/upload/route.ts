@@ -19,6 +19,7 @@ import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
 import { extractText } from '@/lib/pdf/pipeline';
 import { validatePDFFile } from '@/lib/pdf/validator';
+import { sanitizeFilename } from '@/lib/schemas/upload';
 import {
   ValidationError,
   ExtractionError,
@@ -57,6 +58,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Sanitize the client-provided filename before it touches the DB (CG-9).
+    const safeFilename = sanitizeFilename(file.name);
+
     // 4. Convert to buffer for validation and extraction
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -92,7 +96,7 @@ export async function POST(req: NextRequest) {
       const result = await db
         .insert(contracts)
         .values({
-          filename: file.name,
+          filename: safeFilename,
           originalText: extractedText,
           status: 'uploaded',
           owner: me.username,
@@ -128,7 +132,7 @@ export async function POST(req: NextRequest) {
       entity: 'contract',
       entityId: contract.id,
       ip: clientIp(req),
-      detail: { filename: file.name, pageCount, extractionMethod },
+      detail: { filename: safeFilename, pageCount, extractionMethod },
     });
 
     return NextResponse.json(createSuccessResponse(responseData), {

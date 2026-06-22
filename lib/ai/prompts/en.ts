@@ -9,6 +9,7 @@
 
 import type { Policy } from '@/db/schema';
 import type { Finding } from '../schemas';
+import { ANTI_INJECTION_EN, wrapUntrusted } from './guard';
 
 /**
  * Build system prompt with company policies and perspective (English)
@@ -50,7 +51,7 @@ STYLE:
 IMPORTANT: Use the exact Italian enum values for type ("strength", "improvement") and priority ("importante", "consigliato", "suggerimento"). These are database identifiers, not display strings.
 
 COMPANY POLICIES:
-${policyList}`;
+${policyList}${ANTI_INJECTION_EN}`;
 }
 
 /**
@@ -61,9 +62,7 @@ export function buildUserPrompt(chunkText: string, chunkIndex: number, perspecti
 
   return `Analyze the following contract excerpt (chunk ${chunkIndex + 1}) from the ${perspectiveTerm} perspective.
 
----
-${chunkText}
----
+${wrapUntrusted(chunkText)}
 
 Identify strengths AND areas for improvement relative to company policies.
 For each element provide: brief title, type, referenced policy, priority (null for strengths), concise explanation, and modification suggestion (null for strengths).

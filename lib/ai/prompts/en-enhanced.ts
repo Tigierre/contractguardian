@@ -9,6 +9,7 @@
 
 import type { Policy } from '@/db/schema';
 import type { LegalNorm } from '@/lib/legal-norms/query';
+import { ANTI_INJECTION_EN, wrapUntrusted } from './guard';
 
 /**
  * Build enhanced system prompt with company policies, party names, and legal norms (English)
@@ -70,7 +71,7 @@ STYLE:
 IMPORTANT: Use the exact Italian enum values for type ("strength", "improvement") and priority ("importante", "consigliato", "suggerimento"). These are database identifiers, not display strings.
 
 COMPANY POLICIES:
-${policyList}`;
+${policyList}${ANTI_INJECTION_EN}`;
 }
 
 /**
@@ -87,9 +88,7 @@ export function buildEnhancedUserPrompt(
 
   return `Analyze the following contract excerpt (chunk ${chunkIndex + 1}).
 
----
-${chunkText}
----
+${wrapUntrusted(chunkText)}
 
 Identify strengths AND areas for improvement relative to company policies.
 Identify specifically the risks for ${partyALabel} and for ${partyBLabel} separately.

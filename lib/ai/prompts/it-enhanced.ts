@@ -9,6 +9,7 @@
 
 import type { Policy } from '@/db/schema';
 import type { LegalNorm } from '@/lib/legal-norms/query';
+import { ANTI_INJECTION_IT, wrapUntrusted } from './guard';
 
 /**
  * Build enhanced system prompt with company policies, party names, and legal norms (Italian)
@@ -68,7 +69,7 @@ STILE:
 - NON inventare problemi: se non trovi nulla di rilevante, restituisci array vuoto
 
 POLICY AZIENDALI:
-${policyList}`;
+${policyList}${ANTI_INJECTION_IT}`;
 }
 
 /**
@@ -85,9 +86,7 @@ export function buildEnhancedUserPrompt(
 
   return `Analizza il seguente estratto contrattuale (chunk ${chunkIndex + 1}).
 
----
-${chunkText}
----
+${wrapUntrusted(chunkText)}
 
 Identifica punti di forza E aree di miglioramento rispetto alle policy aziendali.
 Identifica specificamente i rischi per ${partyALabel} e per ${partyBLabel} separatamente.
