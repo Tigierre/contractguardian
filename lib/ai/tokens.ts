@@ -57,9 +57,25 @@ export function fitsInContext(text: string, maxTokens = 100000): boolean {
  * - OVERLAP_PARAGRAPHS: Maintains context between chunks
  * - POLICY_TOKENS_ESTIMATE: Reserved space for company policies in prompt
  */
+/**
+ * Resolve the per-chunk token budget (CPERF-5).
+ *
+ * Bigger chunks mean fewer LLM calls on long documents (cost ∝ number of
+ * chunks), but a chunk that is too large makes the model "drown" and miss
+ * findings. The default (8000) is a prudent middle ground for gpt-5.4-mini
+ * (128K context) — far above the old 3000 so long contracts cost ~3x less,
+ * yet well below the context window to keep recall high. Override via
+ * ANALYSIS_MAX_CHUNK_TOKENS; clamped to a defensive 1000..24000 range.
+ */
+function resolveMaxChunkTokens(): number {
+  const raw = Number(process.env.ANALYSIS_MAX_CHUNK_TOKENS);
+  if (!Number.isFinite(raw) || raw <= 0) return 8000;
+  return Math.min(24000, Math.max(1000, Math.floor(raw)));
+}
+
 export const CHUNK_CONFIG = {
   /** Maximum tokens per chunk (leaves space for system prompt and output) */
-  MAX_CHUNK_TOKENS: 3000,
+  MAX_CHUNK_TOKENS: resolveMaxChunkTokens(),
   /** Number of paragraphs to overlap between chunks for context */
   OVERLAP_PARAGRAPHS: 1,
   /** Estimated tokens reserved for policies in system prompt */

@@ -37,6 +37,7 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
   const [overflowMessage, setOverflowMessage] = useState<string | null>(null);
   const [isProceedLoading, setIsProceedLoading] = useState(false);
   const [proceedError, setProceedError] = useState<string | null>(null);
+  const [mergeWarning, setMergeWarning] = useState<string | null>(null);
 
   // Track valid files used during upload phase for progress counter
   const validFilesRef = useRef<BatchFileEntry[]>([]);
@@ -198,6 +199,7 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
 
     setIsProceedLoading(true);
     setProceedError(null);
+    setMergeWarning(null);
 
     try {
       // Step 1: Merge contracts into one
@@ -216,6 +218,12 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
       }
 
       const { contractId: mergedId, filename: mergedFilename } = mergeJson.data;
+
+      // CPERF-5: surface the non-blocking "very long document" notice while the
+      // pre-analysis runs (does not block the flow).
+      if (mergeJson.data.warning) {
+        setMergeWarning(mergeJson.data.warning);
+      }
 
       // Step 2: Pre-analyze merged contract
       const preRes = await fetch(`/api/contracts/${mergedId}/pre-analyze`, {
@@ -568,6 +576,9 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
             <div className="space-y-2">
               {proceedError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{proceedError}</p>
+              )}
+              {mergeWarning && (
+                <p className="text-sm text-amber-700 dark:text-amber-400" role="status">{mergeWarning}</p>
               )}
               <button
                 type="button"

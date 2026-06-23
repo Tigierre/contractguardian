@@ -97,4 +97,9 @@ export interface MergeContractsRequest {
 export interface MergeContractsResponse {
   contractId: number;
   filename: string;
+  /**
+   * Non-blocking notice (CPERF-5): set when the merged text is very long, so
+   * the UI can warn that analysis will be slower/limited. Absent otherwise.
+   */
+  warning?: string;
 }

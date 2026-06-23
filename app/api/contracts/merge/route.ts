@@ -24,7 +24,23 @@ import {
 } from '@/lib/errors';
 import { requireIdentity, assertSameOrigin, clientIp } from '@/lib/auth/context';
 import { writeAudit } from '@/lib/audit/audit';
+import { dedupeContractText } from '@/lib/ai/text-dedup';
+import { estimatePages } from '@/lib/ai/chunker';
 import type { MergeContractsRequest, MergeContractsResponse } from '@/src/types/api';
+
+/**
+ * Soft cap on merged-text length (CPERF-5). Above this we don't block or
+ * truncate — we attach a non-blocking warning so the user knows the analysis
+ * will be slower and may be limited to the first sections (the chunk cap,
+ * ANALYSIS_MAX_CHUNKS, does the actual truncation downstream with its own
+ * note in the executive summary). Default ~600k chars ≈ 200 pages.
+ * Override via ANALYSIS_MAX_TEXT_CHARS.
+ */
+function maxTextChars(): number {
+  const raw = Number(process.env.ANALYSIS_MAX_TEXT_CHARS);
+  if (!Number.isFinite(raw) || raw <= 0) return 600_000;
+  return Math.floor(raw);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -65,11 +81,19 @@ export async function POST(req: NextRequest) {
     // Build combined filename: "File1.pdf + File2.pdf"
     const combinedFilename = sortedRows.map((r) => r.filename).join(' + ');
 
-    // Concatenate text with file separators
-    const combinedText = sortedRows
-      .map((r) => `\n--- ${r.filename} ---\n\n${r.originalText}`)
-      .join('\n\n')
-      .trim();
+    // Concatenate text, dropping repeated blocks across files (CPERF-5):
+    // merged annexes/versions share large boilerplate that would otherwise be
+    // chunked and re-analyzed at full LLM cost on every copy.
+    const dedup = dedupeContractText(
+      sortedRows.map((r) => ({ filename: r.filename, text: r.originalText ?? '' }))
+    );
+    const combinedText = dedup.combinedText;
+    if (dedup.removedBlocks > 0) {
+      console.info(
+        `Merge dedup: dropped ${dedup.removedBlocks} repeated blocks ` +
+          `(${dedup.originalChars} → ${dedup.dedupedChars} chars)`
+      );
+    }
 
     // Create merged contract (owned by the caller)
     const [merged] = await db.insert(contracts).values({
@@ -100,10 +124,21 @@ export async function POST(req: NextRequest) {
       ip: clientIp(req), detail: { mergedFrom: mergedIds, count: mergedIds.length },
     });
 
+    // CPERF-5 soft cap: warn (don't block) when the merged text is very long.
+    let warning: string | undefined;
+    if (combinedText.length > maxTextChars()) {
+      const pages = estimatePages(combinedText);
+      warning = language === 'en'
+        ? `Very long document (~${pages} pages): analysis will be slower and may be limited to the first sections to keep time and cost under control.`
+        : `Documento molto lungo (~${pages} pagine): l'analisi sarà più lenta e potrà essere limitata alle prime sezioni per contenere tempi e costi.`;
+      console.warn(`Merge over soft cap: ${combinedText.length} chars (~${pages} pages), contract ${merged.id}`);
+    }
+
     return NextResponse.json(
       createSuccessResponse<MergeContractsResponse>({
         contractId: merged.id,
         filename: combinedFilename,
+        ...(warning ? { warning } : {}),
       }),
       { status: 201 }
     );

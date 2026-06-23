@@ -20,7 +20,7 @@ import type { Finding } from './schemas';
  * @param b - Second text string
  * @returns Similarity score from 0 (no overlap) to 1 (identical)
  */
-function textSimilarity(a: string, b: string): number {
+export function textSimilarity(a: string, b: string): number {
   const wordsA = new Set(a.toLowerCase().split(/\s+/));
   const wordsB = new Set(b.toLowerCase().split(/\s+/));
 
