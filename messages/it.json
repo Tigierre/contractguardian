@@ -30,6 +30,8 @@
     "maxSize": "Massimo 10MB - Solo file PDF",
     "uploading": "Caricamento in corso...",
     "extracting": "Estrazione testo dal PDF",
+    "processingTitle": "Estrazione del testo in corso...",
+    "processingSubtitle": "Per i PDF scansionati l'OCR può richiedere qualche minuto. Puoi attendere qui.",
     "uploadComplete": "Caricamento completato",
     "fileLabel": "File:",
     "textExtracted": "Testo estratto:",

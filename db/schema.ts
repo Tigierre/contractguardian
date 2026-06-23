@@ -8,9 +8,24 @@ export const contracts = pgTable('contracts', {
   // ogni utente vede/gestisce solo i propri contratti (chiude CG-1 dell'audit di sicurezza).
   // Nullable per le righe pre-esistenti a questa migrazione (su un deploy nuovo = nessuna).
   owner: text('owner'),
+  // status del contratto:
+  //   'extracting'        = estrazione testo/OCR in corso (job async, vedi sotto)
+  //   'uploaded'          = testo pronto, contratto utilizzabile (default storico)
+  //   'extraction_failed' = estrazione fallita (vedi extractionError)
   status: text('status').notNull().default('uploaded'),
   analysisStatus: text('analysis_status').default('none'), // none, pending, completed, failed
   language: text('language').notNull().default('it'), // 'it' | 'en'
+  // Estrazione async (CPERF-1 step 2, "OCR vero-async", migrazione 0006). L'upload
+  // non estrae più il testo in modo sincrono dentro la richiesta HTTP (su PDF
+  // scansionati l'OCR può durare minuti → timeout del proxy/Authentik). Crea il
+  // contratto come 'extracting', avvia l'estrazione in background e il frontend
+  // polla GET /api/contracts/[id]/extraction. Questi metadati — prima presenti solo
+  // nella risposta sincrona della POST — vanno persistiti perché il polling li legga.
+  pageCount: integer('page_count'), // pagine del PDF (note solo a estrazione conclusa)
+  extractionMethod: text('extraction_method'), // 'native' | 'ocr'
+  ocrConfidence: integer('ocr_confidence'), // 0-100, solo quando extractionMethod = 'ocr'
+  qualityWarning: text('quality_warning'), // avviso non bloccante (OCR moderato/troncato)
+  extractionError: text('extraction_error'), // messaggio in italiano se status = 'extraction_failed'
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
   // Soft-delete (CG-8, migrazione 0005). "Eliminare" marca la riga come cestinata

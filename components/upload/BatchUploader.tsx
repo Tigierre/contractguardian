@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { useState, useRef } from 'react';
 import type { UploadResponse, ApiResponse } from '@/src/types/api';
 import type { PreAnalysis } from '@/lib/ai/schemas';
+import { pollExtractionStatus } from '@/lib/upload/poll-extraction';
 
 type FileStatus = 'pending' | 'uploading' | 'extracting' | 'success' | 'error';
 
@@ -116,16 +117,21 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
           throw new Error(data.error?.message || 'Errore sconosciuto');
         }
 
+        // Estrazione asincrona (CPERF-1 step 2): attendi l'esito pollando il server.
         updateFile(entry.id, { status: 'extracting' });
-        await new Promise(r => setTimeout(r, 200));
+        const extraction = await pollExtractionStatus(data.data.id);
+
+        if (extraction.status === 'extraction_failed') {
+          throw new Error(extraction.extractionError || 'Errore durante l’estrazione del testo');
+        }
 
         updateFile(entry.id, {
           status: 'success',
-          contractId: data.data.id,
-          extractionMethod: data.data.extractionMethod,
-          pageCount: data.data.pageCount,
-          ocrConfidence: data.data.ocrConfidence,
-          qualityWarning: data.data.qualityWarning,
+          contractId: extraction.id,
+          extractionMethod: extraction.extractionMethod,
+          pageCount: extraction.pageCount,
+          ocrConfidence: extraction.ocrConfidence,
+          qualityWarning: extraction.qualityWarning,
         });
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Errore sconosciuto';
@@ -149,13 +155,21 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
       const data: ApiResponse<UploadResponse> = await res.json();
       if (!data.success || !data.data) throw new Error(data.error?.message || 'Errore');
+
+      updateFile(id, { status: 'extracting' });
+      const extraction = await pollExtractionStatus(data.data.id);
+
+      if (extraction.status === 'extraction_failed') {
+        throw new Error(extraction.extractionError || 'Errore durante l’estrazione del testo');
+      }
+
       updateFile(id, {
         status: 'success',
-        contractId: data.data.id,
-        extractionMethod: data.data.extractionMethod,
-        pageCount: data.data.pageCount,
-        ocrConfidence: data.data.ocrConfidence,
-        qualityWarning: data.data.qualityWarning,
+        contractId: extraction.id,
+        extractionMethod: extraction.extractionMethod,
+        pageCount: extraction.pageCount,
+        ocrConfidence: extraction.ocrConfidence,
+        qualityWarning: extraction.qualityWarning,
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Errore';

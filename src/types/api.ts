@@ -18,15 +18,35 @@ export interface ApiResponse<T = unknown> {
   };
 }
 
+/** Stato dell'estrazione testo (CPERF-1 step 2, "OCR vero-async"). */
+export type ExtractionStatus = 'extracting' | 'uploaded' | 'extraction_failed';
+
+/**
+ * Risposta di POST /api/upload. L'estrazione è asincrona: la POST risponde subito
+ * con lo stato 'extracting' e il client polla GET /api/contracts/[id]/extraction.
+ * I metadati di estrazione (testo, pagine, OCR) NON sono qui — arrivano dal polling.
+ */
 export interface UploadResponse {
   id: number;
   filename: string;
-  textLength: number;
-  pageCount: number;
+  status: ExtractionStatus;
   createdAt: Date;
+}
+
+/**
+ * Risposta di GET /api/contracts/[id]/extraction (polling). I campi di esito sono
+ * valorizzati solo quando status = 'uploaded'; extractionError solo se 'extraction_failed'.
+ */
+export interface ExtractionStatusResponse {
+  id: number;
+  filename: string;
+  status: ExtractionStatus;
+  textLength?: number;
+  pageCount?: number;
   extractionMethod?: 'native' | 'ocr';
   ocrConfidence?: number;
   qualityWarning?: string;
+  extractionError?: string;
 }
 
 export type ContractStatus = 'uploaded' | 'analyzing' | 'completed' | 'error';

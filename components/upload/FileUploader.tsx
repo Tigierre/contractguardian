@@ -3,10 +3,15 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
 import { useState } from 'react';
-import type { UploadResponse, ApiResponse } from '@/src/types/api';
+import type { UploadResponse, ExtractionStatusResponse, ApiResponse } from '@/src/types/api';
 import type { PreAnalysis } from '@/lib/ai/schemas';
+import { pollExtractionStatus } from '@/lib/upload/poll-extraction';
 
-type UploadState = 'idle' | 'uploading' | 'success' | 'extracting' | 'error';
+// 'uploading'  = invio del file (POST in corso)
+// 'processing' = estrazione testo/OCR in background sul server (polling — CPERF-1 step 2)
+// 'success'    = estrazione completata, mostra metadati + avvio pre-analisi
+// 'extracting' = pre-analisi metadati in corso (handleAnalyze)
+type UploadState = 'idle' | 'uploading' | 'processing' | 'success' | 'extracting' | 'error';
 
 interface FileUploaderProps {
   onUploadComplete?: (contractId: number, filename: string) => void;
@@ -18,7 +23,7 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
   const locale = useLocale();
   const [state, setState] = useState<UploadState>('idle');
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UploadResponse | null>(null);
+  const [result, setResult] = useState<ExtractionStatusResponse | null>(null);
 
   const onDrop = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -42,12 +47,21 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
         throw new Error(data.error?.message || t('unknownError'));
       }
 
-      setResult(data.data);
+      // L'estrazione è asincrona (CPERF-1 step 2): la POST ha solo creato il
+      // contratto come 'extracting'. Attendi l'esito pollando il server.
+      setState('processing');
+      const extraction = await pollExtractionStatus(data.data.id);
+
+      if (extraction.status === 'extraction_failed') {
+        throw new Error(extraction.extractionError || t('unknownError'));
+      }
+
+      setResult(extraction);
       setState('success');
 
       // Call onUploadComplete callback if provided
       if (onUploadComplete) {
-        onUploadComplete(data.data.id, data.data.filename);
+        onUploadComplete(extraction.id, extraction.filename);
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t('unknownError');
@@ -159,6 +173,19 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
         </div>
       )}
 
+      {/* Processing - estrazione testo/OCR in background (polling reale) */}
+      {state === 'processing' && (
+        <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-lg border-2 border-blue-500">
+          <div className="animate-spin mx-auto h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+          <p className="mt-4 text-slate-700 dark:text-slate-300 font-medium">
+            {t('processingTitle')}
+          </p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            {t('processingSubtitle')}
+          </p>
+        </div>
+      )}
+
       {/* Success - show analyze button */}
       {state === 'success' && result && (
         <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-500 rounded-lg p-6">
@@ -177,8 +204,8 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
               </h3>
               <div className="text-sm text-green-800 dark:text-green-300 space-y-1">
                 <p><strong>{t('fileLabel')}</strong> {result.filename}</p>
-                <p><strong>{t('textExtracted')}</strong> {result.textLength.toLocaleString('it-IT')} {t('characters')}</p>
-                <p><strong>{t('pages')}</strong> {result.pageCount}</p>
+                <p><strong>{t('textExtracted')}</strong> {(result.textLength ?? 0).toLocaleString('it-IT')} {t('characters')}</p>
+                <p><strong>{t('pages')}</strong> {result.pageCount ?? 0}</p>
                 {result.extractionMethod === 'ocr' && result.ocrConfidence && (
                   <p><strong>{t('ocrMethod', { confidence: result.ocrConfidence })}</strong></p>
                 )}

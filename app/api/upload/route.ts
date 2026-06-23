@@ -17,7 +17,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
-import { extractText } from '@/lib/pdf/pipeline';
+import { runExtraction } from '@/lib/pdf/extraction-job';
 import { validatePDFFile } from '@/lib/pdf/validator';
 import { sanitizeFilename } from '@/lib/schemas/upload';
 import {
@@ -71,34 +71,18 @@ export async function POST(req: NextRequest) {
       throw new ValidationError(validation.error!);
     }
 
-    // 6. Extract text (native + OCR fallback pipeline)
-    let extractedText: string;
-    let pageCount: number;
-    let extractionMethod: 'native' | 'ocr' = 'native';
-    let ocrConfidence: number | undefined;
-    let qualityWarning: string | undefined;
-
-    try {
-      const result = await extractText(buffer);
-      extractedText = result.text;
-      pageCount = result.pageCount;
-      extractionMethod = result.method;
-      ocrConfidence = result.ocrConfidence;
-      qualityWarning = result.qualityWarning;
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Errore estrazione testo';
-      throw new ExtractionError(message);
-    }
-
-    // 8. Save to database
+    // 6. Crea subito il contratto come 'extracting' (estrazione async — CPERF-1
+    //    step 2). originalText parte vuoto: il job di estrazione lo valorizzerà.
+    //    La POST NON estrae più il testo inline (su PDF scansionati l'OCR può
+    //    durare minuti → timeout proxy/Authentik): il frontend polla lo stato.
     let contract;
     try {
       const result = await db
         .insert(contracts)
         .values({
           filename: safeFilename,
-          originalText: extractedText,
-          status: 'uploaded',
+          originalText: '',
+          status: 'extracting',
           owner: me.username,
         })
         .returning();
@@ -113,16 +97,18 @@ export async function POST(req: NextRequest) {
       throw new DatabaseError('Errore durante il salvataggio del contratto');
     }
 
-    // 9. Return success response
+    // 7. Avvia l'estrazione in background (fire-and-forget, stesso schema di
+    //    runAnalysis). Il buffer resta in memoria nella closure finché il job
+    //    finisce; runExtraction non lancia mai (persiste l'esito sul record).
+    void runExtraction(contract.id, buffer);
+
+    // 8. Risposta immediata: il client conosce id+status e inizia a pollare
+    //    GET /api/contracts/[id]/extraction.
     const responseData: UploadResponse = {
       id: contract.id,
       filename: contract.filename,
-      textLength: extractedText.length,
-      pageCount,
+      status: 'extracting',
       createdAt: contract.createdAt,
-      extractionMethod,
-      ocrConfidence,
-      qualityWarning,
     };
 
     await writeAudit({
@@ -132,7 +118,7 @@ export async function POST(req: NextRequest) {
       entity: 'contract',
       entityId: contract.id,
       ip: clientIp(req),
-      detail: { filename: safeFilename, pageCount, extractionMethod },
+      detail: { filename: safeFilename, async: true },
     });
 
     return NextResponse.json(createSuccessResponse(responseData), {

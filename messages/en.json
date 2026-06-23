@@ -30,6 +30,8 @@
     "maxSize": "Maximum 10MB - PDF files only",
     "uploading": "Uploading...",
     "extracting": "Extracting text from PDF",
+    "processingTitle": "Extracting text...",
+    "processingSubtitle": "For scanned PDFs, OCR may take a few minutes. You can wait here.",
     "uploadComplete": "Upload complete",
     "fileLabel": "File:",
     "textExtracted": "Extracted text:",
