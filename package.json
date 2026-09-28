@@ -35,7 +35,7 @@
     "openai": "^6.17.0",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^5.4.624",
+    "pdfjs-dist": "^6.3.289",
     "postgres": "^3.4.8",
     "react": "19.1.0",
     "react-dom": "19.1.0",
