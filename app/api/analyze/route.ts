@@ -23,6 +23,7 @@ import {
   ValidationError,
   AnalysisError,
   ForbiddenError,
+  NotFoundError,
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/errors';
@@ -35,15 +36,16 @@ export async function POST(req: NextRequest) {
     assertSameOrigin(req);
     const me = requireIdentity(req);
 
-    const body = await req.json();
-    const { contractId, language } = body;
+    // Corpo non JSON → 400 (non un 503 generico).
+    const body = await req.json().catch(() => null);
+    const { contractId, language } = (body ?? {}) as { contractId?: unknown; language?: unknown };
 
-    if (!contractId || typeof contractId !== 'number') {
-      throw new ValidationError('contractId è richiesto e deve essere un numero');
+    if (typeof contractId !== 'number' || !Number.isInteger(contractId) || contractId <= 0) {
+      throw new ValidationError('contractId è richiesto e deve essere un intero positivo');
     }
 
     // Validate language if provided
-    const contractLanguage: 'it' | 'en' = language && ['it', 'en'].includes(language) ? language : 'it';
+    const contractLanguage: 'it' | 'en' = language === 'en' ? 'en' : 'it';
 
     // Verify contract exists + ownership + non cestinato (non si analizzano contratti altrui o nel cestino)
     const [contract] = await db
@@ -52,8 +54,9 @@ export async function POST(req: NextRequest) {
       .where(and(eq(contracts.id, contractId), isNull(contracts.deletedAt)))
       .limit(1);
 
+    // Contratto altrui o cestinato → 404, come se non esistesse.
     if (!contract || contract.owner !== me.username) {
-      throw new ValidationError(`Contratto ${contractId} non trovato`);
+      throw new NotFoundError('Contratto non trovato');
     }
 
     // Save language on the contract
@@ -155,7 +158,11 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error('Analyze error:', error);
 
-    if (error instanceof ValidationError || error instanceof ForbiddenError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof ForbiddenError ||
+      error instanceof NotFoundError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });

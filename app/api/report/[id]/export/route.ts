@@ -1,7 +1,18 @@
+/**
+ * GET /api/report/[id]/export
+ *
+ * Esporta in PDF il report di un'analisi completata. Accesso riservato al
+ * proprietario del contratto: un'analisi altrui (o di un contratto nel cestino)
+ * risponde 404, e lo fa PRIMA di qualunque altro controllo, così nemmeno lo stato
+ * di un'analisi altrui è deducibile dalla risposta.
+ *
+ * @module app/api/report/[id]/export/route
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
-import { analyses, findings, contracts } from '@/db/schema';
-import { and, eq, isNull } from 'drizzle-orm';
+import { findings } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import { generateReportPDF } from '@/lib/pdf/report-generator';
 import {
   createErrorResponse,
@@ -11,20 +22,8 @@ import {
 } from '@/lib/errors';
 import { requireIdentity, clientIp } from '@/lib/auth/context';
 import { writeAudit } from '@/lib/audit/audit';
-
-/**
- * Parse the stored normIds JSON defensively (CG-9): a malformed value must not
- * 500 the whole export. Returns only an array of strings, else an empty array.
- */
-function parseNormIds(raw: string | null): string[] {
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === 'string') : [];
-  } catch {
-    return [];
-  }
-}
+import { findOwnedAnalysis } from '@/lib/contracts/ownership';
+import { parseNormIds } from '@/lib/legal-norms/norm-ids';
 
 export async function GET(
   req: NextRequest,
@@ -40,30 +39,15 @@ export async function GET(
       throw new ValidationError('ID analisi non valido');
     }
 
-    // Load analysis
-    const [analysis] = await db
-      .select()
-      .from(analyses)
-      .where(eq(analyses.id, analysisId))
-      .limit(1);
-
-    if (!analysis) {
+    // Proprietà prima di tutto: analisi + contratto filtrati per proprietario.
+    const owned = await findOwnedAnalysis(analysisId, me.username);
+    if (!owned) {
       throw new NotFoundError('Analisi non trovata');
     }
+    const { analysis, contract } = owned;
 
     if (analysis.status !== 'completed') {
       throw new ValidationError('Analisi non ancora completata. Attendi il completamento prima di esportare.');
-    }
-
-    // Load contract — escluso se cestinato (CG-8)
-    const [contract] = await db
-      .select()
-      .from(contracts)
-      .where(and(eq(contracts.id, analysis.contractId), isNull(contracts.deletedAt)))
-      .limit(1);
-
-    if (!contract || contract.owner !== me.username) {
-      throw new NotFoundError('Contratto associato non trovato');
     }
 
     // Get contract language for PDF labels

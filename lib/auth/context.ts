@@ -4,34 +4,31 @@ import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { ForbiddenError } from '@/lib/errors';
 
 // =============================================================================
-// Integrazione con Authentik (add-on dell'hub) — fiducia nel PROXY, non nel browser
+// Identità dal reverse proxy con forward-auth — fiducia nel PROXY, non nel browser
 // =============================================================================
-// ContractGuardian NON ha auth propria: gira SEMPRE dietro Traefik forward-auth →
-// Authentik (vedi cg/DEPLOY-STANDARD.md §5). L'outpost inietta gli header
-// `X-authentik-*` con l'identità dell'utente autenticato.
+// L'app non ha un login proprio: è pensata per stare dietro un reverse proxy con
+// forward-auth verso Authentik (per esempio Traefik + outpost Authentik). Il proxy
+// autentica l'utente e inoltra all'app gli header `X-authentik-*`.
 //
-// ⚠️ Perché ci si può fidare dell'header testuale per l'IDENTITÀ (ownership/audit):
-//    a monte l'edge dell'hub strippa gli `X-authentik-*` in ingresso
-//    (edge-strip-auth-headers, baseline HI-2) → il client NON può iniettarli; ciò che
-//    arriva all'app è impostato dall'outpost. Qui usiamo l'identità per attribuzione
-//    (ownership dei contratti, attore dell'audit), NON per privilegi: nessuna azione è
-//    gated da gruppo in v1. Se in futuro servisse autorizzare per gruppo, derivarlo dal
-//    JWT validato col JWKS (pattern portale `auth.ts`), non dall'header testuale.
+// ⚠️ Requisiti di deploy perché gli header testuali siano affidabili:
+//    1. il proxy RIMUOVE gli `X-authentik-*` arrivati dal client prima di inoltrare;
+//    2. l'app NON è raggiungibile se non attraverso il proxy.
+//    Rispettati questi due punti, l'header testuale basta per l'IDENTITÀ (proprietà
+//    dei contratti, attore dell'audit). I PRIVILEGI invece non si derivano mai dagli
+//    header testuali: vengono dal JWT firmato, validato col JWKS (vedi più sotto).
 //
-// Fail-closed: in produzione, se manca l'identità (= forward-auth non configurato),
-// le route dati rifiutano (403) invece di servire dati senza un proprietario. Così
-// l'app "rende concreto" il vincolo «CG sta dietro Authentik» anche se l'edge è mal
-// configurato (difesa in profondità, chiude CG-1 dell'audit di sicurezza).
+// Fail-closed: in produzione, se manca l'identità (forward-auth non configurato),
+// le route dati rispondono 403 invece di servire dati senza un proprietario.
 // -----------------------------------------------------------------------------
 
 export interface Identity {
-  /** username Authentik — chiave di ownership e attore dell'audit */
+  /** username dal proxy — chiave di proprietà e attore dell'audit */
   username: string;
-  /** email Authentik (display/diagnostica) */
+  /** email dal proxy (visualizzazione/diagnostica) */
   email: string;
   /** gruppi DICHIARATI dall'header testuale: solo contesto/audit, MAI per i permessi */
   declaredGroups: string[];
-  /** true se l'identità arriva da un header Authentik (non dal fallback dev) */
+  /** true se l'identità arriva dagli header del proxy (non dall'utente di sviluppo) */
   fromProxy: boolean;
 }
 
@@ -46,7 +43,7 @@ function splitGroups(raw: string | null): string[] {
     .filter(Boolean);
 }
 
-/** Legge l'identità dagli header Authentik. Non lancia (per i path che tollerano l'anonimo). */
+/** Legge l'identità dagli header del proxy. Non lancia (per i path che tollerano l'anonimo). */
 export function getIdentity(req: { headers: HeaderSource }): Identity {
   const h = req.headers;
   const username =
@@ -63,9 +60,9 @@ export function getIdentity(req: { headers: HeaderSource }): Identity {
 }
 
 /**
- * Identità OBBLIGATORIA per le route dati. In produzione, se l'header Authentik manca,
- * lancia ForbiddenError (403): nessun dato senza un proprietario. In sviluppo (no
- * Authentik) usa un utente fittizio così l'app è eseguibile/testabile in locale.
+ * Identità OBBLIGATORIA per le route dati. In produzione, se gli header del proxy
+ * mancano, lancia ForbiddenError (403): nessun dato senza un proprietario. In sviluppo
+ * (nessun proxy) usa un utente fittizio così l'app è eseguibile e testabile in locale.
  */
 export function requireIdentity(req: { headers: HeaderSource }): Identity {
   const id = getIdentity(req);
@@ -74,15 +71,15 @@ export function requireIdentity(req: { headers: HeaderSource }): Identity {
     const dev = (process.env.CG_DEV_USER || 'local-dev').trim();
     return { username: dev, email: '', declaredGroups: [], fromProxy: false };
   }
-  throw new ForbiddenError('Identità non disponibile: accesso consentito solo dietro Authentik');
+  throw new ForbiddenError('Identità non disponibile: accesso consentito solo tramite il proxy di autenticazione');
 }
 
 // =============================================================================
-// F5 — CSRF: same-origin sulle route mutating (pattern portale src/lib/security.ts)
+// CSRF: same-origin sulle route che modificano dati
 // =============================================================================
-// Se Authentik usa un cookie di sessione sul dominio, una pagina esterna potrebbe
-// forzare richieste cross-site che cavalcano la sessione. CG è same-origin: nessun
-// client legittimo è cross-origin → si rifiuta tutto ciò che non lo è.
+// Se il proxy usa un cookie di sessione sul dominio, una pagina esterna potrebbe
+// forzare richieste cross-site che cavalcano la sessione. L'app è same-origin:
+// nessun client legittimo è cross-origin → si rifiuta tutto ciò che non lo è.
 
 /** Lancia ForbiddenError se la richiesta mutating non è same-origin. */
 export function assertSameOrigin(req: Request): void {
@@ -98,7 +95,7 @@ export function assertSameOrigin(req: Request): void {
   throw new ForbiddenError('Origine non consentita');
 }
 
-/** IP client per l'audit (passa per Traefik → X-Forwarded-For). */
+/** IP client per l'audit (dal reverse proxy → X-Forwarded-For). */
 export function clientIp(req: Request): string | null {
   const xff = req.headers.get('x-forwarded-for');
   if (xff) return xff.split(',')[0]!.trim() || null;
@@ -108,14 +105,25 @@ export function clientIp(req: Request): string | null {
 // =============================================================================
 // Autorizzazione per ruolo (admin) — gruppi dal JWT VALIDATO, non dall'header
 // =============================================================================
-// Il ripristino di un contratto cestinato (e lo svuota-cestino) è riservato
-// all'admin. Il privilegio NON si deriva dall'header testuale `X-authentik-groups`
-// (falsificabile da chi raggiunge il backend, vedi avviso in testa al file): si
-// deriva dal claim `groups` del JWT `X-authentik-jwt` VALIDATO contro il JWKS di
-// Authentik (firma + exp/nbf [+ iss/aud se configurati]). Stesso pattern del
-// portale (src/lib/auth.ts, hardening F3/HI-4), riusato per uniformità d'hub.
+// Il ripristino di un contratto cestinato e lo svuotamento del cestino sono
+// riservati all'admin. Il privilegio NON si deriva dall'header testuale
+// `X-authentik-groups` (falsificabile da chi raggiunge il backend): si deriva dal
+// claim `groups` del JWT `X-authentik-jwt`, verificato contro il JWKS del provider.
 //
-// Fail-closed: se il JWT manca o non valida, isAdmin = false.
+// Configurazione (tutta da env, mai da header della richiesta):
+//   - CG_ADMIN_GROUP          gruppi che concedono l'admin (lista separata da virgole)
+//   - AUTHENTIK_JWKS_URL      URL del JWKS con cui verificare la firma del JWT
+//   - AUTHENTIK_JWT_ISSUER    opzionale: se valorizzata, il claim `iss` è obbligatorio
+//                             e deve coincidere
+//   - AUTHENTIK_JWT_AUDIENCE  opzionale: se valorizzata, il claim `aud` è obbligatorio
+//                             e deve contenerla
+//
+// L'URL del JWKS viene SOLO dall'ambiente: un JWKS indicato dalla richiesta (per
+// esempio con un header) permetterebbe a chi raggiunge il backend di presentare un
+// JWT firmato con chiavi proprie.
+//
+// Fail-closed: JWT assente o non valido, JWKS non configurato o irraggiungibile,
+// issuer/audience che non coincidono → isAdmin = false.
 // -----------------------------------------------------------------------------
 
 function env(name: string): string | undefined {
@@ -123,7 +131,7 @@ function env(name: string): string | undefined {
   return v && v.trim() ? v.trim() : undefined;
 }
 
-// I gruppi-admin: una o più label Authentik separate da virgola (CG_ADMIN_GROUP).
+// I gruppi-admin: una o più label separate da virgola (CG_ADMIN_GROUP).
 function adminGroups(): string[] {
   return (env('CG_ADMIN_GROUP') ?? '')
     .split(',')
@@ -131,7 +139,7 @@ function adminGroups(): string[] {
     .filter(Boolean);
 }
 
-// JWKS remoto cachato per URL (jose gestisce cache + refresh delle chiavi).
+// JWKS remoto cachato per URL (jose gestisce cache e rinnovo delle chiavi).
 const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
 
 function getJwks(url: string) {
@@ -143,28 +151,41 @@ function getJwks(url: string) {
   return jwks;
 }
 
-/** Risolve l'URL del JWKS: env esplicita → header runtime dell'outpost. */
-function resolveJwksUrl(h: HeaderSource): string | null {
-  return env('AUTHENTIK_JWKS_URL') ?? h.get('x-authentik-meta-jwks') ?? null;
+// L'avviso di configurazione mancante esce una sola volta per processo: basta a
+// chi legge i log, senza riempirli a ogni richiesta.
+let warnedMissingJwks = false;
+
+function warnMissingJwksOnce(): void {
+  if (warnedMissingJwks) return;
+  warnedMissingJwks = true;
+  console.warn(
+    '[auth] AUTHENTIK_JWKS_URL non configurata: nessun utente riceverà i privilegi ' +
+      'di amministratore finché non viene impostata (CG_ADMIN_GROUP è valorizzata).'
+  );
 }
 
-/** Gruppi AUTOREVOLI dal JWT validato col JWKS. `[]` se il JWT manca/non valida. */
+/** Gruppi AUTOREVOLI dal JWT validato col JWKS. `[]` se il JWT manca o non valida. */
 async function verifyGroups(h: HeaderSource): Promise<string[]> {
   const jwt = h.get('x-authentik-jwt');
-  const jwksUrl = resolveJwksUrl(h);
-  if (!jwt || !jwksUrl) return [];
+  if (!jwt) return [];
+  const jwksUrl = env('AUTHENTIK_JWKS_URL');
+  if (!jwksUrl) {
+    warnMissingJwksOnce();
+    return [];
+  }
   try {
     const issuer = env('AUTHENTIK_JWT_ISSUER');
     const audience = env('AUTHENTIK_JWT_AUDIENCE');
     const { payload } = await jwtVerify(jwt, getJwks(jwksUrl), {
       ...(issuer ? { issuer } : {}),
       ...(audience ? { audience } : {}),
-      clockTolerance: 30, // tolleranza minima per skew d'orologio
+      clockTolerance: 30, // tolleranza minima per lo sfasamento degli orologi
     });
     const claim = (payload as JWTPayload & { groups?: unknown }).groups;
     return Array.isArray(claim) ? claim.filter((g): g is string => typeof g === 'string') : [];
   } catch (e) {
-    // Firma/scadenza/issuer non validi → nessun gruppo autorevole (fail-closed).
+    // Firma, scadenza, issuer o audience non validi, JWKS irraggiungibile o URL
+    // malformato → nessun gruppo autorevole (fail-closed).
     console.error('[auth] verifica JWT fallita:', e instanceof Error ? e.message : e);
     return [];
   }
@@ -180,7 +201,7 @@ export async function isAdmin(req: { headers: HeaderSource }): Promise<boolean> 
 
 /**
  * Identità OBBLIGATORIA + privilegio admin. Lancia ForbiddenError (403) se non admin.
- * In sviluppo (no Authentik), `CG_DEV_ADMIN=true` concede l'admin all'utente fittizio
+ * In sviluppo (nessun proxy), `CG_DEV_ADMIN=true` concede l'admin all'utente fittizio
  * così il flusso di ripristino/cestino è testabile in locale (come CG_DEV_USER).
  */
 export async function requireAdmin(req: { headers: HeaderSource }): Promise<Identity> {

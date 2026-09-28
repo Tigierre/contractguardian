@@ -35,6 +35,8 @@ export default function ReportPage() {
         if (!json.success || !json.data) {
           setErrorMsg((json as { error?: { message?: string } }).error?.message ?? t('loadingError'));
           setState('error');
+          // Errore definitivo (es. 404): inutile continuare a interrogare il server.
+          if (interval) clearInterval(interval);
           return;
         }
 

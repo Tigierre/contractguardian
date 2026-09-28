@@ -1,31 +1,36 @@
 /**
  * GET /api/analyze/[id]
  *
- * Retrieves analysis results including findings.
- *
- * Requirements:
- * - AI-02: Return severity classification per finding
- * - AI-03: Return redline suggestions per finding
+ * Restituisce lo stato e i risultati di un'analisi (finding compresi).
+ * Accesso riservato al proprietario del contratto analizzato: un'analisi di un
+ * altro utente, o di un contratto nel cestino, risponde 404 come se non esistesse.
  *
  * @module app/api/analyze/[id]/route
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
-import { analyses, findings, contracts } from '@/db/schema';
-import { and, eq, isNull } from 'drizzle-orm';
+import { findings } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import {
   createSuccessResponse,
   createErrorResponse,
   ValidationError,
   NotFoundError,
+  ForbiddenError,
 } from '@/lib/errors';
+import { requireIdentity } from '@/lib/auth/context';
+import { findOwnedAnalysis } from '@/lib/contracts/ownership';
+import { parseNormIds } from '@/lib/legal-norms/norm-ids';
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Identità obbligatoria: senza, 403 (fail-closed) prima di toccare il DB.
+    const me = requireIdentity(req);
+
     const { id } = await params;
     const analysisId = parseInt(id, 10);
 
@@ -33,36 +38,12 @@ export async function GET(
       throw new ValidationError('ID analisi non valido');
     }
 
-    // Load analysis
-    const [analysis] = await db
-      .select()
-      .from(analyses)
-      .where(eq(analyses.id, analysisId))
-      .limit(1);
-
-    if (!analysis) {
+    // Analisi + contratto in una sola query, filtrata per proprietario e non cestinato.
+    const owned = await findOwnedAnalysis(analysisId, me.username);
+    if (!owned) {
       throw new NotFoundError('Analisi non trovata');
     }
-
-    // Load contract to get party names — escluso se cestinato (CG-8): un'analisi
-    // il cui contratto è nel cestino non dev'essere più consultabile.
-    const [contract] = await db
-      .select({
-        partyA: contracts.partyA,
-        partyB: contracts.partyB,
-        contractType: contracts.contractType,
-        jurisdiction: contracts.jurisdiction,
-        metadataConfidence: contracts.metadataConfidence,
-        metadataValidatedAt: contracts.metadataValidatedAt,
-      })
-      .from(contracts)
-      .where(and(eq(contracts.id, analysis.contractId), isNull(contracts.deletedAt)))
-      .limit(1);
-
-    if (!contract) {
-      // Contratto inesistente o cestinato → l'analisi non è consultabile.
-      throw new NotFoundError('Analisi non trovata');
-    }
+    const { analysis, contract } = owned;
 
     // Load findings if analysis is completed
     let analysisFindings: Array<{
@@ -93,7 +74,7 @@ export async function GET(
         explanation: f.explanation,
         redlineSuggestion: f.redlineSuggestion,
         actor: f.actor ?? null,
-        normIds: f.normIds ? JSON.parse(f.normIds) : [],
+        normIds: parseNormIds(f.normIds),
       }));
     }
 
@@ -111,11 +92,11 @@ export async function GET(
         totalChunks: analysis.totalChunks,
         currentChunk: analysis.currentChunk,
         enhanced: analysis.enhanced === 'true',
-        partyA: contract?.partyA ?? null,
-        partyB: contract?.partyB ?? null,
-        contractType: contract?.contractType ?? null,
-        jurisdiction: contract?.jurisdiction ?? null,
-        metadataConfidence: contract?.metadataConfidence ?? null,
+        partyA: contract.partyA ?? null,
+        partyB: contract.partyB ?? null,
+        contractType: contract.contractType ?? null,
+        jurisdiction: contract.jurisdiction ?? null,
+        metadataConfidence: contract.metadataConfidence ?? null,
         counts: {
           total: analysis.totalFindings,
           importante: analysis.importanteCount,
@@ -129,7 +110,11 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Get analysis error:', error);
 
-    if (error instanceof ValidationError || error instanceof NotFoundError) {
+    if (
+      error instanceof ValidationError ||
+      error instanceof NotFoundError ||
+      error instanceof ForbiddenError
+    ) {
       return NextResponse.json(createErrorResponse(error), {
         status: error.statusCode,
       });
