@@ -39,7 +39,7 @@
     "postgres": "^3.4.8",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-dropzone": "^14.4.0",
+    "react-dropzone": "^20.1.2",
     "react-hook-form": "^7.71.1",
     "sharp": "^0.35.5",
     "tailwindcss": "^4",
