@@ -8,11 +8,6 @@ export default defineConfig({
     include: ['**/*.test.ts'],
     exclude: ['**/node_modules/**', '**/.next/**'],
     environment: 'node',
-    // Le route importano il client OpenAI, che rifiuta di caricarsi senza chiave:
-    // nei test basta un segnaposto (nessuna chiamata di rete verso il provider).
-    env: {
-      OPENAI_API_KEY: 'sk-test-placeholder',
-    },
     // PGlite + migrazioni richiedono qualche secondo al primo avvio per file.
     hookTimeout: 60_000,
     testTimeout: 30_000,

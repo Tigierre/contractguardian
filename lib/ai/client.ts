@@ -2,16 +2,26 @@
  * OpenAI Client Singleton
  *
  * Provides a single, configured OpenAI client instance for the application.
- * Environment variable validation is performed at import time to fail fast
- * during development/deployment if the API key is missing.
+ * Il client è creato al primo utilizzo, non all'import: `next build` importa i
+ * moduli delle route senza chiamare il modello, e non deve aver bisogno della
+ * chiave. Se OPENAI_API_KEY manca, l'errore emerge alla prima chiamata.
  *
  * @module lib/ai/client
  */
 
 import OpenAI from 'openai';
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY non configurato');
+let instance: OpenAI | undefined;
+
+function getClient(): OpenAI {
+  if (!instance) {
+    const apiKey = process.env.OPENAI_API_KEY?.replace(/[^\x20-\x7E]/g, '');
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY non configurato');
+    }
+    instance = new OpenAI({ apiKey });
+  }
+  return instance;
 }
 
 /**
@@ -20,9 +30,14 @@ if (!process.env.OPENAI_API_KEY) {
  * The client is shared across the application to manage rate limits
  * and connection pooling efficiently. I modelli usati per l'analisi
  * sono definiti sotto (MODEL_PREANALISI, MODEL_ANALISI).
+ * È un proxy verso il client vero, creato pigramente da getClient().
  */
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY?.replace(/[^\x20-\x7E]/g, ''),
+export const openai: OpenAI = new Proxy({} as OpenAI, {
+  get(_target, prop) {
+    const real = getClient();
+    const value = Reflect.get(real, prop, real);
+    return typeof value === 'function' ? value.bind(real) : value;
+  },
 });
 
 /**
