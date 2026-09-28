@@ -1,0 +1,133 @@
+# =============================================================================
+# CI — tipi, test, build, vulnerabilità delle dipendenze, immagine Docker
+# =============================================================================
+# Supply chain: le action sono pinnate al commit SHA (immutabile), non al tag
+# mobile; il commento `# vX.Y.Z` tiene leggibile la versione ed è il formato che
+# Dependabot aggiorna (vedi .github/dependabot.yml).
+# -----------------------------------------------------------------------------
+name: ci
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verifica:
+    name: tipi · test · build · audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dipendenze (lockfile)
+        run: npm ci
+
+      - name: Controllo dei tipi
+        run: npx tsc --noEmit
+
+      # Include i test di autorizzazione delle route su PostgreSQL in-process
+      # (PGlite): nessun servizio esterno.
+      - name: Test
+        run: npm test
+
+      # Nessun segreto: i client DB e OpenAI si creano al primo utilizzo.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      # Blocca su vulnerabilità alte o critiche delle dipendenze di produzione.
+      - name: Vulnerabilità delle dipendenze di produzione
+        run: npm audit --omit=dev --audit-level=high
+
+  immagine:
+    name: immagine Docker (build · avvio · sonda)
+    runs-on: ubuntu-latest
+    needs: verifica
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          # Credenziali usa e getta, valide solo dentro questo job.
+          POSTGRES_USER: cg
+          POSTGRES_PASSWORD: ci-only-not-a-secret
+          POSTGRES_DB: contractguardian
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cg -d contractguardian"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build dell'immagine
+        run: docker build --build-arg SOURCE_COMMIT="${GITHUB_SHA}" -t contractguardian:ci .
+
+      - name: Il commit è inciso nell'immagine
+        run: |
+          docker image inspect contractguardian:ci \
+            --format '{{range .Config.Env}}{{println .}}{{end}}' \
+            | grep -qx "SOURCE_COMMIT=${GITHUB_SHA}"
+
+      # All'avvio l'entrypoint applica le migrazioni al Postgres del job.
+      - name: Avvio del container
+        run: |
+          docker run -d --name cg --network host \
+            -e DATABASE_URL="postgres://cg:ci-only-not-a-secret@127.0.0.1:5432/contractguardian" \
+            -e PORT=3000 \
+            contractguardian:ci
+
+      - name: HEALTHCHECK dell'immagine → healthy
+        run: |
+          for i in $(seq 1 45); do
+            running=$(docker inspect -f '{{.State.Running}}' cg)
+            status=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{end}}' cg)
+            echo "tentativo ${i}: running=${running} health=${status}"
+            [ "${running}" = "true" ] || { echo "::error::il container si è fermato"; exit 1; }
+            [ "${status}" = "healthy" ] && exit 0
+            sleep 4
+          done
+          echo "::error::il container non è diventato healthy"
+          exit 1
+
+      - name: La sonda riporta versione e database
+        run: |
+          body=$(curl -fsS http://127.0.0.1:3000/api/health)
+          echo "${body}"
+          echo "${body}" | grep -q "\"versione\":\"${GITHUB_SHA::7}\""
+          echo "${body}" | grep -q '"database":"connected"'
+
+      - name: Senza identità dal proxy le API rispondono 403
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/api/contracts)
+          echo "GET /api/contracts → ${code}"
+          test "${code}" = "403"
+
+      - name: Log del container
+        if: always()
+        run: docker logs cg 2>&1 | tail -n 200 || true

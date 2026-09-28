@@ -1,0 +1,51 @@
+# =============================================================================
+# Dependabot — aggiornamenti di dipendenze npm, immagine base e action pinnate
+# =============================================================================
+# Le action in .github/workflows sono pinnate a commit SHA: senza Dependabot
+# resterebbero ferme per sempre, anche su versioni vulnerabili. Le PR riscrivono
+# sia lo SHA sia il commento `# vX.Y.Z`.
+# -----------------------------------------------------------------------------
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      # Patch e minor in un'unica PR; le major arrivano una per una.
+      npm-minor-e-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      # Il passaggio a una nuova major di Next.js si pianifica a mano
+      # (routing, caching e API cambiano tra major).
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(dev)"
+
+  # Immagine base del Dockerfile: cattura le CVE del sistema alla fonte.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # Il salto di major di Node si decide a mano (compatibilità dei moduli nativi).
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build(deps)"
+
+  # Action pinnate a SHA nei workflow.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns: ["*"]
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps)"
