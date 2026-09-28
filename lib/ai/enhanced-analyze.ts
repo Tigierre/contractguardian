@@ -8,7 +8,7 @@
  */
 
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { openai, MODEL_ANALISI } from './client';
+import { openai, MODEL_ANALISI, MAX_COMPLETION_TOKENS_ANALISI } from './client';
 import {
   EnhancedChunkAnalysisSchema,
   ExecutiveSummarySchema,
@@ -75,6 +75,7 @@ export async function analyzeChunkEnhanced(
     const response = await openai.chat.completions.parse({
       model: MODEL_ANALISI,
       reasoning_effort: 'medium',
+      max_completion_tokens: MAX_COMPLETION_TOKENS_ANALISI,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -163,6 +164,7 @@ Generate:
     const response = await openai.chat.completions.parse({
       model: MODEL_ANALISI,
       reasoning_effort: 'medium',
+      max_completion_tokens: MAX_COMPLETION_TOKENS_ANALISI,
       messages: [
         { role: 'system', content: systemPromptText },
         { role: 'user', content: summaryPrompt },

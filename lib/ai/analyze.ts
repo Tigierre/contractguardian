@@ -2,13 +2,13 @@
  * Contract Analysis Functions
  *
  * Core AI analysis logic for contract clause evaluation.
- * Uses OpenAI GPT-4o-mini with structured outputs via Zod schemas.
+ * Uses the OpenAI chat completions API with structured outputs via Zod schemas.
  *
  * @module lib/ai/analyze
  */
 
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { openai, MODEL_ANALISI } from './client';
+import { openai, MODEL_ANALISI, MAX_COMPLETION_TOKENS_ANALISI } from './client';
 import {
   ChunkAnalysisSchema,
   ExecutiveSummarySchema,
@@ -39,6 +39,7 @@ export async function analyzeChunk(
     const response = await openai.chat.completions.parse({
       model: MODEL_ANALISI,
       reasoning_effort: 'medium',
+      max_completion_tokens: MAX_COMPLETION_TOKENS_ANALISI,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -72,6 +73,7 @@ export async function generateExecutiveSummary(
     const response = await openai.chat.completions.parse({
       model: MODEL_ANALISI,
       reasoning_effort: 'medium',
+      max_completion_tokens: MAX_COMPLETION_TOKENS_ANALISI,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },

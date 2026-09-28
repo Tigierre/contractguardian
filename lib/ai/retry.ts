@@ -9,6 +9,7 @@
  */
 
 import OpenAI from 'openai';
+import { LengthFinishReasonError } from 'openai/error';
 
 /**
  * AI-specific error class
@@ -43,6 +44,7 @@ export const AI_ERROR_CODES = {
   CONNECTION_ERROR: 'CONNECTION_ERROR',
   AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR',
   INVALID_REQUEST: 'INVALID_REQUEST',
+  OUTPUT_LIMIT: 'OUTPUT_LIMIT',
 } as const;
 
 export const AI_ERROR_MESSAGES = {
@@ -53,6 +55,8 @@ export const AI_ERROR_MESSAGES = {
   CONNECTION_ERROR: 'Impossibile connettersi al servizio AI. Verifica la connessione.',
   AUTHENTICATION_ERROR: 'Errore di autenticazione con il servizio AI.',
   INVALID_REQUEST: 'Richiesta non valida per il servizio AI.',
+  OUTPUT_LIMIT:
+    "La risposta del servizio AI ha superato il limite di lunghezza configurato. Riprova; se succede ancora, contatta l'amministratore.",
 } as const;
 
 /**
@@ -133,6 +137,20 @@ export async function withRetry<T>(
         throw new AIError(
           AI_ERROR_MESSAGES.AUTHENTICATION_ERROR,
           AI_ERROR_CODES.AUTHENTICATION_ERROR,
+          false
+        );
+      }
+
+      // Risposta troncata dal tetto max_completion_tokens - non si ritenta (il
+      // ritentativo costerebbe di nuovo il tetto intero). Il log indica la leva.
+      if (error instanceof LengthFinishReasonError) {
+        console.warn(
+          '[AI] Risposta troncata dal tetto di token in uscita: se ricorre, alzare ' +
+            'OPENAI_MAX_COMPLETION_TOKENS_ANALYSIS / OPENAI_MAX_COMPLETION_TOKENS_PREANALYSIS.'
+        );
+        throw new AIError(
+          AI_ERROR_MESSAGES.OUTPUT_LIMIT,
+          AI_ERROR_CODES.OUTPUT_LIMIT,
           false
         );
       }

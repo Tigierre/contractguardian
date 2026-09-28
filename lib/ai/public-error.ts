@@ -44,6 +44,8 @@ export function publicAnalysisErrorMessage(
         return 'Impossibile raggiungere il servizio AI. Riprova tra qualche minuto.';
       case AI_ERROR_CODES.AUTHENTICATION_ERROR:
         return "Servizio AI non configurato correttamente. Contatta l'amministratore.";
+      case AI_ERROR_CODES.OUTPUT_LIMIT:
+        return AI_ERROR_MESSAGES.OUTPUT_LIMIT;
       case AI_ERROR_CODES.PARSE_ERROR:
         return AI_ERROR_MESSAGES.PARSE_ERROR;
       default:

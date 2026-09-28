@@ -8,7 +8,7 @@
  */
 
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { openai, MODEL_PREANALISI } from './client';
+import { openai, MODEL_PREANALISI, MAX_COMPLETION_TOKENS_PREANALISI } from './client';
 import {
   PreAnalysisSchema,
   type PreAnalysis,
@@ -119,6 +119,7 @@ export async function extractContractMetadata(
       // solo none/low/medium/high/xhigh; 'minimal' del vecchio nano non
       // e' piu' valido).
       reasoning_effort: 'low',
+      max_completion_tokens: MAX_COMPLETION_TOKENS_PREANALISI,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
