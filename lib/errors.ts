@@ -164,6 +164,28 @@ export const EXTRACTION_MESSAGES = {
 } as const;
 
 // =============================================================================
+// Payload Errors (413)
+// =============================================================================
+
+/**
+ * Request body larger than the accepted limit.
+ *
+ * Use for uploads rejected before (or while) reading the body, so that an
+ * oversized request is not buffered in memory.
+ *
+ * @example
+ * ```typescript
+ * throw new PayloadTooLargeError(VALIDATION_MESSAGES.FILE_TOO_LARGE);
+ * ```
+ */
+export class PayloadTooLargeError extends AppError {
+  constructor(message: string = 'Richiesta troppo grande') {
+    super('PAYLOAD_TOO_LARGE', message, 413);
+    this.name = 'PayloadTooLargeError';
+  }
+}
+
+// =============================================================================
 // Resource Errors (404)
 // =============================================================================
 

@@ -10,8 +10,8 @@
 /** PDF magic bytes: %PDF- (hex: 25 50 44 46) */
 const PDF_MAGIC_BYTES = Buffer.from([0x25, 0x50, 0x44, 0x46]);
 
-/** Maximum file size: 10MB */
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+/** Maximum file size: 10MB (unica fonte del limite, usata anche dalla route di upload) */
+export const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 /** Minimum file size to be a valid PDF (header + minimal structure) */
 const MIN_FILE_SIZE = 67; // Smallest valid PDF is ~67 bytes
