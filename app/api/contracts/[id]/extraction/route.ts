@@ -1,7 +1,7 @@
 /**
  * GET /api/contracts/[id]/extraction
  *
- * Stato dell'estrazione testo di un contratto (CPERF-1 step 2, "OCR vero-async").
+ * Stato dell'estrazione testo di un contratto (estrazione/OCR asincroni).
  * Dopo l'upload il client polla questo endpoint finché lo status passa da
  * 'extracting' a 'uploaded' (pronto) oppure 'extraction_failed'. Simmetrico a
  * GET /api/analyze/[id], che fa lo stesso per l'analisi.

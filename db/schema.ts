@@ -5,7 +5,7 @@ export const contracts = pgTable('contracts', {
   filename: text('filename').notNull(),
   originalText: text('original_text').notNull(),
   // Proprietario = username Authentik di chi carica il contratto. Ownership per-utente:
-  // ogni utente vede/gestisce solo i propri contratti (chiude CG-1 dell'audit di sicurezza).
+  // ogni utente vede/gestisce solo i propri contratti.
   // Nullable per le righe pre-esistenti a questa migrazione (su un deploy nuovo = nessuna).
   owner: text('owner'),
   // status del contratto:
@@ -15,7 +15,7 @@ export const contracts = pgTable('contracts', {
   status: text('status').notNull().default('uploaded'),
   analysisStatus: text('analysis_status').default('none'), // none, pending, completed, failed
   language: text('language').notNull().default('it'), // 'it' | 'en'
-  // Estrazione async (CPERF-1 step 2, "OCR vero-async", migrazione 0006). L'upload
+  // Estrazione asincrona (migrazione 0006). L'upload
   // non estrae più il testo in modo sincrono dentro la richiesta HTTP (su PDF
   // scansionati l'OCR può durare minuti → timeout del proxy/Authentik). Crea il
   // contratto come 'extracting', avvia l'estrazione in background e il frontend
@@ -28,7 +28,7 @@ export const contracts = pgTable('contracts', {
   extractionError: text('extraction_error'), // messaggio in italiano se status = 'extraction_failed'
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
-  // Soft-delete (CG-8, migrazione 0005). "Eliminare" marca la riga come cestinata
+  // Soft-delete (migrazione 0005). "Eliminare" marca la riga come cestinata
   // invece di cancellarla: deletedAt = istante del cestinamento, deletedBy = chi l'ha
   // fatto. Le letture escludono i cestinati (deletedAt IS NULL). Ripristino = solo
   // admin entro 20 giorni; oltre il cap, purge fisico. Gli indici (FK + cestino) sono

@@ -8,7 +8,7 @@ const { langPath } = require('@tesseract.js-data/ita');
 /**
  * Cap di pagine sottoposte a OCR. Oltre questa soglia le pagine eccedenti NON
  * vengono elaborate (vedi `truncated`/qualityWarning): evita che una scansione
- * di centinaia di pagine blocchi l'upload (CPERF-1). Override via `OCR_MAX_PAGES`.
+ * di centinaia di pagine blocchi l'upload. Override via `OCR_MAX_PAGES`.
  */
 const OCR_MAX_PAGES = Math.max(1, Number(process.env.OCR_MAX_PAGES) || 30);
 
@@ -41,7 +41,7 @@ export interface OCRResult {
  * Extract images from a PDF buffer using pdfjs-dist,
  * then OCR each image with Tesseract.js (Italian language).
  *
- * Performance (CPERF-1): un SOLO worker Tesseract viene creato e riusato per
+ * Performance: un SOLO worker Tesseract viene creato e riusato per
  * tutte le immagini del documento (in precedenza ne veniva creato uno per ogni
  * immagine, ricaricando ogni volta motore e dizionario). In più: cap di pagine,
  * downscale delle immagini e time-box complessivo.
@@ -63,7 +63,7 @@ export async function extractTextWithOCR(buffer: Buffer): Promise<OCRResult> {
   // Già "tronco" se il cap pagine taglia il documento; può diventarlo anche per time-box.
   let truncated = pagesToProcess < pageCount;
 
-  // Worker Tesseract creato UNA volta e riusato per tutte le immagini (CPERF-1).
+  // Worker Tesseract creato UNA volta e riusato per tutte le immagini.
   const worker = await createWorker('ita', undefined, {
     langPath,
     cacheMethod: 'none', // Already local, no caching needed

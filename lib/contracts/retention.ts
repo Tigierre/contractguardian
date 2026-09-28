@@ -4,7 +4,7 @@ import { contracts, analyses, findings } from '@/db/schema';
 import { and, lt, isNotNull, inArray } from 'drizzle-orm';
 
 // =============================================================================
-// Retention del cestino (CG-8) — soft-delete con cap di recuperabilità
+// Retention del cestino — soft-delete con cap di recuperabilità
 // =============================================================================
 // "Eliminare" un contratto lo marca come cestinato (deletedAt). Resta recuperabile
 // dall'admin per un numero finito di giorni (CG_TRASH_RETENTION_DAYS, default 20):

@@ -2,7 +2,7 @@
  * PDF Validation Utilities
  *
  * SECURITY: Always validate magic bytes, not just MIME type.
- * See: RESEARCH.md Pitfall 1 - Client MIME types can be spoofed.
+ * Client-provided MIME types can be spoofed.
  *
  * @module lib/pdf/validator
  */

@@ -58,7 +58,7 @@ export function fitsInContext(text: string, maxTokens = 100000): boolean {
  * - POLICY_TOKENS_ESTIMATE: Reserved space for company policies in prompt
  */
 /**
- * Resolve the per-chunk token budget (CPERF-5).
+ * Resolve the per-chunk token budget.
  *
  * Bigger chunks mean fewer LLM calls on long documents (cost ∝ number of
  * chunks), but a chunk that is too large makes the model "drown" and miss

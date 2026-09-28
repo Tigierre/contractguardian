@@ -8,7 +8,7 @@ import type { PreAnalysis } from '@/lib/ai/schemas';
 import { pollExtractionStatus } from '@/lib/upload/poll-extraction';
 
 // 'uploading'  = invio del file (POST in corso)
-// 'processing' = estrazione testo/OCR in background sul server (polling — CPERF-1 step 2)
+// 'processing' = estrazione testo/OCR in background sul server (polling)
 // 'success'    = estrazione completata, mostra metadati + avvio pre-analisi
 // 'extracting' = pre-analisi metadati in corso (handleAnalyze)
 type UploadState = 'idle' | 'uploading' | 'processing' | 'success' | 'extracting' | 'error';
@@ -47,7 +47,7 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
         throw new Error(data.error?.message || t('unknownError'));
       }
 
-      // L'estrazione è asincrona (CPERF-1 step 2): la POST ha solo creato il
+      // L'estrazione è asincrona: la POST ha solo creato il
       // contratto come 'extracting'. Attendi l'esito pollando il server.
       setState('processing');
       const extraction = await pollExtractionStatus(data.data.id);

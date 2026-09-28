@@ -4,7 +4,7 @@
  * COMPLIANCE: Italian AI Law No. 132/2025 Article 13
  * Requires "clear and comprehensible" disclosure about AI use.
  *
- * DESIGN: RESEARCH.md Pitfall 3 - Must be prominent (above-the-fold)
+ * DESIGN: must be prominent (above-the-fold)
  * Amber warning style for professional legal aesthetic.
  *
  * @module components/layout/LegalDisclaimer

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { dedupeContractText } from '../text-dedup';
 
-describe('dedupeContractText (CPERF-5)', () => {
+describe('dedupeContractText', () => {
   it('keeps a single source intact (no false dedup)', () => {
     const text = 'Clausola uno: oggetto del contratto.\n\nClausola due: durata.';
     const r = dedupeContractText([{ filename: 'a.pdf', text }]);

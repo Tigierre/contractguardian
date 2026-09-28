@@ -18,7 +18,7 @@ export interface ApiResponse<T = unknown> {
   };
 }
 
-/** Stato dell'estrazione testo (CPERF-1 step 2, "OCR vero-async"). */
+/** Stato dell'estrazione testo (asincrona). */
 export type ExtractionStatus = 'extracting' | 'uploaded' | 'extraction_failed';
 
 /**
@@ -118,7 +118,7 @@ export interface MergeContractsResponse {
   contractId: number;
   filename: string;
   /**
-   * Non-blocking notice (CPERF-5): set when the merged text is very long, so
+   * Non-blocking notice: set when the merged text is very long, so
    * the UI can warn that analysis will be slower/limited. Absent otherwise.
    */
   warning?: string;

@@ -29,7 +29,7 @@ import { estimatePages } from '@/lib/ai/chunker';
 import type { MergeContractsRequest, MergeContractsResponse } from '@/src/types/api';
 
 /**
- * Soft cap on merged-text length (CPERF-5). Above this we don't block or
+ * Soft cap on merged-text length. Above this we don't block or
  * truncate — we attach a non-blocking warning so the user knows the analysis
  * will be slower and may be limited to the first sections (the chunk cap,
  * ANALYSIS_MAX_CHUNKS, does the actual truncation downstream with its own
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     // Build combined filename: "File1.pdf + File2.pdf"
     const combinedFilename = sortedRows.map((r) => r.filename).join(' + ');
 
-    // Concatenate text, dropping repeated blocks across files (CPERF-5):
+    // Concatenate text, dropping repeated blocks across files:
     // merged annexes/versions share large boilerplate that would otherwise be
     // chunked and re-analyzed at full LLM cost on every copy.
     const dedup = dedupeContractText(
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Soft-delete dei sorgenti effettivamente uniti (owned ids): mai gli id passati
-    // ma non posseduti (non si toccano i contratti altrui). Coerente con CG-8: nessun
+    // ma non posseduti (non si toccano i contratti altrui). Coerente col soft-delete: nessun
     // hard-delete dall'app → i sorgenti finiscono nel cestino (recuperabili dall'admin,
     // purgati col cap di retention); il loro testo è comunque preservato nel contratto unito.
     const mergedIds = sortedRows.map((r) => r.id);
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
       ip: clientIp(req), detail: { mergedFrom: mergedIds, count: mergedIds.length },
     });
 
-    // CPERF-5 soft cap: warn (don't block) when the merged text is very long.
+    // Soft cap: warn (don't block) when the merged text is very long.
     let warning: string | undefined;
     if (combinedText.length > maxTextChars()) {
       const pages = estimatePages(combinedText);

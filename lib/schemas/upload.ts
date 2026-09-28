@@ -74,7 +74,7 @@ export const UploadMetadataSchema = z.object({
 });
 
 /**
- * Sanitize an uploaded filename before persisting it (CG-9).
+ * Sanitize an uploaded filename before persisting it.
  *
  * The upload route stored `file.name` raw. We strip any directory component and
  * the path/wildcard chars rejected by UploadMetadataSchema, drop control chars,

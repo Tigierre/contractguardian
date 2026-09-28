@@ -8,14 +8,14 @@ import { purgeExpiredDeletedThrottled } from '@/lib/contracts/retention';
 
 export async function GET(req: NextRequest) {
   try {
-    // Ownership: ogni utente vede solo i propri contratti (CG-1).
+    // Proprietà: ogni utente vede solo i propri contratti.
     const me = requireIdentity(req);
     // Rete di sicurezza retention: purga (throttled) i contratti cestinati oltre il cap.
     await purgeExpiredDeletedThrottled();
     const allContracts = await db
       .select()
       .from(contracts)
-      // Esclude i cestinati (soft-delete CG-8): deletedAt IS NULL = solo contratti attivi.
+      // Esclude i cestinati (soft-delete): deletedAt IS NULL = solo contratti attivi.
       .where(and(eq(contracts.owner, me.username), isNull(contracts.deletedAt)))
       .orderBy(desc(contracts.createdAt));
 

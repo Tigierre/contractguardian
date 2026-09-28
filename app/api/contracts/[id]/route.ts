@@ -54,7 +54,7 @@ export async function DELETE(
       throw new NotFoundError('Contratto non trovato');
     }
 
-    // Soft-delete (CG-8): si marca la riga come cestinata invece di cancellarla.
+    // Soft-delete: si marca la riga come cestinata invece di cancellarla.
     // Le analisi/findings restano e tornano visibili se l'admin ripristina entro il
     // cap di retention; oltre il cap il purge a cascata le rimuove definitivamente.
     await db

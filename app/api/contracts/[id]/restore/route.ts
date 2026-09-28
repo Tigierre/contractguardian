@@ -1,7 +1,7 @@
 /**
  * POST /api/contracts/[id]/restore
  *
- * Ripristina un contratto cestinato (soft-delete, CG-8). Azione RISERVATA all'admin
+ * Ripristina un contratto cestinato (soft-delete). Azione RISERVATA all'admin
  * (gruppo dal JWT validato col JWKS, vedi lib/auth/context.ts) ed entro il cap di
  * recuperabilità (CG_TRASH_RETENTION_DAYS, default 20): oltre il cap il dato è
  * destinato al purge definitivo e non è più ripristinabile.

@@ -3,7 +3,7 @@ import { pollExtractionStatus } from '../poll-extraction';
 import type { ApiResponse, ExtractionStatusResponse } from '@/src/types/api';
 
 /**
- * Test dell'helper di polling dell'estrazione (CPERF-1 step 2, "OCR vero-async").
+ * Test dell'helper di polling dell'estrazione asincrona.
  * Coprono i casi terminali raggiunti al primo poll (nessuna attesa reale) + i
  * percorsi d'errore. Il loop di attesa multi-iterazione dipende dai timer e non
  * è coperto qui per non introdurre flakiness da fake-timer.

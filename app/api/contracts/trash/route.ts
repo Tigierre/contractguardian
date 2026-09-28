@@ -4,7 +4,7 @@
  *
  * Entrambe RISERVATE all'admin (gruppo dal JWT validato col JWKS). Il cestino è una
  * vista trasversale a tutti gli utenti: solo l'admin può ispezionarlo, ripristinare
- * (vedi [id]/restore) o svuotarlo. Soft-delete + retention: CG-8.
+ * (vedi [id]/restore) o svuotarlo. Soft-delete + retention: lib/contracts/retention.ts.
  *
  * @module app/api/contracts/trash/route
  */

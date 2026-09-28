@@ -45,7 +45,7 @@ export async function PATCH(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB + ownership + non cestinato (CG-8)
+    // Contratto del chiamante e non cestinato
     const [contract] = await db
       .select()
       .from(contracts)

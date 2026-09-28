@@ -1,5 +1,5 @@
 /**
- * Polling lato client dello stato di estrazione testo (CPERF-1 step 2).
+ * Polling lato client dello stato di estrazione testo.
  *
  * Dopo POST /api/upload il contratto è 'extracting': l'estrazione native+OCR gira
  * in background sul server. Questo helper interroga GET /api/contracts/[id]/extraction

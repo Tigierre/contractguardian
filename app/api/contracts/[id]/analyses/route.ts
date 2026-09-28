@@ -33,7 +33,7 @@ export async function GET(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Ownership: il contratto dev'essere del chiamante e non cestinato (CG-8)
+    // Proprietà: il contratto dev'essere del chiamante e non cestinato
     const [contract] = await db
       .select({ owner: contracts.owner })
       .from(contracts)

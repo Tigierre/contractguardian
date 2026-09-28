@@ -117,7 +117,7 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
           throw new Error(data.error?.message || 'Errore sconosciuto');
         }
 
-        // Estrazione asincrona (CPERF-1 step 2): attendi l'esito pollando il server.
+        // Estrazione asincrona: attendi l'esito pollando il server.
         updateFile(entry.id, { status: 'extracting' });
         const extraction = await pollExtractionStatus(data.data.id);
 
@@ -233,7 +233,7 @@ export function BatchUploader({ onSingleFileComplete }: BatchUploaderProps = {})
 
       const { contractId: mergedId, filename: mergedFilename } = mergeJson.data;
 
-      // CPERF-5: surface the non-blocking "very long document" notice while the
+      // Surface the non-blocking "very long document" notice while the
       // pre-analysis runs (does not block the flow).
       if (mergeJson.data.warning) {
         setMergeWarning(mergeJson.data.warning);

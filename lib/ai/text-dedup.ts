@@ -1,5 +1,5 @@
 /**
- * Upstream Contract-Text Deduplication (CPERF-5)
+ * Upstream Contract-Text Deduplication
  *
  * When several files are merged into one contract (contract + annexes, or a
  * contract split across versions), large portions are usually identical

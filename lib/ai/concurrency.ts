@@ -1,5 +1,5 @@
 /**
- * In-process concurrency limiter for contract analyses (CPERF-2).
+ * In-process concurrency limiter for contract analyses.
  *
  * `POST /api/analyze` launches each analysis fire-and-forget. Without a cap,
  * N simultaneous uploads = N×(chunks×LLM calls) running at once → cost spike,

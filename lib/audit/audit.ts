@@ -3,7 +3,7 @@ import { db } from '@/src/lib/db';
 import { auditLog } from '@/db/schema';
 
 // =============================================================================
-// Audit log append-only — chi fa cosa sui contratti (accountability / GDPR, CG-5).
+// Audit log append-only — chi fa cosa sui contratti (accountability / GDPR).
 // =============================================================================
 // Scrive su public.audit_log via Drizzle. La hash-chain tamper-evident
 // (prev_hash/row_hash) la calcola il TRIGGER nel DB (migrazione 0004) → qui NON si

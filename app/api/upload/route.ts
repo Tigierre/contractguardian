@@ -8,8 +8,9 @@
  * - UPLOAD-02: PDF text extraction
  * - UPLOAD-04: File validation
  *
- * Security: Uses magic byte validation (RESEARCH.md Pitfall 1)
- * UX: All error messages in Italian (RESEARCH.md Pitfall 5)
+ * Security: magic-byte validation (client MIME types can be spoofed); body size
+ * capped before it is read into memory.
+ * UX: All error messages in Italian
  *
  * @module app/api/upload/route
  */
