@@ -1,5 +1,5 @@
 /**
- * Job di estrazione testo asincrono (CPERF-1 step 2, "OCR vero-async").
+ * Job di estrazione testo asincrono.
  *
  * `POST /api/upload` crea il contratto come 'extracting' e invoca questa funzione
  * in fire-and-forget (stesso schema di runAnalysis): l'estrazione native+OCR gira
@@ -16,7 +16,23 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
+import { ExtractionError } from '@/lib/errors';
 import { extractText } from './pipeline';
+
+/**
+ * Messaggio mostrato quando l'estrazione fallisce per un errore interno (libreria
+ * PDF/OCR, DB, memoria). Il dettaglio resta nei log.
+ */
+export const GENERIC_EXTRACTION_ERROR =
+  'Impossibile estrarre il testo dal PDF. Il file potrebbe essere danneggiato, protetto o in un formato non supportato.';
+
+/**
+ * Messaggio sicuro da salvare in `extractionError` (e quindi da mostrare al client):
+ * il testo di un ExtractionError è scritto per l'utente, tutto il resto no.
+ */
+export function publicExtractionErrorMessage(error: unknown): string {
+  return error instanceof ExtractionError ? error.message : GENERIC_EXTRACTION_ERROR;
+}
 
 /**
  * Esegue l'estrazione del testo per un contratto già creato (status 'extracting')
@@ -42,9 +58,9 @@ export async function runExtraction(contractId: number, buffer: Buffer): Promise
       })
       .where(eq(contracts.id, contractId));
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : 'Errore durante l’estrazione del testo';
+    // Dettaglio completo nei log; nel DB solo un messaggio mostrabile all'utente.
     console.error(`[Extraction] Estrazione fallita per il contratto ${contractId}:`, error);
+    const message = publicExtractionErrorMessage(error);
 
     await db
       .update(contracts)

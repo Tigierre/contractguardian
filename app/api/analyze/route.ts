@@ -197,7 +197,8 @@ export async function POST(req: NextRequest) {
           statusCode = 503;
           break;
         default:
-          message = error.message;
+          // Mai il testo grezzo dell'errore: può contenere dettagli del provider.
+          message = "Errore durante l'analisi del contratto";
           statusCode = 503;
       }
 

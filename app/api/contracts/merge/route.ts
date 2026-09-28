@@ -47,8 +47,9 @@ export async function POST(req: NextRequest) {
     assertSameOrigin(req);
     const me = requireIdentity(req);
 
-    const body: MergeContractsRequest = await req.json();
-    const { contractIds, language: rawLanguage } = body;
+    // Corpo non JSON → 400 (non un 500).
+    const body = (await req.json().catch(() => null)) as Partial<MergeContractsRequest> | null;
+    const { contractIds, language: rawLanguage } = body ?? {};
     const language: 'it' | 'en' = rawLanguage === 'en' ? 'en' : 'it';
 
     // Validate contractIds
@@ -57,6 +58,10 @@ export async function POST(req: NextRequest) {
     }
     if (contractIds.length > 10) {
       throw new ValidationError('Massimo 10 file per unione');
+    }
+    // Solo interi positivi: un valore di altro tipo arriverebbe alla query come errore del DB.
+    if (!contractIds.every((id) => Number.isInteger(id) && id > 0)) {
+      throw new ValidationError('Identificativi dei contratti non validi');
     }
 
     // Fetch only contracts OWNED by the caller (ownership: non si uniscono altrui)

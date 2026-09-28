@@ -13,6 +13,7 @@ import { db } from '@/src/lib/db';
 import { contracts } from '@/db/schema';
 import { and, eq, isNull } from 'drizzle-orm';
 import { extractContractMetadata, calculateOverallConfidence } from '@/lib/ai/pre-analyze';
+import { AnalysisTimeoutError, publicAnalysisErrorMessage } from '@/lib/ai/public-error';
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -49,7 +50,7 @@ export async function POST(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB + ownership + non cestinato (CG-8)
+    // Contratto del chiamante e non cestinato
     const [contract] = await db
       .select()
       .from(contracts)
@@ -77,14 +78,18 @@ export async function POST(
           language
         ),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout pre-analisi (>25s)')), 25000)
+          setTimeout(
+            () => reject(new AnalysisTimeoutError('La pre-analisi ha superato il tempo massimo (25 secondi). Riprova.')),
+            25000
+          )
         ),
       ]);
     } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      console.error('[PreAnalysis] Extraction failed:', errMsg);
+      // Dettaglio nei log; al client solo un messaggio scelto (mai il testo grezzo
+      // dell'errore, che può contenere dettagli del provider o della risposta del modello).
+      console.error('[PreAnalysis] Extraction failed:', error);
       throw new AnalysisError(
-        `Errore durante l'estrazione dei metadati: ${errMsg}. Riprova.`
+        publicAnalysisErrorMessage(error, "Errore durante l'estrazione dei metadati. Riprova.")
       );
     }
 
@@ -163,7 +168,7 @@ export async function GET(
       throw new ValidationError('ID contratto non valido');
     }
 
-    // Fetch contract from DB + ownership + non cestinato (CG-8)
+    // Contratto del chiamante e non cestinato
     const [contract] = await db
       .select()
       .from(contracts)

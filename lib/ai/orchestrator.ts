@@ -19,6 +19,7 @@ import { analyzeChunk, generateExecutiveSummary } from './analyze';
 import { analyzeChunkEnhanced, generateEnhancedExecutiveSummary, type ValidatedMetadata } from './enhanced-analyze';
 import { deduplicateFindings, sortFindings } from './deduplicate';
 import { withAnalysisSlot } from './concurrency';
+import { AnalysisTimeoutError, publicAnalysisErrorMessage } from './public-error';
 import type { Finding, EnhancedFinding } from './schemas';
 
 /**
@@ -40,7 +41,7 @@ const ANALYSIS_TIMEOUT_MS = Math.max(
 const CHUNK_BATCH_SIZE = Math.max(1, Number(process.env.CHUNK_BATCH_SIZE) || 3);
 
 /**
- * Hard ceiling on chunks analyzed per contract (CPERF-2): bounds cost and
+ * Hard ceiling on chunks analyzed per contract: bounds cost and
  * wall-clock for pathologically long documents. Beyond this the analysis covers
  * the first ANALYSIS_MAX_CHUNKS chunks and flags the truncation in the executive
  * summary. Override via ANALYSIS_MAX_CHUNKS.
@@ -82,8 +83,34 @@ function truncationNote(truncated: boolean, originalCount: number, language: 'it
  */
 function createTimeout(ms: number, message: string): Promise<never> {
   return new Promise((_, reject) => {
-    setTimeout(() => reject(new Error(message)), ms);
+    setTimeout(() => reject(new AnalysisTimeoutError(message)), ms);
   });
+}
+
+/**
+ * Segna l'analisi come fallita salvando SOLO un messaggio mostrabile all'utente.
+ * Il dettaglio tecnico va nei log, non nel DB (la colonna finisce nella risposta
+ * di GET /api/analyze/[id]).
+ */
+async function markAnalysisFailed(
+  analysisId: number,
+  contractId: number,
+  error: unknown
+): Promise<void> {
+  console.error(`[Analysis] analisi ${analysisId} (contratto ${contractId}) fallita:`, error);
+  await db
+    .update(analyses)
+    .set({
+      status: 'failed',
+      completedAt: new Date(),
+      errorMessage: publicAnalysisErrorMessage(error),
+    })
+    .where(eq(analyses.id, analysisId));
+
+  await db
+    .update(contracts)
+    .set({ analysisStatus: 'failed' })
+    .where(eq(contracts.id, contractId));
 }
 
 /**
@@ -184,7 +211,7 @@ export async function runAnalysis(
   }
 
   try {
-    // Bound concurrent analyses (CPERF-2), then race the pipeline against timeout.
+    // Bound concurrent analyses, then race the pipeline against timeout.
     await withAnalysisSlot(
       () => Promise.race([
       // Main analysis pipeline
@@ -340,22 +367,7 @@ export async function runAnalysis(
 
     return analysisId;
   } catch (error) {
-    // Mark analysis as failed
-    await db
-      .update(analyses)
-      .set({
-        status: 'failed',
-        completedAt: new Date(),
-        errorMessage: error instanceof Error ? error.message : 'Errore sconosciuto',
-      })
-      .where(eq(analyses.id, analysisId));
-
-    // Update contract status to failed
-    await db
-      .update(contracts)
-      .set({ analysisStatus: 'failed' })
-      .where(eq(contracts.id, contractId));
-
+    await markAnalysisFailed(analysisId, contractId, error);
     throw error;
   }
 }
@@ -448,7 +460,7 @@ export async function runEnhancedAnalysis(
   }
 
   try {
-    // Bound concurrent analyses (CPERF-2), then race the pipeline against timeout.
+    // Bound concurrent analyses, then race the pipeline against timeout.
     await withAnalysisSlot(
       () => Promise.race([
       // Main analysis pipeline
@@ -615,22 +627,7 @@ export async function runEnhancedAnalysis(
 
     return analysisId;
   } catch (error) {
-    // Mark analysis as failed
-    await db
-      .update(analyses)
-      .set({
-        status: 'failed',
-        completedAt: new Date(),
-        errorMessage: error instanceof Error ? error.message : 'Errore sconosciuto',
-      })
-      .where(eq(analyses.id, analysisId));
-
-    // Update contract status to failed
-    await db
-      .update(contracts)
-      .set({ analysisStatus: 'failed' })
-      .where(eq(contracts.id, contractId));
-
+    await markAnalysisFailed(analysisId, contractId, error);
     throw error;
   }
 }

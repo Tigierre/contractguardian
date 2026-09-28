@@ -1,5 +1,6 @@
 import { extractTextFromPDF } from './extractor';
 import { extractTextWithOCR } from './ocr';
+import { ExtractionError } from '@/lib/errors';
 
 const MIN_TEXT_LENGTH = 50;
 const OCR_CONFIDENCE_WARNING = 60;
@@ -38,15 +39,16 @@ export async function extractText(buffer: Buffer): Promise<ExtractionPipelineRes
   const ocr = await extractTextWithOCR(buffer);
 
   // 3. Quality gates
+  // Esiti "di qualità" del documento: messaggi pensati per l'utente (ExtractionError).
   if (ocr.text.length < MIN_TEXT_LENGTH) {
-    throw new Error(
+    throw new ExtractionError(
       'Impossibile estrarre testo sufficiente dal PDF. ' +
       'Il documento potrebbe essere vuoto, protetto o in un formato non supportato.'
     );
   }
 
   if (ocr.confidence < OCR_CONFIDENCE_REJECT) {
-    throw new Error(
+    throw new ExtractionError(
       `Qualità OCR troppo bassa (${ocr.confidence}%) per un'analisi affidabile. ` +
       'Prova con una scansione di qualità migliore.'
     );
