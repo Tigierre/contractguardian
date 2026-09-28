@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { deduplicateFindings, sortBySeverity } from '@/lib/ai/deduplicate';
+import { deduplicateFindings, sortFindings } from '@/lib/ai/deduplicate';
 import type { Finding } from '@/lib/ai/schemas';
 
 describe('Finding Deduplicator', () => {
@@ -142,113 +142,73 @@ describe('Finding Deduplicator', () => {
     });
   });
 
-  describe('sortBySeverity', () => {
-    it('should sort findings from CRITICAL to LOW', () => {
-      const findings: Finding[] = [
-        {
-          clauseText: 'Low issue',
-          policyName: 'P1',
-          severity: 'LOW',
-          explanation: 'A',
-          redlineSuggestion: 'B',
-        },
-        {
-          clauseText: 'Critical issue',
-          policyName: 'P2',
-          severity: 'CRITICAL',
-          explanation: 'C',
-          redlineSuggestion: 'D',
-        },
-        {
-          clauseText: 'Medium issue',
-          policyName: 'P3',
-          severity: 'MEDIUM',
-          explanation: 'E',
-          redlineSuggestion: 'F',
-        },
-        {
-          clauseText: 'High issue',
-          policyName: 'P4',
-          severity: 'HIGH',
-          explanation: 'G',
-          redlineSuggestion: 'H',
-        },
-      ];
-
-      const result = sortBySeverity(findings);
-
-      expect(result[0]?.severity).toBe('CRITICAL');
-      expect(result[1]?.severity).toBe('HIGH');
-      expect(result[2]?.severity).toBe('MEDIUM');
-      expect(result[3]?.severity).toBe('LOW');
+  describe('sortFindings', () => {
+    // Forma attuale di un finding: `type` (strength/improvement) + `priority`
+    // (importante/consigliato/suggerimento, null per i punti di forza).
+    const make = (
+      clauseText: string,
+      type: Finding['type'],
+      priority: Finding['priority']
+    ): Finding => ({
+      title: clauseText,
+      clauseText,
+      type,
+      policyName: 'P',
+      priority,
+      explanation: 'X',
+      redlineSuggestion: type === 'improvement' ? 'Y' : null,
     });
 
-    it('should not mutate original array', () => {
+    it('mette prima i miglioramenti per priorità, poi i punti di forza', () => {
       const findings: Finding[] = [
-        {
-          clauseText: 'A',
-          policyName: 'P',
-          severity: 'LOW',
-          explanation: 'X',
-          redlineSuggestion: 'Y',
-        },
-        {
-          clauseText: 'B',
-          policyName: 'P',
-          severity: 'CRITICAL',
-          explanation: 'X',
-          redlineSuggestion: 'Y',
-        },
+        make('forza', 'strength', null),
+        make('suggerimento', 'improvement', 'suggerimento'),
+        make('importante', 'improvement', 'importante'),
+        make('consigliato', 'improvement', 'consigliato'),
       ];
 
+      const result = sortFindings(findings);
+
+      expect(result.map((f) => f.clauseText)).toEqual([
+        'importante',
+        'consigliato',
+        'suggerimento',
+        'forza',
+      ]);
+    });
+
+    it("non modifica l'array originale", () => {
+      const findings: Finding[] = [
+        make('B', 'strength', null),
+        make('A', 'improvement', 'importante'),
+      ];
       const original = [...findings];
-      const result = sortBySeverity(findings);
 
-      expect(findings).toEqual(original); // Original unchanged
-      expect(result).not.toEqual(findings); // Result is different order
+      const result = sortFindings(findings);
+
+      expect(findings).toEqual(original);
+      expect(result).not.toEqual(findings);
     });
 
-    it('should handle empty array', () => {
-      const result = sortBySeverity([]);
-      expect(result).toEqual([]);
+    it('gestisce un array vuoto', () => {
+      expect(sortFindings([])).toEqual([]);
     });
 
-    it('should handle single finding', () => {
-      const finding: Finding = {
-        clauseText: 'Test',
-        policyName: 'Test',
-        severity: 'MEDIUM',
-        explanation: 'Test',
-        redlineSuggestion: 'Test',
-      };
-
-      const result = sortBySeverity([finding]);
-      expect(result).toEqual([finding]);
+    it('gestisce un singolo finding', () => {
+      const finding = make('unico', 'improvement', 'consigliato');
+      expect(sortFindings([finding])).toEqual([finding]);
     });
 
-    it('should preserve order for same severity', () => {
+    it("mantiene l'ordine a parità di priorità (ordinamento stabile)", () => {
       const findings: Finding[] = [
-        {
-          clauseText: 'First critical',
-          policyName: 'P1',
-          severity: 'CRITICAL',
-          explanation: 'A',
-          redlineSuggestion: 'B',
-        },
-        {
-          clauseText: 'Second critical',
-          policyName: 'P2',
-          severity: 'CRITICAL',
-          explanation: 'C',
-          redlineSuggestion: 'D',
-        },
+        make('primo', 'improvement', 'importante'),
+        make('secondo', 'improvement', 'importante'),
       ];
 
-      const result = sortBySeverity(findings);
+      const result = sortFindings(findings);
 
-      // Both CRITICAL, should preserve original order
-      expect(result[0]?.clauseText).toBe('First critical');
-      expect(result[1]?.clauseText).toBe('Second critical');
+      expect(result[0]?.clauseText).toBe('primo');
+      expect(result[1]?.clauseText).toBe('secondo');
     });
   });
 });

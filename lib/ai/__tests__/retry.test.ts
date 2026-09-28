@@ -144,18 +144,17 @@ describe('AI Retry Logic', () => {
         .mockRejectedValue(new OpenAI.RateLimitError(429, {}, 'Rate limit', createMockHeaders()));
 
       const promise = withRetry(fn, 3, 1000);
+      // Aggancia subito il gestore del rifiuto: la promise rifiuta mentre i timer
+      // finti avanzano, prima che il test arrivi all'await.
+      const settled = promise.catch((e: unknown) => e);
 
       // Run all timers to completion
       await vi.runAllTimersAsync();
 
-      try {
-        await promise;
-        expect.fail('Should have thrown AIError');
-      } catch (error) {
-        expect(error).toBeInstanceOf(AIError);
-        expect((error as AIError).code).toBe(AI_ERROR_CODES.MAX_RETRIES_EXCEEDED);
-        expect((error as AIError).retryable).toBe(false);
-      }
+      const error = await settled;
+      expect(error).toBeInstanceOf(AIError);
+      expect((error as AIError).code).toBe(AI_ERROR_CODES.MAX_RETRIES_EXCEEDED);
+      expect((error as AIError).retryable).toBe(false);
 
       expect(fn).toHaveBeenCalledTimes(3);
     });
@@ -167,16 +166,15 @@ describe('AI Retry Logic', () => {
 
       const baseDelay = 100; // Use smaller delays for faster test
       const promise = withRetry(fn, 3, baseDelay);
+      // Aggancia subito il gestore del rifiuto: la promise rifiuta mentre i timer
+      // finti avanzano, prima che il test arrivi all'await.
+      const settled = promise.catch((e: unknown) => e);
 
       // Run all timers to completion
       await vi.runAllTimersAsync();
 
-      try {
-        await promise;
-        expect.fail('Should have thrown AIError');
-      } catch (error) {
-        expect(error).toBeInstanceOf(AIError);
-      }
+      const error = await settled;
+      expect(error).toBeInstanceOf(AIError);
 
       // Verify exponential backoff happened by checking 3 attempts were made
       expect(fn).toHaveBeenCalledTimes(3);
@@ -198,16 +196,15 @@ describe('AI Retry Logic', () => {
         .mockRejectedValue(new OpenAI.RateLimitError(429, {}, 'Rate limit', createMockHeaders()));
 
       const promise = withRetry(fn, 2, 1000); // Only 2 attempts
+      // Aggancia subito il gestore del rifiuto: la promise rifiuta mentre i timer
+      // finti avanzano, prima che il test arrivi all'await.
+      const settled = promise.catch((e: unknown) => e);
 
       // Run all timers to completion
       await vi.runAllTimersAsync();
 
-      try {
-        await promise;
-        expect.fail('Should have thrown AIError');
-      } catch (error) {
-        expect(error).toBeInstanceOf(AIError);
-      }
+      const error = await settled;
+      expect(error).toBeInstanceOf(AIError);
       expect(fn).toHaveBeenCalledTimes(2);
     });
 
