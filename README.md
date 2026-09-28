@@ -97,7 +97,7 @@ The only hard dependency is a PostgreSQL database and an OpenAI API key.
 ## Getting Started
 
 ### Prerequisites
-- Node.js 20+
+- Node.js 22+
 - A PostgreSQL database ([Supabase](https://supabase.com), [Neon](https://neon.tech), self-hosted, or any compatible provider)
 - An [OpenAI](https://platform.openai.com) API key
 
@@ -131,11 +131,34 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | Yes | PostgreSQL connection string (any compatible provider) |
-| `OPENAI_API_KEY` | Yes | OpenAI API key (GPT-4o-mini) |
+| `DATABASE_URL` | Yes (runtime) | PostgreSQL connection string (any compatible provider) |
+| `OPENAI_API_KEY` | Yes (runtime) | OpenAI API key |
+| `OPENAI_MAX_COMPLETION_TOKENS_ANALYSIS` | No | Output-token cap per analysis call, reasoning included (default `16000`) |
+| `OPENAI_MAX_COMPLETION_TOKENS_PREANALYSIS` | No | Output-token cap per pre-analysis call (default `6000`) |
+| `CG_ADMIN_GROUP` | No | Group(s) granting admin rights (trash restore/purge), comma-separated |
+| `AUTHENTIK_JWKS_URL` | If `CG_ADMIN_GROUP` is set | JWKS used to verify the `X-authentik-jwt` token. Without it nobody is admin |
+| `AUTHENTIK_JWT_ISSUER` / `AUTHENTIK_JWT_AUDIENCE` | No | When set, the JWT must carry a matching `iss` / `aud` |
 | `NEXT_PUBLIC_APP_URL` | No | Base URL for the app (default: `http://localhost:3000`) |
 | `NEXT_PUBLIC_SUPABASE_URL` | No | Supabase project URL (only if using Supabase Auth — not used in v1) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No | Supabase anon key (only if using Supabase Auth — not used in v1) |
+
+`.env.example` documents every variable, including performance tuning and trash retention.
+Neither `DATABASE_URL` nor `OPENAI_API_KEY` is needed at build time: both clients are created on first use.
+
+### Authentication
+
+ContractGuardian has no login of its own. It is meant to run behind a reverse proxy
+with forward-auth to [Authentik](https://goauthentik.io) (e.g. Traefik + an Authentik
+outpost), which forwards the user identity in `X-authentik-*` headers. Two deployment
+requirements follow:
+
+1. the proxy must **strip** any `X-authentik-*` header sent by the client;
+2. the app must not be reachable except through the proxy.
+
+In production, API requests without an identity are rejected with `403`; every user
+only sees their own contracts and analyses. Admin rights are never derived from the
+plain-text groups header: they come from the signed JWT, verified against
+`AUTHENTIK_JWKS_URL`.
 
 ---
 
@@ -162,8 +185,12 @@ You can build and run ContractGuardian as a Docker container on any platform.
 ### Build the image
 
 ```bash
-docker build -t contractguardian .
+docker build --build-arg SOURCE_COMMIT=$(git rev-parse HEAD) -t contractguardian .
 ```
+
+`SOURCE_COMMIT` is baked into the image and reported by `GET /api/health` as
+`versione` (short SHA), so you can always tell which code a container runs. Without
+it the probe reports `"versione": "sconosciuta"`.
 
 ### Run the container
 
@@ -181,6 +208,14 @@ docker run -p 3000:3000 --env-file .env.local contractguardian
 ```
 
 The container runs as a non-root user (`nextjs`), listens on port 3000 by default, and reads `PORT` from the environment if you need a different port.
+
+### Health check
+
+`GET /api/health` answers `200` with `{"status":"healthy","versione":"<sha>","database":"connected"}`,
+or `503` when the database does not answer within 3 seconds. The image declares a
+Docker `HEALTHCHECK` that calls it from inside the container (Node's built-in `fetch`,
+no extra packages), so orchestrators see a container with an unreachable database as
+`unhealthy`.
 
 ### Migrations on boot
 

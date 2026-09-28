@@ -2,6 +2,9 @@
   "name": "contractguardian",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -45,7 +48,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.11",
