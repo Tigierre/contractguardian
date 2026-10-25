@@ -20,6 +20,7 @@
     "test:all": "vitest run && tsx scripts/test-edge-cases.ts"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.3.0",
     "@headlessui/react": "^2.2.9",
     "@hookform/resolvers": "^5.2.2",
     "@swc/helpers": "^0.5.18",

@@ -221,7 +221,7 @@ export function FileUploader({ onUploadComplete, onPreAnalysisComplete }: FileUp
               <div className="mt-3 flex gap-3">
                 <button
                   onClick={handleAnalyze}
-                  className="px-6 py-2.5 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-sm"
+                  className="px-6 py-2.5 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-sm"
                 >
                   {t('startAnalysis')}
                 </button>

@@ -1,0 +1,139 @@
+/*
+ * TEMA DELL'ISTANZA → PALETTE DELL'APP.
+ *
+ * Tutto quello che c'è qui vale SOLO quando <html> porta `data-tema`, cioè quando
+ * BRAND_THEME è uno dei temi di `lib/temi/` (vedi lib/tema-di-casa.ts). Senza, nessuna
+ * regola si applica e l'aspetto di serie resta quello di sempre.
+ *
+ * I componenti usano la palette di Tailwind (`bg-white`, `text-slate-700`, `bg-red-50`…):
+ * invece di riscriverli, qui ogni tonalità si ridefinisce sui token del tema, con il
+ * significato che ha nel modo CHIARO. Le varianti `dark:` col tema sono spente
+ * (app/globals.css): se il tema è scuro, sono i suoi token a esserlo.
+ *
+ *   white            → la superficie (card, pannelli; e il testo sopra i riempimenti pieni)
+ *   slate            → superfici, bordi e testo, dal 50 più chiaro al 900 più scuro
+ *   red, rose        → danger        amber → warning
+ *   green, emerald   → success       blue, sky → info
+ *   primary          → --primary del tema, o BRAND_ACCENT se c'è
+ * Una tonalità che non compare qui resta quella di Tailwind.
+ *
+ * Scala di uno stato X: 50–400 mescolano X con la superficie (fondi e bordi tenui),
+ * 500–600 sono X, 700–950 mescolano X col testo (hover dei riempimenti, testo sui fondi
+ * tenui), così il contrasto segue il modo del tema invece di essere fissato a mano.
+ *
+ * Il selettore `:root[data-tema]` (peso 0,2,0, fuori dai layer di Tailwind) vince sia sui
+ * valori di Tailwind sia sul `:root` dell'app, in qualunque ordine arrivino i fogli.
+ */
+
+:root[data-tema] {
+  --background: var(--bg);
+  --foreground: var(--text);
+
+  --color-white: var(--surface);
+
+  --color-slate-50: color-mix(in srgb, var(--surface-2) 50%, var(--surface));
+  --color-slate-100: var(--surface-2);
+  --color-slate-200: var(--border);
+  --color-slate-300: color-mix(in srgb, var(--border) 65%, var(--text-muted));
+  --color-slate-400: color-mix(in srgb, var(--text-muted) 75%, var(--surface));
+  --color-slate-500: var(--text-muted);
+  --color-slate-600: color-mix(in srgb, var(--text-muted) 65%, var(--text));
+  --color-slate-700: color-mix(in srgb, var(--text-muted) 35%, var(--text));
+  --color-slate-800: var(--text);
+  --color-slate-900: var(--text);
+  --color-slate-950: var(--text);
+
+  --color-red-50: color-mix(in srgb, var(--danger) 8%, var(--surface));
+  --color-red-100: color-mix(in srgb, var(--danger) 15%, var(--surface));
+  --color-red-200: color-mix(in srgb, var(--danger) 28%, var(--surface));
+  --color-red-300: color-mix(in srgb, var(--danger) 42%, var(--surface));
+  --color-red-400: color-mix(in srgb, var(--danger) 70%, var(--surface));
+  --color-red-500: var(--danger);
+  --color-red-600: var(--danger);
+  --color-red-700: color-mix(in srgb, var(--danger) 82%, var(--text));
+  --color-red-800: color-mix(in srgb, var(--danger) 65%, var(--text));
+  --color-red-900: color-mix(in srgb, var(--danger) 50%, var(--text));
+  --color-red-950: color-mix(in srgb, var(--danger) 40%, var(--text));
+
+  --color-rose-50: color-mix(in srgb, var(--danger) 8%, var(--surface));
+  --color-rose-100: color-mix(in srgb, var(--danger) 15%, var(--surface));
+  --color-rose-200: color-mix(in srgb, var(--danger) 28%, var(--surface));
+  --color-rose-300: color-mix(in srgb, var(--danger) 42%, var(--surface));
+  --color-rose-400: color-mix(in srgb, var(--danger) 70%, var(--surface));
+  --color-rose-500: var(--danger);
+  --color-rose-600: var(--danger);
+  --color-rose-700: color-mix(in srgb, var(--danger) 82%, var(--text));
+  --color-rose-800: color-mix(in srgb, var(--danger) 65%, var(--text));
+  --color-rose-900: color-mix(in srgb, var(--danger) 50%, var(--text));
+  --color-rose-950: color-mix(in srgb, var(--danger) 40%, var(--text));
+
+  --color-amber-50: color-mix(in srgb, var(--warning) 8%, var(--surface));
+  --color-amber-100: color-mix(in srgb, var(--warning) 15%, var(--surface));
+  --color-amber-200: color-mix(in srgb, var(--warning) 28%, var(--surface));
+  --color-amber-300: color-mix(in srgb, var(--warning) 42%, var(--surface));
+  --color-amber-400: color-mix(in srgb, var(--warning) 70%, var(--surface));
+  --color-amber-500: var(--warning);
+  --color-amber-600: var(--warning);
+  --color-amber-700: color-mix(in srgb, var(--warning) 82%, var(--text));
+  --color-amber-800: color-mix(in srgb, var(--warning) 65%, var(--text));
+  --color-amber-900: color-mix(in srgb, var(--warning) 50%, var(--text));
+  --color-amber-950: color-mix(in srgb, var(--warning) 40%, var(--text));
+
+  --color-green-50: color-mix(in srgb, var(--success) 8%, var(--surface));
+  --color-green-100: color-mix(in srgb, var(--success) 15%, var(--surface));
+  --color-green-200: color-mix(in srgb, var(--success) 28%, var(--surface));
+  --color-green-300: color-mix(in srgb, var(--success) 42%, var(--surface));
+  --color-green-400: color-mix(in srgb, var(--success) 70%, var(--surface));
+  --color-green-500: var(--success);
+  --color-green-600: var(--success);
+  --color-green-700: color-mix(in srgb, var(--success) 82%, var(--text));
+  --color-green-800: color-mix(in srgb, var(--success) 65%, var(--text));
+  --color-green-900: color-mix(in srgb, var(--success) 50%, var(--text));
+  --color-green-950: color-mix(in srgb, var(--success) 40%, var(--text));
+
+  --color-emerald-50: color-mix(in srgb, var(--success) 8%, var(--surface));
+  --color-emerald-100: color-mix(in srgb, var(--success) 15%, var(--surface));
+  --color-emerald-200: color-mix(in srgb, var(--success) 28%, var(--surface));
+  --color-emerald-300: color-mix(in srgb, var(--success) 42%, var(--surface));
+  --color-emerald-400: color-mix(in srgb, var(--success) 70%, var(--surface));
+  --color-emerald-500: var(--success);
+  --color-emerald-600: var(--success);
+  --color-emerald-700: color-mix(in srgb, var(--success) 82%, var(--text));
+  --color-emerald-800: color-mix(in srgb, var(--success) 65%, var(--text));
+  --color-emerald-900: color-mix(in srgb, var(--success) 50%, var(--text));
+  --color-emerald-950: color-mix(in srgb, var(--success) 40%, var(--text));
+
+  --color-blue-50: color-mix(in srgb, var(--info) 8%, var(--surface));
+  --color-blue-100: color-mix(in srgb, var(--info) 15%, var(--surface));
+  --color-blue-200: color-mix(in srgb, var(--info) 28%, var(--surface));
+  --color-blue-300: color-mix(in srgb, var(--info) 42%, var(--surface));
+  --color-blue-400: color-mix(in srgb, var(--info) 70%, var(--surface));
+  --color-blue-500: var(--info);
+  --color-blue-600: var(--info);
+  --color-blue-700: color-mix(in srgb, var(--info) 82%, var(--text));
+  --color-blue-800: color-mix(in srgb, var(--info) 65%, var(--text));
+  --color-blue-900: color-mix(in srgb, var(--info) 50%, var(--text));
+  --color-blue-950: color-mix(in srgb, var(--info) 40%, var(--text));
+
+  --color-sky-50: color-mix(in srgb, var(--info) 8%, var(--surface));
+  --color-sky-100: color-mix(in srgb, var(--info) 15%, var(--surface));
+  --color-sky-200: color-mix(in srgb, var(--info) 28%, var(--surface));
+  --color-sky-300: color-mix(in srgb, var(--info) 42%, var(--surface));
+  --color-sky-400: color-mix(in srgb, var(--info) 70%, var(--surface));
+  --color-sky-500: var(--info);
+  --color-sky-600: var(--info);
+  --color-sky-700: color-mix(in srgb, var(--info) 82%, var(--text));
+  --color-sky-800: color-mix(in srgb, var(--info) 65%, var(--text));
+  --color-sky-900: color-mix(in srgb, var(--info) 50%, var(--text));
+  --color-sky-950: color-mix(in srgb, var(--info) 40%, var(--text));
+}
+
+/* Titoli: il carattere del tema dove il tema lo fissa; altrimenti quello del testo. */
+:root[data-tema] :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-titoli, var(--font-sans));
+}
+
+/* Col tema il modo lo decide l'istanza (BRAND_MODE): l'interruttore chiaro/scuro sparisce. */
+:root[data-tema] [data-theme-toggle] {
+  display: none;
+}

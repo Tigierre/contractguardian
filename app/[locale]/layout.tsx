@@ -7,7 +7,17 @@ import { routing } from '@/i18n/routing';
 import { LegalDisclaimer } from "@/components/layout/LegalDisclaimer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
+import { aspettoIstanza } from "@/lib/tema-di-casa";
+// Roboto, il carattere del tema `acciaio`: dal pacchetto, servito dall'app stessa. Il browser
+// scarica i file solo se una regola lo usa, cioè solo quando l'istanza sceglie quel tema.
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 import "../globals.css";
+
+// Il tema dell'istanza si legge dalle env a RUNTIME (BRAND_THEME, BRAND_MODE, BRAND_ACCENT):
+// pagine prerenderizzate alla build lo congelerebbero al valore della build.
+export const dynamic = "force-dynamic";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,8 +67,11 @@ export default async function RootLayout({
   // Get messages for this locale
   const messages = await getMessages();
 
+  // Tema e accento dell'istanza; env vuote = nessun attributo, l'aspetto di serie.
+  const aspetto = aspettoIstanza();
+
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning {...aspetto.attributi} style={aspetto.stile}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased`}
       >

@@ -8,6 +8,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
+      data-theme-toggle
       className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
       aria-label={theme === 'dark' ? 'Passa a modalità chiara' : 'Passa a modalità scura'}
     >

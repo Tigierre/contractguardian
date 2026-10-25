@@ -1,0 +1,203 @@
+/* I TEMI DI CASA — GENERATO da temi.json con `node genera.mjs`: non modificare a mano.
+ * Ogni colore in esadecimale (--x) e in canali (--x-rgb, per rgb(var(--x-rgb) / α)).
+ * L'accento e la barra d'istanza arrivano inline sull'involucro (voltoDaEnv in temi.ts).
+ * `:root[data-tema]` vince sul `:root` del prodotto in qualunque ordine si importino i fogli;
+ * `[data-tema]` da solo serve a un involucro interno (una sezione con un altro tema). */
+
+/* 1 · Nova Carbone */
+:root[data-tema='nova'], [data-tema='nova'] {
+  color-scheme: dark;
+  --bg: #2b3441; --bg-rgb: 43 52 65;
+  --surface: #323c4a; --surface-rgb: 50 60 74;
+  --surface-2: #3c4757; --surface-2-rgb: 60 71 87;
+  --border: #46525f; --border-rgb: 70 82 95;
+  --primary: #4f8cff; --primary-rgb: 79 140 255;
+  --primary-hover: #3a78ec; --primary-hover-rgb: 58 120 236;
+  --accent: #6ee7d8; --accent-rgb: 110 231 216;
+  --text: #eef2f7; --text-rgb: 238 242 247;
+  --text-muted: #9aa7b5; --text-muted-rgb: 154 167 181;
+  --success: #3ecf8e; --success-rgb: 62 207 142;
+  --warning: #f5b452; --warning-rgb: 245 180 82;
+  --danger: #f0656b; --danger-rgb: 240 101 107;
+  --info: #5cc8ff; --info-rgb: 92 200 255;
+  --band: #1f2630; --band-rgb: 31 38 48;
+  --band-fg: #eef2f7; --band-fg-rgb: 238 242 247;
+  --band-muted: #9aa7b5; --band-muted-rgb: 154 167 181;
+  --on-primary: #1a1a17; --on-primary-rgb: 26 26 23;
+  --radius: 8px;
+  --shadow: none;
+}
+
+/* 2 · Aurora Chiaro */
+:root[data-tema='aurora'], [data-tema='aurora'] {
+  color-scheme: light;
+  --bg: #f6f8fb; --bg-rgb: 246 248 251;
+  --surface: #ffffff; --surface-rgb: 255 255 255;
+  --surface-2: #eef2f8; --surface-2-rgb: 238 242 248;
+  --border: #d8e0ea; --border-rgb: 216 224 234;
+  --primary: #2f6df0; --primary-rgb: 47 109 240;
+  --primary-hover: #1f57d6; --primary-hover-rgb: 31 87 214;
+  --accent: #7c5cff; --accent-rgb: 124 92 255;
+  --text: #1b2430; --text-rgb: 27 36 48;
+  --text-muted: #5a6675; --text-muted-rgb: 90 102 117;
+  --success: #16a36b; --success-rgb: 22 163 107;
+  --warning: #c17b11; --warning-rgb: 193 123 17;
+  --danger: #d63b46; --danger-rgb: 214 59 70;
+  --info: #1d8fd1; --info-rgb: 29 143 209;
+  --band: #1b2430; --band-rgb: 27 36 48;
+  --band-fg: #f6f8fb; --band-fg-rgb: 246 248 251;
+  --band-muted: #a9b4c2; --band-muted-rgb: 169 180 194;
+  --on-primary: #ffffff; --on-primary-rgb: 255 255 255;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(27,36,48,.08);
+}
+
+/* 3 · Neon Vault */
+:root[data-tema='neon'], [data-tema='neon'] {
+  color-scheme: dark;
+  --bg: #0a0e16; --bg-rgb: 10 14 22;
+  --surface: #121826; --surface-rgb: 18 24 38;
+  --surface-2: #1a2333; --surface-2-rgb: 26 35 51;
+  --border: #283449; --border-rgb: 40 52 73;
+  --primary: #22d3ee; --primary-rgb: 34 211 238;
+  --primary-hover: #14b8d4; --primary-hover-rgb: 20 184 212;
+  --accent: #f637ec; --accent-rgb: 246 55 236;
+  --text: #e6f1ff; --text-rgb: 230 241 255;
+  --text-muted: #7c8aa3; --text-muted-rgb: 124 138 163;
+  --success: #4ade80; --success-rgb: 74 222 128;
+  --warning: #fbbf24; --warning-rgb: 251 191 36;
+  --danger: #fb5d6a; --danger-rgb: 251 93 106;
+  --info: #818cf8; --info-rgb: 129 140 248;
+  --band: #05080d; --band-rgb: 5 8 13;
+  --band-fg: #e6f1ff; --band-fg-rgb: 230 241 255;
+  --band-muted: #7c8aa3; --band-muted-rgb: 124 138 163;
+  --on-primary: #1a1a17; --on-primary-rgb: 26 26 23;
+  --radius: 6px;
+  --shadow: none;
+}
+
+/* 4 · Editoriale Sabbia */
+:root[data-tema='sabbia'], [data-tema='sabbia'] {
+  color-scheme: light;
+  --bg: #f5efe6; --bg-rgb: 245 239 230;
+  --surface: #fffdf8; --surface-rgb: 255 253 248;
+  --surface-2: #ece3d5; --surface-2-rgb: 236 227 213;
+  --border: #ddd0bd; --border-rgb: 221 208 189;
+  --primary: #b5532f; --primary-rgb: 181 83 47;
+  --primary-hover: #97431f; --primary-hover-rgb: 151 67 31;
+  --accent: #2f6e6a; --accent-rgb: 47 110 106;
+  --text: #2a2420; --text-rgb: 42 36 32;
+  --text-muted: #6f6356; --text-muted-rgb: 111 99 86;
+  --success: #4a7c44; --success-rgb: 74 124 68;
+  --warning: #b1791a; --warning-rgb: 177 121 26;
+  --danger: #b23a3a; --danger-rgb: 178 58 58;
+  --info: #3a6ea5; --info-rgb: 58 110 165;
+  --band: #2a2420; --band-rgb: 42 36 32;
+  --band-fg: #f5efe6; --band-fg-rgb: 245 239 230;
+  --band-muted: #b8ab99; --band-muted-rgb: 184 171 153;
+  --on-primary: #ffffff; --on-primary-rgb: 255 255 255;
+  --radius: 4px;
+  --shadow: none;
+}
+
+/* 5 · Foresta Profonda */
+:root[data-tema='foresta'], [data-tema='foresta'] {
+  color-scheme: dark;
+  --bg: #0e1a16; --bg-rgb: 14 26 22;
+  --surface: #14241f; --surface-rgb: 20 36 31;
+  --surface-2: #1c2f29; --surface-2-rgb: 28 47 41;
+  --border: #2b403a; --border-rgb: 43 64 58;
+  --primary: #34d399; --primary-rgb: 52 211 153;
+  --primary-hover: #22b07d; --primary-hover-rgb: 34 176 125;
+  --accent: #a3e635; --accent-rgb: 163 230 53;
+  --text: #e8f5ef; --text-rgb: 232 245 239;
+  --text-muted: #8aa39a; --text-muted-rgb: 138 163 154;
+  --success: #4ade80; --success-rgb: 74 222 128;
+  --warning: #facc15; --warning-rgb: 250 204 21;
+  --danger: #f87171; --danger-rgb: 248 113 113;
+  --info: #38bdf8; --info-rgb: 56 189 248;
+  --band: #08120f; --band-rgb: 8 18 15;
+  --band-fg: #e8f5ef; --band-fg-rgb: 232 245 239;
+  --band-muted: #8aa39a; --band-muted-rgb: 138 163 154;
+  --on-primary: #1a1a17; --on-primary-rgb: 26 26 23;
+  --radius: 8px;
+  --shadow: none;
+}
+
+/* 6 · Officina Calda — chiaro */
+:root[data-tema='officina'], [data-tema='officina'] {
+  color-scheme: light;
+  --bg: #f3f3ef; --bg-rgb: 243 243 239;
+  --surface: #ffffff; --surface-rgb: 255 255 255;
+  --surface-2: #eeeee8; --surface-2-rgb: 238 238 232;
+  --border: #deded6; --border-rgb: 222 222 214;
+  --primary: #2f6f8f; --primary-rgb: 47 111 143;
+  --primary-hover: #29627e; --primary-hover-rgb: 41 98 126;
+  --accent: #3f6b73; --accent-rgb: 63 107 115;
+  --text: #2b2b2b; --text-rgb: 43 43 43;
+  --text-muted: #6b6b63; --text-muted-rgb: 107 107 99;
+  --success: #2f7d4f; --success-rgb: 47 125 79;
+  --warning: #8a5a00; --warning-rgb: 138 90 0;
+  --danger: #b3261e; --danger-rgb: 179 38 30;
+  --info: #2f6f8f; --info-rgb: 47 111 143;
+  --band: #1e1e1c; --band-rgb: 30 30 28;
+  --band-fg: #f3f3ef; --band-fg-rgb: 243 243 239;
+  --band-muted: #a9a99f; --band-muted-rgb: 169 169 159;
+  --on-primary: #ffffff; --on-primary-rgb: 255 255 255;
+  --radius: 4px;
+  --shadow: none;
+  --font-testo: "Barlow", system-ui, sans-serif;
+  --font-titoli: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+}
+
+/* 6 · Officina Calda — scuro */
+:root[data-tema='officina'][data-modo='scuro'], [data-tema='officina'][data-modo='scuro'] {
+  color-scheme: dark;
+  --bg: #161615; --bg-rgb: 22 22 21;
+  --surface: #20201e; --surface-rgb: 32 32 30;
+  --surface-2: #2b2b28; --surface-2-rgb: 43 43 40;
+  --border: #34342f; --border-rgb: 52 52 47;
+  --primary: #2f6f8f; --primary-rgb: 47 111 143;
+  --primary-hover: #29627e; --primary-hover-rgb: 41 98 126;
+  --accent: #8fbcc4; --accent-rgb: 143 188 196;
+  --text: #ecece6; --text-rgb: 236 236 230;
+  --text-muted: #a3a39a; --text-muted-rgb: 163 163 154;
+  --success: #6fcf97; --success-rgb: 111 207 151;
+  --warning: #e8a33d; --warning-rgb: 232 163 61;
+  --danger: #f0807a; --danger-rgb: 240 128 122;
+  --info: #7ab8d9; --info-rgb: 122 184 217;
+  --band: #0e0e0d; --band-rgb: 14 14 13;
+  --band-fg: #f3f3ef; --band-fg-rgb: 243 243 239;
+  --band-muted: #9a9a90; --band-muted-rgb: 154 154 144;
+  --on-primary: #ffffff; --on-primary-rgb: 255 255 255;
+  --radius: 4px;
+  --shadow: none;
+  --font-testo: "Barlow", system-ui, sans-serif;
+  --font-titoli: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+}
+
+/* 7 · Acciaio Chiaro */
+:root[data-tema='acciaio'], [data-tema='acciaio'] {
+  color-scheme: light;
+  --bg: #f4f5f6; --bg-rgb: 244 245 246;
+  --surface: #ffffff; --surface-rgb: 255 255 255;
+  --surface-2: #f0f0f1; --surface-2-rgb: 240 240 241;
+  --border: #e7e7e9; --border-rgb: 231 231 233;
+  --primary: #2f6db0; --primary-rgb: 47 109 176;
+  --primary-hover: #2a62a0; --primary-hover-rgb: 42 98 160;
+  --accent: #2f6db0; --accent-rgb: 47 109 176;
+  --text: #1a1a1b; --text-rgb: 26 26 27;
+  --text-muted: #565659; --text-muted-rgb: 86 86 89;
+  --success: #277645; --success-rgb: 39 118 69;
+  --warning: #8b610b; --warning-rgb: 139 97 11;
+  --danger: #b1392a; --danger-rgb: 177 57 42;
+  --info: #2d68a9; --info-rgb: 45 104 169;
+  --band: #0c0c0d; --band-rgb: 12 12 13;
+  --band-fg: #f7f7f8; --band-fg-rgb: 247 247 248;
+  --band-muted: #9a9aa1; --band-muted-rgb: 154 154 161;
+  --on-primary: #ffffff; --on-primary-rgb: 255 255 255;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(12,12,13,.08);
+  --font-testo: "Roboto", system-ui, sans-serif;
+  --font-titoli: "Roboto", system-ui, sans-serif;
+}

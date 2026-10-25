@@ -192,7 +192,7 @@ export function MetadataValidationCard({
         <button
           type="button"
           onClick={handleStartExtraction}
-          className="px-6 py-2.5 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-sm"
+          className="px-6 py-2.5 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-sm"
         >
           Avvia Pre-Analisi
         </button>
@@ -291,7 +291,7 @@ export function MetadataValidationCard({
             type="button"
             onClick={handleProceedToAnalysis}
             disabled={!allFieldsConfirmed}
-            className="px-6 py-2.5 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Procedi all'Analisi
           </button>

@@ -141,9 +141,42 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_APP_URL` | No | Base URL for the app (default: `http://localhost:3000`) |
 | `NEXT_PUBLIC_SUPABASE_URL` | No | Supabase project URL (only if using Supabase Auth — not used in v1) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No | Supabase anon key (only if using Supabase Auth — not used in v1) |
+| `BRAND_THEME` | No | One of the bundled themes (see [Theming](#theming)). Empty = the default look |
+| `BRAND_MODE` | No | `chiaro` (light) or `scuro` (dark), only for themes that ship both |
+| `BRAND_ACCENT` | No | Brand colour for primary actions, `#rrggbb` |
 
 `.env.example` documents every variable, including performance tuning and trash retention.
 Neither `DATABASE_URL` nor `OPENAI_API_KEY` is needed at build time: both clients are created on first use.
+
+### Theming
+
+The look of an instance is chosen with environment variables read **at runtime**, with no
+code changes and no rebuild:
+
+```sh
+BRAND_THEME=acciaio      # nova · aurora · neon · sabbia · foresta · officina · acciaio
+BRAND_ACCENT=#0f766e     # optional: your brand colour on primary actions
+```
+
+- **Empty variables = the default look**, unchanged. An unknown theme id or a malformed
+  colour never breaks the app: it is logged once (`[tema] …`) and ignored.
+- The themes live in `lib/temi/` (`temi.css`: one block of colour tokens per theme;
+  `temi.ts`: contrast helpers and `voltoDaEnv()`). They are shared files: update them by
+  copying newer versions over, not by editing them here.
+- With a theme active, `lib/tema-di-casa.css` maps the Tailwind palette used by the
+  components (`white`, `slate`, `red`/`rose`, `amber`, `green`/`emerald`, `blue`/`sky`) onto
+  the theme tokens (surface, border, text, danger, warning, success, info). The `dark:`
+  variant is switched off and the light/dark toggle is not shown: the theme (and `BRAND_MODE`
+  for themes that have both modes) decides the mode.
+- `BRAND_ACCENT` replaces `--primary`; the text on top of it (`--on-primary`) and its hover
+  are computed for contrast, so a light brand colour gets dark text. It also works without
+  a theme.
+- Some themes set a typeface (`acciaio` → Roboto, `officina` → Barlow). Fonts come from npm
+  packages (`@fontsource/*`) and are served by the app itself, never from a CDN; the browser
+  downloads them only when the active theme uses them. Roboto is bundled; a theme whose font
+  package is not installed falls back to the system font.
+- Pages are rendered on demand (`force-dynamic` in `app/[locale]/layout.tsx`) so that the
+  variables are read when the container runs, not when the image is built.
 
 ### Authentication
 

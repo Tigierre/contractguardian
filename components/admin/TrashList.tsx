@@ -153,7 +153,7 @@ export function TrashList() {
                 onClick={() => restore(it.id)}
                 disabled={busyId === it.id || it.daysLeft <= 0}
                 title={it.daysLeft <= 0 ? t('expired') : t('restore')}
-                className="flex-shrink-0 px-3 py-1.5 text-sm rounded-md bg-primary text-white hover:opacity-90 disabled:opacity-40"
+                className="flex-shrink-0 px-3 py-1.5 text-sm rounded-md bg-primary text-on-primary hover:opacity-90 disabled:opacity-40"
               >
                 {busyId === it.id ? '…' : t('restore')}
               </button>

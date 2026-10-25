@@ -1,4 +1,17 @@
 @import "tailwindcss";
+/* Temi dell'istanza (BRAND_THEME): inerti finché <html> non porta `data-tema`. */
+@import "../lib/temi/temi.css";
+@import "../lib/tema-di-casa.css";
+
+/* `dark:` segue la preferenza del sistema, come sempre, ma solo SENZA un tema dell'istanza:
+   col tema il modo lo portano i suoi token (lib/tema-di-casa.css). Specificità invariata. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:not(:where([data-tema], [data-tema] *)) {
+      @slot;
+    }
+  }
+}
 
 :root {
   /* Italian Legal Theme - Serious & Professional */
@@ -14,6 +27,9 @@
   --accent: #f59e0b;
   --accent-dark: #d97706;
   --accent-light: #fbbf24;
+
+  /* Testo sopra --primary. Con BRAND_ACCENT si calcola per il contrasto (lib/tema-di-casa.ts). */
+  --on-primary: #ffffff;
 
   /* Neutrals: Slate Grays */
   --neutral-50: #f8fafc;
@@ -33,7 +49,9 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans);
+  --color-on-primary: var(--on-primary);
+  /* Il carattere del tema, se il tema ne fissa uno; altrimenti quello di sempre. */
+  --font-sans: var(--font-testo, var(--font-geist-sans));
   --font-mono: var(--font-geist-mono);
 }
 
