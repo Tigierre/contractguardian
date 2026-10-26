@@ -31,7 +31,7 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.3",
     "jose": "^5.10.0",
-    "next": "15.5.26",
+    "next": "15.5.28",
     "next-intl": "^4.14.7",
     "openai": "^6.17.0",
     "pdf-lib": "^1.17.1",
@@ -45,7 +45,7 @@
     "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "tesseract.js": "^7.0.0",
-    "zod": "^4.3.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -60,6 +60,7 @@
   "overrides": {
     "next": {
       "postcss": "^8.5.28"
-    }
+    },
+    "source-map-js": "^1.2.2"
   }
 }
